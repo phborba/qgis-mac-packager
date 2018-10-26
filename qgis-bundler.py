@@ -70,9 +70,12 @@ print("STEP 0: Copy QGIS and independent folders to build folder")
 print(100*"*")
 
 print ("Cleaning: " + args.output_directory)
-shutil.rmtree(args.output_directory)
-if os.path.exists(args.output_directory + "/.DS_Store"):
-    os.remove(args.output_directory + "/.DS_Store")
+if os.path.exists(args.output_directory):
+    shutil.rmtree(args.output_directory)
+    if os.path.exists(args.output_directory + "/.DS_Store"):
+        os.remove(args.output_directory + "/.DS_Store")
+else:
+    os.makedirs(args.output_directory)
 
 print("Copying " + args.qgis_install_tree)
 shutil.copytree(args.qgis_install_tree, args.output_directory, symlinks=True)

@@ -49,10 +49,11 @@ def get_binary_dependencies(binary):
             # plugins is for dynamically loaded plugins in frameworks (e.g. Qt modules)
         elif (".framework" in lib_path) and ("/plugins/" not in lib_path) and ("/Current/lib/" not in lib_path) and ("/Current/bin/" not in lib_path):
             frameworks.append(lib_path)
-        elif [".dylib", ".so"] in lib_path:
+        # elif [".dylib", ".so"] in lib_path:
+        else:
             libs.append(lib_path)
-        else: # executables
-            pass
+        #else: # executables
+        #    pass
 
     return BinaryDependencies(libname, path, frameworks, sys_libs, libs)
 
