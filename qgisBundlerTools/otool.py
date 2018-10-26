@@ -1,0 +1,59 @@
+# 2018 Peter Petrik (zilolv at gmail dot com)
+# GNU General Public License 2 any later version
+
+import subprocess
+import os
+
+
+class BinaryDependencies:
+    def __init__(self, libname, path, frameworks, sys_libs, libs):
+        self.libname = libname
+        self.path = path
+        self.frameworks = frameworks
+        self.sys_libs = sys_libs
+        self.libs = libs
+
+    def __str__(self):
+        msg = "BinaryDependency " + self.libname + " (" + self.path + ")"
+        msg += "\nLibs:\n\t"
+        msg += "\n\t".join(self.libs)
+        msg += "\nFrameworks:\n\t"
+        msg += "\n\t".join(self.frameworks)
+        msg += "\nSysLibs:\n\t"
+        msg += "\n\t".join(self.sys_libs)
+        return msg
+
+
+def get_binary_dependencies(binary):
+    args = ["otool", "-L", binary]
+    ret = subprocess.check_output(args)
+    otool_libs = ret.decode().split("\n")
+    path = otool_libs.pop(0)[:-1] # first one is the library path
+    libname = os.path.basename(path)
+
+    frameworks = []
+    sys_libs = []
+    libs = []
+
+    # also add library itself
+    for lib in otool_libs + [binary]:
+        # e.g.
+        # \t@executable_path/lib/libqgis_app.3.3.0.dylib (compatibility version 3.3.0, current version 3.3.0)
+        lib = lib.strip()
+        lib_parts = lib.split(" (")
+        lib_path = lib_parts[0]
+
+        if lib_path.startswith("/usr/lib/") or lib_path.startswith("/System/Library/"):
+            sys_libs.append(lib_path)
+            # current/lib and bin is for some reason Python has some bundled libs/exes in framewoek
+            # plugins is for dynamically loaded plugins in frameworks (e.g. Qt modules)
+        elif (".framework" in lib_path) and ("/plugins/" not in lib_path) and ("/Current/lib/" not in lib_path) and ("/Current/bin/" not in lib_path):
+            frameworks.append(lib_path)
+        elif [".dylib", ".so"] in lib_path:
+            libs.append(lib_path)
+        else: # executables
+            pass
+
+    return BinaryDependencies(libname, path, frameworks, sys_libs, libs)
+
+
