@@ -24,6 +24,16 @@ class BinaryDependencies:
         return msg
 
 
+def is_omach_file(binary):
+    args = ["otool", "-L", binary]
+    try:
+        ret = subprocess.check_output(args)
+    except:
+        return False
+
+    return "is not an object file" not in ret
+
+
 def get_binary_dependencies(binary):
     args = ["otool", "-L", binary]
     ret = subprocess.check_output(args)

@@ -5,17 +5,17 @@ import os
 
 
 def framework_name(framework):
-    # references Version/X
-    baseFrameworkDir = os.path.join(framework, os.pardir, os.pardir, os.pardir)
-    baseFrameworkDir = os.path.abspath(baseFrameworkDir)
-    if not baseFrameworkDir.endswith(".framework"):
-        # references current
-        baseFrameworkDir = os.path.join(framework, os.pardir)
-        baseFrameworkDir = os.path.abspath(baseFrameworkDir)
-        if not baseFrameworkDir.endswith(".framework"):
-            raise Exception("Wrong framework directory structure!" + framework)
+    path = framework
+    while path:
+        path = os.path.abspath(path)
+        if path.endswith(".framework"):
+            break
+        path = os.path.join(path, os.pardir)
 
-    frameworkName = os.path.basename(baseFrameworkDir)
+    if not path:
+        raise Exception("Wrong framework directory structure!" + framework)
+
+    frameworkName = os.path.basename(path)
     frameworkName = frameworkName.replace(".framework", "")
 
-    return frameworkName
+    return frameworkName, path
