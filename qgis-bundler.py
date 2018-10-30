@@ -2,16 +2,12 @@
 # GNU General Public License 2 any later version
 
 import argparse
-import shutil
-import os
 import glob
-import subprocess
 
 import qgisBundlerTools.otool as otool
 import qgisBundlerTools.install_name_tool as install_name_tool
 import qgisBundlerTools.utils as utils
 from steps import *
-
 
 parser = argparse.ArgumentParser(description='Create QGIS Application installer for MacOS')
 
@@ -34,6 +30,7 @@ parser.add_argument('--start_step',
                     required=False,
                     default=0)
 
+verbose = False
 
 args = parser.parse_args()
 
@@ -57,18 +54,27 @@ if not os.path.exists(os.path.join(args.qgis_install_tree, "QGIS.app")):
     raise QGISBundlerError(args.qgis_install_tree + " does not contain QGIS.app")
 
 
-qgisApp = os.path.realpath(os.path.join(args.output_directory, "QGIS.app"))
-contentsDir = os.path.join(qgisApp, "Contents")
-macosDir = os.path.join(contentsDir, "MacOS")
-frameworksDir = os.path.join(contentsDir, "Frameworks")
-libDir = os.path.join(macosDir, "lib")
-qgisExe = os.path.join(macosDir, "QGIS")
-pluginsDir = os.path.join(contentsDir, "PlugIns")
-qgisPluginsDir = os.path.join(pluginsDir, "qgis")
-pythonDir = os.path.join(contentsDir, "Resources", "python")
+class Paths:
+    def __init__(self, args):
+        # original destinations
+        self.pyqtHostDir = args.pyqt
+        self.pythonHost = args.python
+        self.pysitepackages = os.path.join(os.path.dirname(self.pythonHost), "lib", "python3.7", "site-packages")
 
-# step8(qgisApp, qgisExe, macosDir)
-# exit(1)
+        # new bundle destinations
+        self.qgisApp = os.path.realpath(os.path.join(args.output_directory, "QGIS.app"))
+        self.contentsDir = os.path.join(self.qgisApp, "Contents")
+        self.macosDir = os.path.join(self.contentsDir, "MacOS")
+        self.frameworksDir = os.path.join(self.contentsDir, "Frameworks")
+        self.libDir = os.path.join(self.macosDir, "lib")
+        self.qgisExe = os.path.join(self.macosDir, "QGIS")
+        self.pluginsDir = os.path.join(self.contentsDir, "PlugIns")
+        self.qgisPluginsDir = os.path.join(self.pluginsDir, "qgis")
+        self.pythonDir = os.path.join(self.contentsDir, "Resources", "python")
+
+
+cp = utils.CopyUtils(os.path.realpath(args.output_directory))
+pa = Paths(args)
 
 print(100*"*")
 print("STEP 0: Copy QGIS and independent folders to build folder")
@@ -76,27 +82,61 @@ print(100*"*")
 
 print ("Cleaning: " + args.output_directory)
 if os.path.exists(args.output_directory):
-    shutil.rmtree(args.output_directory)
+    cp.rmtree(args.output_directory)
     if os.path.exists(args.output_directory + "/.DS_Store"):
-        os.remove(args.output_directory + "/.DS_Store")
+        cp.remove(args.output_directory + "/.DS_Store")
 else:
     os.makedirs(args.output_directory)
 
 print("Copying " + args.qgis_install_tree)
-shutil.copytree(args.qgis_install_tree, args.output_directory, symlinks=True)
-if not os.path.exists(qgisApp):
-    raise QGISBundlerError(qgisExe + " does not exists")
+cp.copytree(args.qgis_install_tree, args.output_directory, symlinks=True)
+if not os.path.exists(pa.qgisApp):
+    raise QGISBundlerError(pa.qgisExe + " does not exists")
+
+print("Append Python site-packages")
+# some packages (numpy, matplotlib and psycopg2) depends on them, but they are not
+# system libraries nor in /usr/local/lib folder (cellar)
+# extraLibsNotInSystem = ["libopenblasp-r0.3.0.dev.dylib"]
+extraLibsNotInSystem = []
+
+for item in os.listdir(pa.pysitepackages):
+    s = os.path.join(pa.pysitepackages, item)
+    d = os.path.join(pa.pythonDir, item)
+    if os.path.exists(d):
+        print("Skipped " + d )
+        continue
+    else:
+        print(" Copied " + d )
+
+    if os.path.isdir(s):
+        # hard copy - no symlinks
+        cp.copytree(s, d, False)
+
+        if os.path.exists(d + "/.dylibs"):
+            # for extraLib in extraLibsNotInSystem:
+            #    if os.path.exists(d + "/.dylibs/" + extraLib):
+            #        cp.copy(d + "/.dylibs/" + extraLib, libDir + "/" + extraLib)
+            #
+            print("Removing extra " + d + "/.dylibs")
+            cp.rmtree(d + "/.dylibs")
+            # raise QGISBundlerError("invalid directory")
+    else:
+        cp.copy(s, d)
+
+subprocess.call(['chmod', '-R', '+w', pa.pluginsDir])
 
 print("Copying PyQt " + pyqtHostDir)
-shutil.copytree(pyqtHostDir, pythonDir + "/PyQt5", symlinks=True)
-subprocess.call(['chmod', '-R', '+w', pythonDir + "/PyQt5"])
+if not os.path.exists(pa.pythonDir + "/PyQt5/Qt.so"):
+    raise QGISBundlerError("Inconsistent python with pyqt5, should be copied in previous step")
 pyqtpluginfile = os.path.join(pyqtHostDir, os.pardir, os.pardir, os.pardir, os.pardir, "share", "pyqt", "plugins")
-shutil.copytree(pyqtpluginfile, pluginsDir + "/PyQt5" )
-subprocess.call(['chmod', '-R', '+w', pluginsDir + "/PyQt5"])
+cp.copytree(pyqtpluginfile, pa.pluginsDir + "/PyQt5", True)
+subprocess.call(['chmod', '-R', '+w', pa.pluginsDir + "/PyQt5"])
 
-pyqttest = os.path.join(pythonDir, "PyQt5/Qt.so")
-if not os.path.exists(pyqttest):
-    raise QGISBundlerError(pyqttest + " does not exists")
+
+# print("Workarounds ")
+# WORKAROUNDS, WHY this is not picked
+# cp.copy("/usr/local/opt/openblas/lib/libopenblas_haswellp-r0.3.3.dylib", pa.libDir + "/libopenblas_haswellp-r0.3.3.dylib")
+# subprocess.call(['chmod', '+w', pa.libDir + "/libopenblas_haswellp-r0.3.3.dylib"])
 
 print(100*"*")
 print("STEP 1: Analyze the libraries we need to bundle")
@@ -104,7 +144,7 @@ print(100*"*")
 
 # Find QT
 qtDir = None
-for framework in otool.get_binary_dependencies(qgisExe).frameworks:
+for framework in otool.get_binary_dependencies(pa, pa.qgisExe).frameworks:
     if "lib/QtCore.framework" in framework:
         path = os.path.realpath(framework)
         qtDir = path.split("/lib/")[0]
@@ -115,7 +155,7 @@ print("Found QT: " + qtDir)
 
 # Find QCA dir
 qcaDir = None
-for framework in otool.get_binary_dependencies(qgisExe).frameworks:
+for framework in otool.get_binary_dependencies(pa, pa.qgisExe).frameworks:
     if "lib/qca" in framework:
         path = os.path.realpath(framework)
         qcaDir = path.split("/lib/")[0]
@@ -134,16 +174,17 @@ done_queue = set()
 
 # initial items:
 # 1. qgis executable
-deps_queue.add(qgisExe)
-# 2. dynamic qgis providers
-deps_queue |= set(glob.glob(qgisPluginsDir + "/*.so"))
+deps_queue.add(pa.qgisExe)
+# 2. all so and dylibs in bundle folder
+for root, dirs, files in os.walk(pa.qgisApp):
+    for file in files:
+        filepath = os.path.join(root, file)
+        filename, file_extension = os.path.splitext(filepath)
+        if file_extension in [".dylib", ".so"]:
+            deps_queue.add(filepath)
 # 3. python libraries
-deps_queue |= set(glob.glob(pythonDir + "/*/*.so"))
-deps_queue |= set(glob.glob(pythonDir + "/*/*.dylib"))
 deps_queue |= set(glob.glob(os.path.dirname(args.python) + "/lib/python3.7/lib-dynload/*.so"))
-
 # 4. dynamic qt providers
-# TODO do we need all?
 deps_queue |= set(glob.glob(qtDir + "/plugins/*/*.dylib"))
 deps_queue |= set(glob.glob(qcaDir + "/lib/qt5/plugins/*/*.dylib"))
 # 5. python interpreter
@@ -153,10 +194,11 @@ while deps_queue:
     lib = deps_queue.pop()
     # patch @rpath, @loader_path and @executable_path
     lib_fixed = lib.replace("@rpath", args.rpath_hint)
-    lib_fixed = lib_fixed.replace("@executable_path", macosDir)
-    lib_fixed = lib_fixed.replace("@loader_path/../../../MacOS/..", contentsDir)
-    lib_fixed = lib_fixed.replace("@loader_path/../../..", frameworksDir)
-    lib_fixed = lib_fixed.replace("@loader_path/../..", contentsDir)
+    lib_fixed = lib_fixed.replace("@executable_path", pa.macosDir)
+    lib_fixed = utils.resolve_libpath(pa, lib_fixed)
+
+    if "@loader_path" in lib_fixed:
+        raise QGISBundlerError("Ups, broken otool.py? this should be resolved there " + lib_fixed)
 
     if lib_fixed in done_queue:
         continue
@@ -166,12 +208,13 @@ while deps_queue:
 
     extraInfo = "" if lib == lib_fixed else "(" + lib_fixed + ")"
     print("Analyzing " + lib + extraInfo)
-    done_queue.add(lib_fixed)
 
     if not os.path.exists(lib_fixed):
-        raise QGISBundlerError("Library missing!")
+        raise QGISBundlerError("Library missing! " + lib_fixed)
 
-    binaryDependencies = otool.get_binary_dependencies(lib_fixed)
+    done_queue.add(lib_fixed)
+
+    binaryDependencies = otool.get_binary_dependencies(pa, lib_fixed)
 
     sys_libs |= set(binaryDependencies.sys_libs)
     libs |= set(binaryDependencies.libs)
@@ -203,30 +246,37 @@ for lib in libs:
     if "/plugins/" in lib:
         pluginFolder = lib.split("/plugins/")[1]
         pluginFolder = pluginFolder.split("/")[0]
-        target_dir = pluginsDir + "/" + pluginFolder
+        target_dir = pa.pluginsDir + "/" + pluginFolder
     else:
-        target_dir = libDir
+        target_dir = pa.libDir
 
-    print("Bundling " + lib + " to " + target_dir)
-    try:
-        # only copy if not already in the bundle
-        # frameworks are copied elsewhere
-        if (qgisApp not in lib) and (".framework" not in lib):
-            if not os.path.exists(target_dir):
-                os.makedirs(target_dir)
-            shutil.copy2(lib, target_dir)
+    # only copy if not already in the bundle
+    # frameworks are copied elsewhere
+    if (pa.qgisApp not in lib) and (".framework" not in lib):
+        print("Bundling " + lib + " to " + target_dir)
+        if not os.path.exists(target_dir):
+            os.makedirs(target_dir)
+        cp.copy(lib, target_dir)
 
         new_file = os.path.join(target_dir, os.path.basename(lib))
         subprocess.call(['chmod', '+w', new_file])
-    except:
-        print("Warning: " + lib + "? double copy TODO ?")
+
+    # link to libs folder if the library is somewhere around the bundle dir
+    if (pa.qgisApp in lib) and (pa.libDir not in lib) :
+        link = pa.libDir + "/" + os.path.basename(lib)
+        if not os.path.exists(link):
+            cp.symlink(os.path.relpath(lib, pa.libDir),
+                       link)
+            link = os.path.realpath(link)
+            if not os.path.exists(link):
+                raise QGISBundlerError("Ups, wrongly relinked! " + lib)
 
     # find out if there are no python3.7 plugins in the dir
     plugLibDir = os.path.join(os.path.dirname(lib), "python3.7", "site-packages", "PyQt5")
     if os.path.exists(plugLibDir):
         for file in glob.glob(plugLibDir + "/*.so"):
-            destFile = pluginsDir + "/PyQt5/" + os.path.basename(file)
-            shutil.copy2(file, destFile )
+            destFile = pa.pluginsDir + "/PyQt5/" + os.path.basename(file)
+            cp.copy(file, destFile )
             subprocess.call(['chmod', '+w', destFile])
             print("Adding extra python plugin " + file)
 
@@ -234,29 +284,34 @@ print(100*"*")
 print("STEP 3: Copy frameworks to bundle")
 print(100*"*")
 for framework in frameworks:
-    # We assume that all libraries with @ are already bundled in QGIS.app
-    # TODO in conda they use rpath, so this is not true
-    if not framework or "@" in framework:
+    if not framework:
         continue
 
     frameworkName, baseFrameworkDir = utils.framework_name(framework)
-    print("Bundling " + frameworkName + " to " + frameworksDir)
-    try:
-        new_framework = os.path.join(frameworksDir, frameworkName + ".framework")
-        # only copy if not already in the bundle
-        if qgisApp not in baseFrameworkDir:
-            shutil.copytree(baseFrameworkDir, new_framework, symlinks=True)
+    new_framework = os.path.join(pa.frameworksDir, frameworkName + ".framework")
+
+    # only copy if not already in the bundle
+    if os.path.exists(new_framework):
+        print("Skipping " + new_framework + " already exists")
+        continue
+
+    # do not copy system libs
+    if pa.qgisApp not in baseFrameworkDir:
+        print("Bundling " + frameworkName + " to " + pa.frameworksDir)
+        cp.copytree(baseFrameworkDir, new_framework, symlinks=True)
         subprocess.call(['chmod', '-R', '+w', new_framework])
-    except:
-        print("Warning: " + frameworkName + "? double copy TODO ?")
+
 
 libPatchedPath = "@executable_path/lib"
 relLibPathToFramework = "@executable_path/../Frameworks"
 
+# Now everything should be here
+subprocess.call(['chmod', '-R', '+w', pa.qgisApp])
+
 print(100*"*")
 print("STEP 4: Fix frameworks linker paths")
 print(100*"*")
-frameworks = glob.glob(frameworksDir + "/*.framework")
+frameworks = glob.glob(pa.frameworksDir + "/*.framework")
 for framework in frameworks:
     print("Patching " + framework)
     frameworkName = os.path.basename(framework)
@@ -269,9 +324,9 @@ for framework in frameworks:
         verFramework = os.path.join(version, frameworkName)
         if os.path.exists(verFramework):
             if not os.path.islink(verFramework):
-                binaryDependencies = otool.get_binary_dependencies(verFramework)
+                binaryDependencies = otool.get_binary_dependencies(pa, verFramework)
                 subprocess.call(['chmod', '+x', verFramework])
-                install_name_tool.fix_lib(verFramework, binaryDependencies, contentsDir, libPatchedPath, relLibPathToFramework)
+                install_name_tool.fix_lib(verFramework, binaryDependencies, pa.contentsDir, libPatchedPath, relLibPathToFramework)
 
             if version is not "Current":
                 last_version = os.path.basename(version)
@@ -282,8 +337,8 @@ for framework in frameworks:
     currentFramework = os.path.join(framework, frameworkName)
     if os.path.exists(currentFramework):
         if not os.path.islink(verFramework):
-            binaryDependencies = otool.get_binary_dependencies(currentFramework)
-            install_name_tool.fix_lib(currentFramework, binaryDependencies, contentsDir, libPatchedPath, relLibPathToFramework)
+            binaryDependencies = otool.get_binary_dependencies(pa, currentFramework)
+            install_name_tool.fix_lib(currentFramework, binaryDependencies, pa.contentsDir, libPatchedPath, relLibPathToFramework)
             subprocess.call(['chmod', '+x', currentFramework])
     else:
         if last_version is None:
@@ -297,41 +352,68 @@ for framework in frameworks:
     # patch helpers (?)
     helper = os.path.join(framework, "Helpers", "QtWebEngineProcess.app" , "Contents", "MacOS", "QtWebEngineProcess")
     if os.path.exists(helper):
-        binaryDependencies = otool.get_binary_dependencies(helper)
-        install_name_tool.fix_lib(helper, binaryDependencies, contentsDir, libPatchedPath, relLibPathToFramework)
+        binaryDependencies = otool.get_binary_dependencies(pa, helper)
+        install_name_tool.fix_lib(helper, binaryDependencies, pa.contentsDir, libPatchedPath, relLibPathToFramework)
         subprocess.call(['chmod', '+x', helper])
 
     # TODO generic?
     helper = os.path.join(framework, "Versions/Current/Resources/Python.app/Contents/MacOS/Python")
     if os.path.exists(helper):
-        binaryDependencies = otool.get_binary_dependencies(helper)
-        install_name_tool.fix_lib(helper, binaryDependencies, contentsDir, libPatchedPath, relLibPathToFramework)
+        binaryDependencies = otool.get_binary_dependencies(pa, helper)
+        install_name_tool.fix_lib(helper, binaryDependencies, pa.contentsDir, libPatchedPath, relLibPathToFramework)
         subprocess.call(['chmod', '+x', helper])
 
     helper = os.path.join(framework, "Versions/Current/lib/python3.7/lib-dynload")
     if os.path.exists(helper):
         for bin in glob.glob(helper + "/*.so"):
-            binaryDependencies = otool.get_binary_dependencies(bin)
-            install_name_tool.fix_lib(bin, binaryDependencies, contentsDir, libPatchedPath, relLibPathToFramework)
+            binaryDependencies = otool.get_binary_dependencies(pa, bin)
+            install_name_tool.fix_lib(bin, binaryDependencies, pa.contentsDir, libPatchedPath, relLibPathToFramework)
             subprocess.call(['chmod', '+x', bin])
+
+            link = pa.libDir + "/" + os.path.basename(bin)
+            cp.symlink(os.path.relpath(bin, pa.libDir),
+                       link)
+            link = os.path.realpath(link)
+            if not os.path.exists(link):
+                raise QGISBundlerError("Ups, wrongly relinked! " + bin)
+
+    if "Python" in framework:
+        filepath = os.path.join(framework, "Versions/Current/lib/python3.7/site-packages" )
+        cp.unlink(filepath)
+        cp.symlink("../../../../../../Resources/python", filepath)
+        filepath = os.path.realpath(filepath)
+        if  not os.path.exists(filepath):
+            raise QGISBundlerError("Ups, wrongly relinked! " + "site-packages")
+
 
 print(100*"*")
 print("STEP 5: Fix libraries/plugins linker paths")
 print(100*"*")
-libs = glob.glob(libDir + "/*.dylib")
-libs += glob.glob(qgisPluginsDir + "/*.so")
-libs += glob.glob(pluginsDir + "/*/*.dylib")
-libs += glob.glob(pluginsDir + "/*/*.so")
-libs += glob.glob(pythonDir + "/*/*.so")
-libs += glob.glob(pythonDir + "/*/*.dylib")
+libs = []
+for root, dirs, files in os.walk(pa.qgisApp):
+    for file in files:
+        filepath = os.path.join(root, file)
+        if ".framework" not in filepath:
+            filename, file_extension = os.path.splitext(filepath)
+            if file_extension in [".dylib", ".so"]:
+                libs += [filepath]
+
+# libs = glob.glob(pa.libDir + "/*.dylib")
+# libs += glob.glob(pa.qgisPluginsDir + "/*.so")
+# libs += glob.glob(pa.pluginsDir + "/*/*.dylib")
+# libs += glob.glob(pa.pluginsDir + "/*/*/*.so")
+# libs += glob.glob(pa.pluginsDir + "/*/*.so")
+# libs += glob.glob(pa.pluginsDir + "/.so")
+# libs += glob.glob(pa.pythonDir + "/*/*.so")
+# libs += glob.glob(pa.pythonDir + "/*/*.dylib")
 
 # note there are some libs here: /Python.framework/Versions/Current/lib/*.dylib but
 # those are just links to Current/Python
 for lib in libs:
     if not os.path.islink(lib):
         print("Patching " + lib)
-        binaryDependencies = otool.get_binary_dependencies(lib)
-        install_name_tool.fix_lib(lib, binaryDependencies, contentsDir, libPatchedPath, relLibPathToFramework)
+        binaryDependencies = otool.get_binary_dependencies(pa, lib)
+        install_name_tool.fix_lib(lib, binaryDependencies, pa.contentsDir, libPatchedPath, relLibPathToFramework)
         subprocess.call(['chmod', '+x', lib])
     else:
         print("Skipping link " + lib)
@@ -340,16 +422,16 @@ print(100*"*")
 print("STEP 6: Fix executables linker paths")
 print(100*"*")
 exes = set()
-exes.add(qgisExe)
-exes.add(macosDir + "/lib/qgis/crssync")
-exes |= set(glob.glob(frameworksDir + "/Python.framework/Versions/Current/bin/*"))
+exes.add(pa.qgisExe)
+exes.add(pa.macosDir + "/lib/qgis/crssync")
+exes |= set(glob.glob(pa.frameworksDir + "/Python.framework/Versions/Current/bin/*"))
 
 for exe in exes:
     if not os.path.islink(exe):
         print("Patching " + exe)
-        binaryDependencies = otool.get_binary_dependencies(exe)
+        binaryDependencies = otool.get_binary_dependencies(pa.qgisApp, exe)
         try:
-            install_name_tool.fix_lib(exe, binaryDependencies, contentsDir, libPatchedPath, relLibPathToFramework)
+            install_name_tool.fix_lib(exe, binaryDependencies, pa.contentsDir, libPatchedPath, relLibPathToFramework)
         except subprocess.CalledProcessError:
             # Python.framework/Versions/Current/bin/idle3 is not a Mach-O file ??
             pass
@@ -363,7 +445,7 @@ print(100*"*")
 # It looks like that QCA compiled with QCA_PLUGIN_PATH CMake define
 # adds this by default to QT_PLUGIN_PATH. Overwrite this
 # in resulting binary library
-qcaLib = os.path.join(frameworksDir, "qca-qt5.framework", "qca-qt5")
+qcaLib = os.path.join(pa.frameworksDir, "qca-qt5.framework", "qca-qt5")
 f = open(qcaLib, 'rb+')
 data = f.read()
 data=data.replace(bytes(qcaDir + "/lib/qt5/plugins"), bytes(qcaDir + "/xxx/xxx/plugins"))
@@ -377,14 +459,17 @@ if qcaLib in output:
 
 
 
-step8(qgisApp, qgisExe, macosDir)
+step8(pa)
 
 
 print(100*"*")
 print("STEP 9: Patch env")
 print(100*"*")
 
-# export PATH=/usr/local/opt/qt/bin:/usr/local/opt/sip/bin:/usr/local/opt/pyqt/bin:/usr/local/opt/qca/bin:/usr/local/opt/gdal2-python/bin:/usr/local/opt/gdal2/bin:/usr/local/opt/qgis3/libexec/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:$PATH
+# export PATH=/usr/local/opt/qt/bin:/usr/local/opt/sip/bin:/usr/local/opt/pyqt/bin:/usr/local/opt/qca/bin:
+# /usr/local/opt/gdal2-python/bin:/usr/local/opt/gdal2/bin:/usr/local/opt/qgis3/libexec/vendor/bin:
+# /usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:$PATH
+
 # export PYTHONPATH=/usr/local/opt/gdal2-python/lib/python3.7/site-packages:/usr/local/opt/qgis3/lib/python3.7/site-packages:/usr/local/opt/qgis3/libexec/vendor/lib/python3.7/site-packages:/usr/local/Cellar/qgis3/3.2.3/libexec/vendor/lib/python3.7/site-packages:$PYTHONPATH
 # export GDAL_DRIVER_PATH=/usr/local/lib/gdalplugins
 # export GDAL_DATA=/usr/local/opt/gdal2/share/gdal
@@ -399,7 +484,7 @@ print(100*"*")
 pkgFile = args.output_directory + "/qgis.pkg"
 args = ["productbuild",
         "--identifier", "co.uk.lutraconsulting.qgis",
-        "--component", qgisApp,
+        "--component", pa.qgisApp,
         "/Applications",
         pkgFile
         ]

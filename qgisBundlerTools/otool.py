@@ -34,7 +34,7 @@ def is_omach_file(binary):
     return "is not an object file" not in ret
 
 
-def get_binary_dependencies(binary):
+def get_binary_dependencies(pa, binary):
     args = ["otool", "-L", binary]
     ret = subprocess.check_output(args)
     otool_libs = ret.decode().split("\n")
@@ -52,6 +52,11 @@ def get_binary_dependencies(binary):
         lib = lib.strip()
         lib_parts = lib.split(" (")
         lib_path = lib_parts[0]
+
+        # TODO hmm, very suspicions!
+        # looks like numpy references different version that is in deps?
+        if "libopenblasp-r0.3.3.dylib" in lib_path:
+            lib_path = lib_path.replace("libopenblasp-r0.3.3.dylib", "libopenblas_haswellp-r0.3.3.dylib")
 
         if lib_path.startswith("/usr/lib/") or lib_path.startswith("/System/Library/"):
             sys_libs.append(lib_path)
