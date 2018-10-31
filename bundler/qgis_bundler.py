@@ -466,28 +466,4 @@ print(100*"*")
 print("STEP 9: Patch env")
 print(100*"*")
 
-# export PATH=/usr/local/opt/qt/bin:/usr/local/opt/sip/bin:/usr/local/opt/pyqt/bin:/usr/local/opt/qca/bin:
-# /usr/local/opt/gdal2-python/bin:/usr/local/opt/gdal2/bin:/usr/local/opt/qgis3/libexec/vendor/bin:
-# /usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:$PATH
-
-# export PYTHONPATH=/usr/local/opt/gdal2-python/lib/python3.7/site-packages:/usr/local/opt/qgis3/lib/python3.7/site-packages:/usr/local/opt/qgis3/libexec/vendor/lib/python3.7/site-packages:/usr/local/Cellar/qgis3/3.2.3/libexec/vendor/lib/python3.7/site-packages:$PYTHONPATH
-# export GDAL_DRIVER_PATH=/usr/local/lib/gdalplugins
-# export GDAL_DATA=/usr/local/opt/gdal2/share/gdal
-# export QT_PLUGIN_PATH=/usr/local/opt/qgis3/lib/qt/plugins:/usr/local/opt/qt/plugins:/usr/local/lib/qt/plugins
-# export GRASS_PREFIX=/usr/local/opt/grass7/grass-base
-# export OSG_LIBRARY_PATH=/usr/local/lib/osgPlugins-3.6.2
-# /usr/local/opt/qgis3/QGIS.app/Contents/MacOS/QGIS
-
-print(100*"*")
-print("STEP 10: Create installer")
-print(100*"*")
-pkgFile = args.output_directory + "/qgis.pkg"
-args = ["productbuild",
-        "--identifier", "co.uk.lutraconsulting.qgis",
-        "--component", pa.qgisApp,
-        "/Applications",
-        pkgFile
-        ]
-subprocess.check_output(args)
-fsize = subprocess.check_output(["du", "-h", pkgFile])
-print("ALL DONE\n" + fsize)
+#TODO needed?
