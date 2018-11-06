@@ -1,5 +1,5 @@
 theme: jekyll-theme-minimal
 title: QGIS Downloads
-description: MacOS QGIS Package Download
-logo: qgis-icon-60x60.png
+description: Download QGIS
+logo: qgis-icon-512x512.png
 show_downloads: "true"

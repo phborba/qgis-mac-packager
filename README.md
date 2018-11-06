@@ -2,26 +2,16 @@
 
 Set of scripts to create MacOS standalone QGIS package (dmg)
 
-# Package details
+For package details, see [details page](https://lutraconsulting.github.io/qgis-mac-packager/)
 
-Supported MacOS El Capitan 10.11 and higher
+# Server Setup 
 
-Includes:
-- QGIS
-- Python 3.7
-- Qt
-- PyQt
-- GDAL
-
-# Developement 
-
-## Server 
-
-# Current server:
+we use http://maccloud.me Mini server for nightly builds
 
 - MacOS El Capitan 10.11.4
 - XCode 7.3.1
 - Command Line Tools 7.3.1
+- Homebrew 
 
 # Server common setup
 
@@ -63,15 +53,9 @@ brew install qgis3 --only-dependencies
 
 ## Building
 
-1. Install homebrew and follow steps on homebrew-osgeo4mac to install qgis3
+1. Install deps as described above
 2. Download QGIS git repository
-3. Build release version and install it to your local folder
-4. Run `python qgis-bundler.py` with python3 and with some reasonable parameters (see `run_bundler.sh`)
-5. This will create .pkg file with 
-
-
-Notes:
-
-- QGIS should be built with QGIS_MACAPP_BUNDLE=0
-- In principle it should work with conda deps, but not tested
-- This can be probably a replacement of envisioned QGIS_MACAPP_BUNDLE=3 level (qgis/QGIS/mac/*.cmake scripts)
+3. Build release version with QGIS_MACAPP_BUNDLE=0 and install it to your local folder
+4. Run `python3 bundler/qgis-bundler.py` to get `QGIS.app` bundle
+5. Run `python3 packager/qgis-packager.py` to get `qgis.dmg` file
+5. Run `python3 uploader/qgis-uploader.py` to upload to dropbox
