@@ -9,7 +9,7 @@ import qgisBundlerTools.install_name_tool as install_name_tool
 import qgisBundlerTools.utils as utils
 from steps import *
 
-parser = argparse.ArgumentParser(description='Create QGIS Application installer for MacOS')
+parser = argparse.ArgumentParser(description='Create QGIS Application bundle')
 
 parser.add_argument('--qgis_install_tree',
                     required=True,

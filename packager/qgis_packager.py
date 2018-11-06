@@ -13,11 +13,12 @@ class QGISPackageError(Exception):
     pass
 
 
-parser = argparse.ArgumentParser(description='Create QGIS Application installer for MacOS')
+parser = argparse.ArgumentParser(description='Package QGIS Application')
 
 parser.add_argument('--output_directory',
                     required=True,
                     help='output directory with resulting QGIS.app files')
+parser.add_argument('--timestamp', required=True)
 
 pkg = False
 dmg = True
@@ -35,7 +36,7 @@ if pkg:
     print(100*"*")
     print("STEP: Create pkg installer")
     print(100*"*")
-    pkgFile = args.output_directory + "/qgis.pkg"
+    pkgFile = args.output_directory + "/qgis_" + args.timestamp +".pkg"
     if os.path.exists(pkgFile):
         print("Removing old pkg")
         os.remove(pkgFile)
@@ -54,7 +55,7 @@ if dmg:
     print(100*"*")
     print("STEP: Create dmg image")
     print(100*"*")
-    dmgFile = args.output_directory + "/qgis.dmg"
+    dmgFile = args.output_directory + "/qgis_" + args.timestamp +".dmg"
     if os.path.exists(dmgFile):
         print("Removing old dmg")
         os.remove(dmgFile)
