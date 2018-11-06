@@ -8,9 +8,8 @@ For package details, see [details page](https://lutraconsulting.github.io/qgis-m
 
 we use http://maccloud.me Mini server for nightly builds
 
-- MacOS El Capitan 10.11.4
-- XCode 7.3.1
-- Command Line Tools 7.3.1
+- MacOS El Capitan 10.11.6
+- XCode 8.2
 - Homebrew 
 
 # Server common setup
@@ -46,11 +45,6 @@ brew cask install xquartz
 brew install qgis3 --only-dependencies 
 ```
 
-# Upload to Dropbox
-
-1. Create App with a folder to upload a files, get a token
-2. Create File ~/Projects/dropbox_token.txt and paste the token inside
-
 ## Building
 
 1. Install deps as described above
@@ -59,3 +53,8 @@ brew install qgis3 --only-dependencies
 4. Run `python3 bundler/qgis-bundler.py` to get `QGIS.app` bundle
 5. Run `python3 packager/qgis-packager.py` to get `qgis.dmg` file
 5. Run `python3 uploader/qgis-uploader.py` to upload to dropbox
+
+# Upload to Dropbox
+
+1. Create App with a folder to upload a files, get a token
+2. Create File ~/Projects/dropbox_token.txt and paste the token inside

@@ -5,7 +5,6 @@ Minimum supported version is 10.14.1
 
 Package was build with XCode  10.1 (10B61) and following Homebrew's packages
 
-- bash-completion 1.3_3
 - bison 3.1
 - boost 1.67.0_1
 - cairo 1.16.0
@@ -25,7 +24,6 @@ Package was build with XCode  10.1 (10B61) and following Homebrew's packages
 - freexl 1.0.5_1
 - fribidi 1.0.5
 - gcc 8.2.0
-- gdal 2.3.1_2
 - gdal2 2.3.2
 - gdal2-python 2.3.2
 - gdbm 1.18.1
@@ -87,7 +85,6 @@ Package was build with XCode  10.1 (10B61) and following Homebrew's packages
 - pyqt5-webkit 5.10.1
 - pyspatialite 3.0.1_3
 - python 3.7.0
-- python@2 2.7.15_1
 - qca 2.1.3_2
 - qgis3 3.4.0
 - qjson 0.9.0_1

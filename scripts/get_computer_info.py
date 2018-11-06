@@ -16,7 +16,7 @@ def xcode():
     return "Unknown"
 
 def homebrew_libs():
-    exclude = ["python@2", "bash-completion"]
+    exclude = ["python@2", "bash-completion", "gdal"]
     libs = []
 
     output = subprocess.check_output(["brew", "--prefix"], encoding='UTF-8')
@@ -33,9 +33,13 @@ def homebrew_libs():
         if len(versions) != 1:
             raise Exception("Multiple versions installed for " + bottle_dir)
 
+        excluded = False
         for e in exclude:
-            if e in bottle:
-                continue
+            if bottle.endswith(e):
+                excluded = True
+                break
+        if excluded:
+            continue
 
         libs += ["- " + bottle + " " + str(versions[0])]
 
