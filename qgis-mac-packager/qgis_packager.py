@@ -27,7 +27,7 @@ args = parser.parse_args()
 print("BUNDLE DIRECTORY: " + args.bundle_directory)
 print("OUTNAME: " + args.outname)
 
-qgisApp = os.path.join(args.output_directory, "QGIS.app")
+qgisApp = os.path.join(args.bundle_directory, "QGIS.app")
 
 if not os.path.exists(qgisApp):
     raise QGISPackageError(qgisApp + " does not exists")
@@ -84,5 +84,5 @@ if dmg:
     #        "-v",
     #        dmgFile]
 
-    fsize = subprocess.check_output(["du", "-h", dmgFile])
+    fsize = subprocess.check_output(["du", "-h", dmgFile], encoding='UTF-8')
     print("ALL DONE\n" + fsize)

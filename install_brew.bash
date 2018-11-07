@@ -21,4 +21,5 @@ pip3 install dropbox
 pip3 install GitPython
 brew cask install xquartz
 brew install grass7
+brew install gsl
 brew install qgis3 --only-dependencies

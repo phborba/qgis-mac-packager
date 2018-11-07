@@ -72,7 +72,7 @@ class Paths:
         self.pluginsDir = os.path.join(self.contentsDir, "PlugIns")
         self.qgisPluginsDir = os.path.join(self.pluginsDir, "qgis")
         self.pythonDir = os.path.join(self.contentsDir, "Resources", "python")
-
+        self.binDir = os.path.join(self.macosDir, "bin")
 
 cp = utils.CopyUtils(os.path.realpath(args.output_directory))
 pa = Paths(args)
@@ -86,13 +86,15 @@ if os.path.exists(args.output_directory):
     cp.rmtree(args.output_directory)
     if os.path.exists(args.output_directory + "/.DS_Store"):
         cp.remove(args.output_directory + "/.DS_Store")
-else:
-    os.makedirs(args.output_directory)
 
 print("Copying " + args.qgis_install_tree)
 cp.copytree(args.qgis_install_tree, args.output_directory, symlinks=True)
 if not os.path.exists(pa.qgisApp):
     raise QGISBundlerError(pa.qgisExe + " does not exists")
+
+print("Remove unneeded qgis_bench.app")
+if os.path.exists(pa.binDir + "/qgis_bench.app"):
+    cp.rmtree(pa.binDir + "/qgis_bench.app")
 
 print("Append Python site-packages")
 # some packages (numpy, matplotlib and psycopg2) depends on them, but they are not
