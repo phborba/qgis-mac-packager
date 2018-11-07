@@ -15,7 +15,7 @@ def step8(pa):
 
     print("Test qgis --help works")
     try:
-        output = subprocess.check_output([pa.qgisExe, "--help"], stderr=subprocess.STDOUT)
+        output = subprocess.check_output([pa.qgisExe, "--help"], stderr=subprocess.STDOUT, encoding='UTF-8')
     except subprocess.CalledProcessError as err:
         # for some reason it returns exit 1 even when it writes help
         output = err.output

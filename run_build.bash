@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # 2018 Peter Petrik (zilolv at gmail dot com)
 # GNU General Public License 2 any later version
 
@@ -11,7 +13,7 @@ if (( $# != 3 )); then
     echo "run_all build_dir git_tag release_name"
 fi
 
-BUILD_DIR=$DIR/build-$1
+BUILD_DIR=$1
 GIT=$2
 RELEASE=$3
 echo "Building & Packaging QGIS to $BUILD_DIR"

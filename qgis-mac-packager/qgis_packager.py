@@ -24,7 +24,8 @@ pkg = False
 dmg = True
 
 args = parser.parse_args()
-print("OUTPUT DIRECTORY: " + args.output_directory)
+print("BUNDLE DIRECTORY: " + args.bundle_directory)
+print("OUTNAME: " + args.outname)
 
 qgisApp = os.path.join(args.output_directory, "QGIS.app")
 

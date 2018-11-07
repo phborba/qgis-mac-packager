@@ -449,12 +449,12 @@ print(100*"*")
 qcaLib = os.path.join(pa.frameworksDir, "qca-qt5.framework", "qca-qt5")
 f = open(qcaLib, 'rb+')
 data = f.read()
-data=data.replace(bytes(qcaDir + "/lib/qt5/plugins"), bytes(qcaDir + "/xxx/xxx/plugins"))
+data=data.replace(bytes(qcaDir + "/lib/qt5/plugins", "utf-8"), bytes(qcaDir + "/xxx/xxx/plugins", "utf-8"))
 f.seek(0)
 f.write(data)
 f.close()
 
-output = subprocess.check_output(["strings", qcaLib])
+output = subprocess.check_output(["strings", qcaLib], encoding='UTF-8')
 if qcaLib in output:
     raise QGISBundlerError("Failed to patch " + qcaLib)
 

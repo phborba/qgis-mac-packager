@@ -106,7 +106,7 @@ for path in prefix_path.split(";"):
 
 args = ["cmake",
         "-DCMAKE_BUILD_TYPE=Release",
-        "-DCMAKE_INSTALL_PREFIX="+os.path.realpath(qgisDir),
+        "-DCMAKE_INSTALL_PREFIX="+os.path.realpath(installDir),
         "-DCMAKE_PREFIX_PATH="+prefix_path,
         "-DQGIS_MACAPP_BUNDLE=0",
         "-DWITH_3D=TRUE",
@@ -126,19 +126,6 @@ print("STEP 4: make on " + str(cores) + " cores")
 print(100*"*")
 os.chdir(buildDir)
 
-args = ["make" , "-j" + str(cores)]
+os.system("make -j"+str(cores) + " install")
 
-output = subprocess.check_output(args, encoding='UTF-8')
-print(output)
-
-print(100*"*")
-print("STEP 5: install " + installDir)
-print(100*"*")
-os.chdir(buildDir)
-
-args = ["make",
-        "install"
-       ]
-
-output = subprocess.check_output(args, encoding='UTF-8')
-print(output)
+print("build done")

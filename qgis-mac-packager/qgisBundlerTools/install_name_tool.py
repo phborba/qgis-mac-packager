@@ -11,20 +11,21 @@ def fix_lib(binary, depLibs, contentsPath, relLibPathToExe, relLibPathToFramewor
     p = binary.replace(contentsPath, "@executable_path/..")
     args = ["install_name_tool", "-id", p, binary]
     try:
-        subprocess.check_output(args)
+        subprocess.check_output(args, encoding='UTF-8')
     except:
         print("WARNING: " + binary)
 
     for lib in depLibs.libs:
         # WORKAROUND # TODO REMOVE ME
-        libworkaround = lib.replace("libopenblas_haswellp-r0.3.3.dylib", "libopenblasp-r0.3.3.dylib")
+        #libworkaround = lib.replace("libopenblas_haswellp-r0.3.3.dylib", "libopenblasp-r0.3.3.dylib")
+        libworkaround = lib
 
         args = ["install_name_tool",
                 "-change", libworkaround,
                 relLibPathToExe + "/" + os.path.basename(lib),
                 binary]
         try:
-            subprocess.check_output(args)
+            subprocess.check_output(args, encoding='UTF-8')
         except:
             print("WARNING: " + binary)
 
@@ -33,4 +34,4 @@ def fix_lib(binary, depLibs, contentsPath, relLibPathToExe, relLibPathToFramewor
         # Do not use versions lib, just the main one
         framework_path = relLibPathToFramework + "/" + frameworkName + ".framework/" + frameworkName
         args = ["install_name_tool", "-change", framework, framework_path, binary]
-        subprocess.check_output(args)
+        subprocess.check_output(args, encoding='UTF-8')
