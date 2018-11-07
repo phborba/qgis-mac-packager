@@ -22,4 +22,5 @@ pip3 install GitPython
 brew cask install xquartz
 brew install grass7
 brew install gsl
+brew install cmake
 brew install qgis3 --only-dependencies

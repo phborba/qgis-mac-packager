@@ -300,7 +300,7 @@ for framework in frameworks:
 
     # do not copy system libs
     if pa.qgisApp not in baseFrameworkDir:
-        print("Bundling " + frameworkName + " to " + pa.frameworksDir)
+        print("Bundling " + frameworkName + ": " + framework + "  to " + pa.frameworksDir)
         cp.copytree(baseFrameworkDir, new_framework, symlinks=True)
         subprocess.call(['chmod', '-R', '+w', new_framework])
 
