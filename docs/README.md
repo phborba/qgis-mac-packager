@@ -1,44 +1,46 @@
 # Package Details
-Package contains standalone QGIS installation.
+Package contains standalone QGIS installation, with bundled Python, Qt, GDAL and other dependencies.
 
-Minimum supported version is 10.14.1
+Please report any issues on [GitHub issue tracker](https://github.com/lutraconsulting/qgis-mac-packager/issues)
 
-Package was build with XCode  10.1 (10B61) and following Homebrew's packages
+Minimum supported MacOS version is 10.14
 
-- bison 3.1
+Package was build with XCode 10.1 (10B61) and following Homebrew's packages
+
+- bison 3.2
 - boost 1.67.0_1
 - cairo 1.16.0
-- ccache 3.5
 - cgal 4.13
-- cmake 3.12.3
 - conan 1.8.4
-- create-dmg 1.0.0.4
+- curl 7.62.0
 - cython 0.29
 - eigen 3.3.5
 - expat 2.2.6
 - fcgi 2.4.0
-- ffmpeg 4.0.2_1
+- fftw 3.3.8
 - flex 2.6.4
 - fontconfig 2.13.1
 - freetype 2.9.1
 - freexl 1.0.5_1
 - fribidi 1.0.5
 - gcc 8.2.0
-- gdal2 2.3.2
+- gdal2 2.3.2_1
 - gdal2-python 2.3.2
 - gdbm 1.18.1
 - geos 3.7.0
 - gettext 0.19.8.1
+- ghostscript 9.25
 - giflib 5.1.4_1
 - git 2.19.1
 - glib 2.58.1
-- glslang 6.2.2596
+- glslang 7.9.2888
 - gmp 6.1.2_2
+- gnu-sed 4.5
 - graphite2 1.3.12
-- gsl 2.5
+- grass7 7.4.2
 - gst-plugins-base 1.14.4
 - gstreamer 1.14.4
-- harfbuzz 2.0.2
+- harfbuzz 2.1.1
 - hdf5 1.10.4
 - hicolor-icon-theme 0.17
 - icu4c 62.1
@@ -46,7 +48,7 @@ Package was build with XCode  10.1 (10B61) and following Homebrew's packages
 - jpeg 9c
 - jpeg-turbo 2.0.0
 - json-c 0.13.1
-- lame 3.100
+- lbzip2 2.5
 - libffi 3.2.1
 - libgeotiff 1.4.2_2
 - libiconv 1.15
@@ -57,19 +59,24 @@ Package was build with XCode  10.1 (10B61) and following Homebrew's packages
 - libspatialite 4.3.0a_6
 - libtasn1 4.13
 - libtiff 4.0.9_4
+- libtool 2.4.6_1
 - libvorbis 1.3.6
-- libvpx 1.7.0
 - libxml2 2.9.7
 - libxslt 1.1.32
 - libzip 1.5.1
+- lighttpd 1.4.50
+- little-cms2 2.9
 - lz4 1.8.3
 - lzo 2.10
 - matplotlib 2.2.3
 - mpfr 4.0.1
 - netcdf 4.6.1_4
-- ninja 1.8.2
-- numpy 1.15.3
+- nspr 4.20
+- nss 3.40
+- numpy 1.15.4
 - openblas 0.3.3
+- openjpeg 2.3.0
+- openldap 2.4.46
 - openssl 1.0.2p
 - openvpn 2.4.6
 - opus 1.3
@@ -78,6 +85,8 @@ Package was build with XCode  10.1 (10B61) and following Homebrew's packages
 - pcre 8.42
 - pcre2 10.32
 - pixman 0.34.0_1
+- pkg-config 0.29.2
+- poppler 0.71.0
 - postgis 2.5.0
 - postgresql 10.5
 - proj 5.2.0
@@ -86,7 +95,7 @@ Package was build with XCode  10.1 (10B61) and following Homebrew's packages
 - pyspatialite 3.0.1_3
 - python 3.7.0
 - qca 2.1.3_2
-- qgis3 3.4.0
+- qhull 2015.2
 - qjson 0.9.0_1
 - qscintilla2 2.10.4_1
 - qt 5.11.2
@@ -96,18 +105,20 @@ Package was build with XCode  10.1 (10B61) and following Homebrew's packages
 - qwtpolar 1.1.1_3
 - readline 7.0.5
 - scipy 1.1.0_2
-- sdl2 2.0.8
 - sfcgal 1.3.5
 - sip 4.19.8_5
-- snappy 1.1.7_1
 - spatialindex 1.8.5
+- spawn-fcgi 1.6.4
 - sqlite 3.25.2
 - szip 2.1.1_1
+- tcl-tk 8.6.8
 - theora 1.1.1
+- unixodbc 2.3.7
 - webp 1.0.0
-- x264 r2854
-- x265 2.9
-- xvid 1.3.5
+- wxmac 3.0.4_1
+- wxpython 3.0.2.0_1
 - xz 5.2.4
 - zlib 1.2.11
 - zstd 1.3.7
+
+Updated: 2018-11-07 11:42:48

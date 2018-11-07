@@ -59,8 +59,9 @@ def get_computer_info():
     msg = ""
     msg += "# Package Details\n"
     msg += "Package contains standalone QGIS installation, with bundled Python, Qt, GDAL and other dependencies.\n\n"
-    msg += "Minimum supported version is " + mac_ver + "\n\n"
-    msg += "Package was build with XCode  " + xcode() + " and following Homebrew's packages\n\n"
+    msg += "Please report any issues on [GitHub issue tracker](https://github.com/lutraconsulting/qgis-mac-packager/issues)\n\n"
+    msg += "Minimum supported MacOS version is " + mac_ver + "\n\n"
+    msg += "Package was build with XCode " + xcode() + " and following Homebrew's packages\n\n"
     msg += homebrew_libs() + "\n\n"
     msg += "Updated: " + timestamp()
 
