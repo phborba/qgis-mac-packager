@@ -16,6 +16,8 @@ fi
 BUILD_DIR=$1
 GIT=$2
 RELEASE=$3
+PACKAGE=qgis_${RELEASE}_${GIT}_${TIMESTAMP}.dmg
+
 echo "Building & Packaging QGIS to $BUILD_DIR"
 mkdir -p $BUILD_DIR
 
@@ -39,13 +41,13 @@ python3 qgis_bundler.py \
 echo "Package"
 python3 qgis_packager.py \
   --bundle_directory $BUILD_DIR/bundle \
-  --outname=$BUILD_DIR/qgis_${RELEASE}_${GIT}_${TIMESTAMP}.dmg
+  --outname=$BUILD_DIR/$PACKAGE
 
 echo "Upload"
 python3 qgis_uploader.py \
   --dropbox=$DIR/../dropbox_token.txt \
-  --destination=/$RELEASE \
-  --package=$BUILD_DIR/qgis_${RELEASE}_${GIT}_${TIMESTAMP}.dmg
+  --destination=/$RELEASE/$PACKAGE \
+  --package=$BUILD_DIR/$PACKAGE
 
 echo "All done"
 cd $PWD

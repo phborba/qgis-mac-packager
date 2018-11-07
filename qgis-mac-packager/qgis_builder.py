@@ -104,6 +104,10 @@ for path in prefix_path.split(";"):
     if not os.path.exists(path):
         raise QGISBuildError("Missing " + path)
 
+env = {
+    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
+}
+
 args = ["cmake",
         "-DCMAKE_BUILD_TYPE=Release",
         "-DCMAKE_INSTALL_PREFIX="+os.path.realpath(installDir),
@@ -116,9 +120,17 @@ args = ["cmake",
 
 print("run cmake command:")
 print(args)
+print("env:")
+print(env)
 
-output = subprocess.check_output(args, encoding='UTF-8')
-print(output)
+result = subprocess.run(args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,  # Combine out/err into stdout; stderr will be None
+            universal_newlines=True,
+            check=True,
+            env=env
+        )
+print(result.stdout)
 
 print(100*"*")
 cores = multiprocessing.cpu_count() - 1
