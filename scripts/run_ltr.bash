@@ -7,7 +7,7 @@ TAG=ltr-3_4
 
 PWD=`pwd`
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-BD=$DIR/../builds/ltr-${TAG}
+BD=$DIR/../../builds/ltr-${TAG}
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 LOG=$BD/build_${TIMESTAMP}.log
 

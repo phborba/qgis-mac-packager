@@ -25,7 +25,7 @@ echo "Building QGIS $GIT for $RELEASE"
 
 echo "Please run brew update manually to get new deps"
 
-cd qgis-mac-packager
+cd $DIR/../qgis-mac-packager
 echo "Run build"
 python3 qgis_builder.py \
   --output_directory $BUILD_DIR \
@@ -45,7 +45,7 @@ python3 qgis_packager.py \
 
 echo "Upload"
 python3 qgis_uploader.py \
-  --dropbox=$DIR/../dropbox_token.txt \
+  --dropbox=$DIR/../../dropbox_token.txt \
   --destination=/$RELEASE/$PACKAGE \
   --package=$BUILD_DIR/$PACKAGE
 

@@ -39,6 +39,12 @@ export HOMEBREW_NO_AUTO_UPDATE=1
   builds/nightly
 ```
 - Run `run_*.bash` to build nightly/ltr/pr releases
+- Nightly releases should be set as cronjobs once per day
+``` 
+crontab -e
+0 12 * * *  cd /Users/lutra/qgis/qgis-mac-packager && ./backup.sh
+```
+
 
 # Server Update
 
