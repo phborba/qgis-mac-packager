@@ -79,4 +79,7 @@ if __name__ == '__main__':
     # Create a backup of the current settings file
     backup(local=args.package, remote=args.destination)
 
-    print("Done!")
+    # Share for public
+    r = dbx.sharing_create_shared_link_with_settings(args.destination)
+
+    print("Done! " + str(r.url))
