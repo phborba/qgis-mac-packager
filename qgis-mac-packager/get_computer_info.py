@@ -4,6 +4,13 @@
 import subprocess
 import platform
 import os
+import time
+
+
+def timestamp():
+    ts = time.gmtime()
+    return time.strftime("%Y-%m-%d %H:%M:%S", ts)
+
 
 def xcode():
     output = subprocess.check_output(["system_profiler", "SPDeveloperToolsDataType"], encoding='UTF-8')
@@ -45,10 +52,20 @@ def homebrew_libs():
 
     return "\n".join(sorted(libs))
 
-mac_ver = platform.mac_ver()[0]
 
-print("# Package Details")
-print("Package contains standalone QGIS installation.\n")
-print("Minimum supported version is " + mac_ver + "\n")
-print("Package was build with XCode  " + xcode() + " and following Homebrew's packages\n")
-print(homebrew_libs())
+def get_computer_info():
+    mac_ver = platform.mac_ver()[0]
+
+    msg = ""
+    msg += "# Package Details\n"
+    msg += "Package contains standalone QGIS installation, with bundled Python, Qt, GDAL and other dependencies.\n\n"
+    msg += "Minimum supported version is " + mac_ver + "\n\n"
+    msg += "Package was build with XCode  " + xcode() + " and following Homebrew's packages\n\n"
+    msg += homebrew_libs() + "\n\n"
+    msg += "Updated: " + timestamp()
+
+    return msg
+
+
+# print to stdout
+print(get_computer_info())

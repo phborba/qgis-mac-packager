@@ -6,46 +6,37 @@ For package details, see [details page](https://lutraconsulting.github.io/qgis-m
 
 # Server Setup 
 
-we use http://maccloud.me Mini server for nightly builds
-
-- MacOS El Capitan 10.11.6
-- XCode 8.2
-- Homebrew 
-
-# Server common setup
-
-- add homebrew to `bash_profile`
+- Get Mojave server
+- Get Apple Development Program for your Apple ID
+- Login to the server (have static IP)
+- Change default password to some secure one
+- Install XCode from App Store 
+- Go to Apple Developer Download page -> More and command line tools. Install both
+- Sign out from the apple developer page and app store
+- Open XCode and accept license
+- install homebrew and QGIS deps by running `install_brew.bash`
+- Update `~/.bash_profile`
 ```
+export CLICOLOR=1
+export PS1="\[\e[32m\]\u\[\e[m\]\[\e[32m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[34m\]\w\[\e[m\]\\$ "
+
+# allow bash completion 
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+fi
+
 export PATH="/usr/local/sbin:$PATH"
 export HOMEBREW_NO_AUTO_UPDATE=1
 ```
-
-
-# Bundling and Packaging
-
-Note you need to have Apple Development Program purchased
-
-1. Get mac on cloud, login (have static IP)
-2. Go to Apple Developer Download page and download XCode for your OS and command line tools. Install
-3. Open XCode and accept license
-4. install homebrew and run 
+- now clone this repository
+- so your folders structure is
 ```
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-brew tap osgeo/osgeo4mac
-brew install git
-brew install openvpn
-brew install szip
-brew install hdf5
-brew install cython
-brew link --overwrite numpy
-brew install scipy
-brew install netcdf
-pip3 install dropbox
-brew cask install xquartz
-brew install qgis3 --only-dependencies 
+  dropbox_token.txt
+  qgis-mac-packager/
+  builds/nightly
+  builds/pr
+  builds/ltr
 ```
-
-## Building
 
 1. Install deps as described above
 2. Download QGIS git repository
@@ -54,7 +45,11 @@ brew install qgis3 --only-dependencies
 5. Run `python3 packager/qgis-packager.py` to get `qgis.dmg` file
 5. Run `python3 uploader/qgis-uploader.py` to upload to dropbox
 
-# Upload to Dropbox
+Upload to Dropbox
 
 1. Create App with a folder to upload a files, get a token
 2. Create File ~/Projects/dropbox_token.txt and paste the token inside
+
+# Server Update
+
+- TODO

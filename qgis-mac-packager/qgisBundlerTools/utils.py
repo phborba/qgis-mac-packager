@@ -62,6 +62,14 @@ class CopyUtils:
             if self.outdir not in realpath:
                 raise Exception("Trying to do file operation outsite bundle directory! " + name)
 
+    def recreate_dir(self, name):
+        if os.path.exists(name):
+            self.rmtree(name)
+            if os.path.exists(name + "/.DS_Store"):
+                self.remove(name + "/.DS_Store")
+        else:
+            os.makedirs(name)
+
     def remove(self, name):
         self._is_in_out_dir(name)
         os.remove(name)

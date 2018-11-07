@@ -8,6 +8,7 @@ import qgisBundlerTools.otool as otool
 import qgisBundlerTools.install_name_tool as install_name_tool
 import qgisBundlerTools.utils as utils
 from steps import *
+from get_computer_info import *
 
 parser = argparse.ArgumentParser(description='Create QGIS Application bundle')
 
