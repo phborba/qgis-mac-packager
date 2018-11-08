@@ -37,7 +37,8 @@ python3 qgis_bundler.py \
   --output_directory $BUILD_DIR/bundle  \
   --python /usr/local/opt/python3/Frameworks/Python.framework/Versions/3.7/Python \
   --pyqt /usr/local/opt/pyqt5/lib/python3.7/site-packages/PyQt5 \
-  --gdal /usr/local/opt/gdal2
+  --gdal /usr/local/opt/gdal2 \
+  --saga /usr/local/opt/saga-gis-lts
 
 echo "Package"
 python3 qgis_packager.py \

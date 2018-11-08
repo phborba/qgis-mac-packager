@@ -8,11 +8,26 @@ class QGISBundlerError(Exception):
     pass
 
 
-def step8(pa):
-    print(100*"*")
-    print("STEP 8: Test full tree QGIS.app")
-    print(100*"*")
+def check_deps(pa, filepath, executable_path):
+    binaryDependencies = otool.get_binary_dependencies(pa, filepath)
+    all_binaries = binaryDependencies.libs + binaryDependencies.frameworks
 
+    for bin in all_binaries:
+        if bin:
+            binpath = bin.replace("@executable_path", executable_path)
+            binpath = os.path.realpath(binpath)
+
+            if "@" in binpath:
+                raise QGISBundlerError("Library/Framework " + bin + " with rpath or loader path for " + filepath)
+
+            binpath = os.path.realpath(binpath)
+            if not os.path.exists(binpath):
+                raise QGISBundlerError("Library/Framework " + bin + " not exist for " + filepath)
+
+            if pa.qgisApp not in binpath:
+                raise QGISBundlerError("Library/Framework " + bin + " is not in bundle dir for " + filepath)
+
+def step8(pa):
     print("Test qgis --help works")
     try:
         output = subprocess.check_output([pa.qgisExe, "--help"], stderr=subprocess.STDOUT, encoding='UTF-8')
@@ -30,25 +45,16 @@ def step8(pa):
         for file in files:
             filepath = os.path.join(root, file)
             filename, file_extension = os.path.splitext(filepath)
-            if file_extension in [".dylib", ".so", ""] and otool.is_omach_file(filepath):
-                print('Checking compactness of ' + filepath)
-                binaryDependencies = otool.get_binary_dependencies(pa, filepath)
-                all_binaries = binaryDependencies.libs + binaryDependencies.frameworks
-
-                for bin in all_binaries:
-                    if bin:
-                        binpath = bin.replace("@executable_path", os.path.realpath(pa.macosDir))
-                        binpath = os.path.realpath(binpath)
-
-                        if "@" in binpath:
-                            raise QGISBundlerError("Library/Framework " + bin + " with rpath or loader path for " + filepath)
-
-                        binpath = os.path.realpath(binpath)
-                        if not os.path.exists(binpath):
-                            raise QGISBundlerError("Library/Framework " + bin + " not exist for " + filepath)
-
-                        if pa.qgisApp not in binpath:
-                            raise QGISBundlerError("Library/Framework " + bin + " is not in bundle dir for " + filepath)
+            if file_extension in [".dylib", ".so"] and otool.is_omach_file(filepath):
+                print('Checking compactness of library ' + filepath)
+                check_deps(pa, filepath, os.path.realpath(pa.macosDir))
+            elif not file_extension and otool.is_omach_file(filepath): # no extension == binaries
+                if os.access(filepath, os.X_OK) and ("/Frameworks/" not in filepath):
+                    print('Checking compactness of binaries ' + filepath)
+                    check_deps(pa, filepath, os.path.dirname(filepath))
+                else:
+                    print('Checking compactness of library ' + filepath)
+                    check_deps(pa, filepath, os.path.realpath(pa.macosDir))
 
     print("Test that all links are pointing to the destination inside the bundle")
     for root, dirs, files in os.walk(pa.qgisApp):

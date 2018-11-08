@@ -24,4 +24,5 @@ brew install grass7
 brew install gsl
 brew install cmake
 brew install create-dmg
+brew install osgeo/osgeo4mac/saga-gis-lts
 brew install qgis3 --only-dependencies

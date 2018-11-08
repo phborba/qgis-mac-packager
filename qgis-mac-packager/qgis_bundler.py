@@ -27,6 +27,9 @@ parser.add_argument('--pyqt',
 parser.add_argument('--gdal',
                     required=True,
                     help='gdal installation directory')
+parser.add_argument('--saga',
+                    required=True,
+                    help='saga installation directory')
 parser.add_argument('--rpath_hint',
                     required=False,
                     default="")
@@ -43,6 +46,7 @@ print("OUTPUT DIRECTORY: " + args.output_directory)
 print("PYTHON: " + args.python)
 print("PYQT: " + args.pyqt)
 print("GDAL: " + args.gdal)
+print("SAGA: " + args.saga)
 
 if not os.path.exists(args.python):
     raise QGISBundlerError(args.python + " does not exists")
@@ -61,6 +65,10 @@ if not os.path.exists(os.path.join(args.qgis_install_tree, "QGIS.app")):
 if not os.path.exists(args.gdal + "/bin"):
     raise QGISBundlerError(args.gdal + "/bin does not contain GDAL installation")
 
+if not os.path.exists(args.saga + "/bin"):
+    raise QGISBundlerError(args.saga + "/bin does not contain SAGA installation")
+
+
 class Paths:
     def __init__(self, args):
         # original destinations
@@ -68,6 +76,7 @@ class Paths:
         self.pythonHost = os.path.realpath(args.python)
         self.pysitepackages = os.path.join(os.path.dirname(self.pythonHost), "lib", "python3.7", "site-packages")
         self.gdalHost = os.path.realpath(args.gdal)
+        self.sagaHost = os.path.realpath(args.saga)
 
         # new bundle destinations
         self.qgisApp = os.path.realpath(os.path.join(args.output_directory, "QGIS.app"))
@@ -99,12 +108,21 @@ cp.copytree(args.qgis_install_tree, args.output_directory, symlinks=True)
 if not os.path.exists(pa.qgisApp):
     raise QGISBundlerError(pa.qgisExe + " does not exists")
 
-print("Copying " + pa.gdalHost)
 if not os.path.exists(pa.binDir):
     os.makedirs(pa.binDir)
 
+print("Remove crssync")
+if os.path.exists(pa.libDir + "/qgis/crssync"):
+    cp.rmtree(pa.libDir + "/qgis")
+
+print("Copying " + pa.gdalHost)
 for item in os.listdir(pa.gdalHost + "/bin"):
     cp.copy(pa.gdalHost + "/bin/" + item, pa.binDir)
+
+
+print("Copying SAGA " + pa.sagaHost)
+cp.copy(pa.sagaHost + "/bin/saga_cmd", pa.binDir)
+
 subprocess.call(['chmod', '-R', '+w', pa.binDir])
 
 print("Remove unneeded qgis_bench.app")
@@ -112,11 +130,6 @@ if os.path.exists(pa.binDir + "/qgis_bench.app"):
     cp.rmtree(pa.binDir + "/qgis_bench.app")
 
 print("Append Python site-packages")
-# some packages (numpy, matplotlib and psycopg2) depends on them, but they are not
-# system libraries nor in /usr/local/lib folder (cellar)
-# extraLibsNotInSystem = ["libopenblasp-r0.3.0.dev.dylib"]
-extraLibsNotInSystem = []
-
 for item in os.listdir(pa.pysitepackages):
     s = os.path.join(pa.pysitepackages, item)
     d = os.path.join(pa.pythonDir, item)
@@ -131,13 +144,8 @@ for item in os.listdir(pa.pysitepackages):
         cp.copytree(s, d, False)
 
         if os.path.exists(d + "/.dylibs"):
-            # for extraLib in extraLibsNotInSystem:
-            #    if os.path.exists(d + "/.dylibs/" + extraLib):
-            #        cp.copy(d + "/.dylibs/" + extraLib, libDir + "/" + extraLib)
-            #
             print("Removing extra " + d + "/.dylibs")
             cp.rmtree(d + "/.dylibs")
-            # raise QGISBundlerError("invalid directory")
     else:
         cp.copy(s, d)
 
@@ -149,12 +157,6 @@ if not os.path.exists(pa.pythonDir + "/PyQt5/Qt.so"):
 pyqtpluginfile = os.path.join(pyqtHostDir, os.pardir, os.pardir, os.pardir, os.pardir, "share", "pyqt", "plugins")
 cp.copytree(pyqtpluginfile, pa.pluginsDir + "/PyQt5", True)
 subprocess.call(['chmod', '-R', '+w', pa.pluginsDir + "/PyQt5"])
-
-
-# print("Workarounds ")
-# WORKAROUNDS, WHY this is not picked
-# cp.copy("/usr/local/opt/openblas/lib/libopenblas_haswellp-r0.3.3.dylib", pa.libDir + "/libopenblas_haswellp-r0.3.3.dylib")
-# subprocess.call(['chmod', '+w', pa.libDir + "/libopenblas_haswellp-r0.3.3.dylib"])
 
 print(100*"*")
 print("STEP 1: Analyze the libraries we need to bundle")
@@ -207,6 +209,8 @@ deps_queue |= set(glob.glob(qtDir + "/plugins/*/*.dylib"))
 deps_queue |= set(glob.glob(qcaDir + "/lib/qt5/plugins/*/*.dylib"))
 # 5. python interpreter
 deps_queue.add(pythonHost)
+# 5. saga for processing toolbox
+deps_queue.add(pa.binDir + "/saga_cmd")
 
 while deps_queue:
     lib = deps_queue.pop()
@@ -416,15 +420,6 @@ for root, dirs, files in os.walk(pa.qgisApp):
             if file_extension in [".dylib", ".so"]:
                 libs += [filepath]
 
-# libs = glob.glob(pa.libDir + "/*.dylib")
-# libs += glob.glob(pa.qgisPluginsDir + "/*.so")
-# libs += glob.glob(pa.pluginsDir + "/*/*.dylib")
-# libs += glob.glob(pa.pluginsDir + "/*/*/*.so")
-# libs += glob.glob(pa.pluginsDir + "/*/*.so")
-# libs += glob.glob(pa.pluginsDir + "/.so")
-# libs += glob.glob(pa.pythonDir + "/*/*.so")
-# libs += glob.glob(pa.pythonDir + "/*/*.dylib")
-
 # note there are some libs here: /Python.framework/Versions/Current/lib/*.dylib but
 # those are just links to Current/Python
 for lib in libs:
@@ -441,7 +436,6 @@ print("STEP 6: Fix executables linker paths")
 print(100*"*")
 exes = set()
 exes.add(pa.qgisExe)
-exes.add(pa.macosDir + "/lib/qgis/crssync")
 exes |= set(glob.glob(pa.frameworksDir + "/Python.framework/Versions/Current/bin/*"))
 exes |= set(glob.glob(pa.binDir + "/*"))
 
@@ -455,6 +449,16 @@ for exe in exes:
             # Python.framework/Versions/Current/bin/idle3 is not a Mach-O file ??
             pass
         subprocess.call(['chmod', '+x', exe])
+
+        # as we use @executable_path everywhere,
+        # there is a problem
+        # because QGIS and bin/* is different directory
+        exeDir = os.path.dirname(exe)
+        if not os.path.exists(exeDir + "/lib"):
+            cp.symlink(os.path.relpath(pa.libDir, exeDir), exeDir + "/lib")
+        testLink = os.path.realpath(exeDir + "/lib")
+        if testLink != os.path.realpath(pa.libDir):
+            raise QGISBundlerError("invalid lib link!")
     else:
         print("Skipping link " + exe)
 
@@ -477,12 +481,24 @@ if qcaLib in output:
     raise QGISBundlerError("Failed to patch " + qcaLib)
 
 
+print(100*"*")
+print("STEP 8: Clean redundant files")
+print(100*"*")
 
+for root, dirnames, filenames in os.walk(pa.qgisApp):
+    for file in filenames:
+        fpath = os.path.join(root, file)
+        filename, file_extension = os.path.splitext(fpath)
+        if file_extension in [".a", ".pyc"]:
+            cp.remove(fpath)
+
+    for dir in dirs:
+        dpath = os.path.join(root, dir)
+        if "__pycache__" in dpath:
+            cp.rmtree(dpath)
+
+print(100 * "*")
+print("STEP 9: Test full tree QGIS.app")
+print(100 * "*")
 step8(pa)
 
-
-print(100*"*")
-print("STEP 9: Patch env")
-print(100*"*")
-
-#TODO needed?

@@ -16,12 +16,8 @@ def fix_lib(binary, depLibs, contentsPath, relLibPathToExe, relLibPathToFramewor
         print("WARNING: " + binary)
 
     for lib in depLibs.libs:
-        # WORKAROUND # TODO REMOVE ME
-        #libworkaround = lib.replace("libopenblas_haswellp-r0.3.3.dylib", "libopenblasp-r0.3.3.dylib")
-        libworkaround = lib
-
         args = ["install_name_tool",
-                "-change", libworkaround,
+                "-change", lib,
                 relLibPathToExe + "/" + os.path.basename(lib),
                 binary]
         try:

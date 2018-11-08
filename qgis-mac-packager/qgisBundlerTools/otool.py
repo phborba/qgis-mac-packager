@@ -44,6 +44,7 @@ def get_binary_dependencies(pa, binary):
     frameworks = []
     sys_libs = []
     libs = []
+    binaries = []
 
     # also add library itself
     for lib in otool_libs + [binary]:
@@ -53,10 +54,7 @@ def get_binary_dependencies(pa, binary):
         lib_parts = lib.split(" (")
         lib_path = lib_parts[0]
 
-        # TODO hmm, very suspicions!
-        # looks like numpy references different version that is in deps?
-        # if "libopenblasp-r0.3.3.dylib" in lib_path:
-        #     lib_path = lib_path.replace("libopenblasp-r0.3.3.dylib", "libopenblas_haswellp-r0.3.3.dylib")
+        filename, file_extension = os.path.splitext(lib_path)
 
         if lib_path.startswith("/usr/lib/") or lib_path.startswith("/System/Library/"):
             sys_libs.append(lib_path)
@@ -65,11 +63,13 @@ def get_binary_dependencies(pa, binary):
         elif (".framework" in lib_path) and ("/plugins/" not in lib_path) and ("/Current/lib/" not in lib_path) and ("/Current/bin/" not in lib_path):
             frameworks.append(lib_path)
         # elif [".dylib", ".so"] in lib_path:
-        else:
+        elif file_extension in [".dylib", ".so"]:
             libs.append(lib_path)
-        #else: # executables
-        #    pass
+        else:
+            # binaries
+            binaries.append(lib_path)
 
+    # binaries must be copied manually to the destination
     return BinaryDependencies(libname, path, frameworks, sys_libs, libs)
 
 
