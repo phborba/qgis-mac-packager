@@ -32,17 +32,20 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 - to upload to Dropbox
     1. Create App with a folder to upload a files, get a token
     2. Create File ~/Projects/dropbox_token.txt and paste the token inside
+- copy `run_cronjob` one folder above
 - so your folders structure is
 ```
   dropbox_token.txt
+  run_cronjob.bash
   qgis-mac-packager/
-  builds/nightly
+  builds/
+  logs/
 ```
 - Run `run_*.bash` to build nightly/ltr/pr releases
 - Nightly releases should be set as cronjobs once per day
 ``` 
 crontab -e
-0 12 * * *  cd /Users/lutra/qgis/qgis-mac-packager/scripts && ./run_cronjob.bash
+0 12 * * *  cd /Users/lutra/qgis && ./run_cronjob.bash > ./builds/cron.log 2>&1
 ```
 
 

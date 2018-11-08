@@ -24,6 +24,9 @@ parser.add_argument('--python',
 parser.add_argument('--pyqt',
                     required=True,
                     help='directory with pyqt packages to bundle, something like /usr/local/Cellar/pyqt/5.10.1_1/lib/python3.7/site-packages/PyQt5')
+parser.add_argument('--gdal',
+                    required=True,
+                    help='gdal installation directory')
 parser.add_argument('--rpath_hint',
                     required=False,
                     default="")
@@ -39,6 +42,7 @@ print("QGIS INSTALL TREE: " + args.qgis_install_tree)
 print("OUTPUT DIRECTORY: " + args.output_directory)
 print("PYTHON: " + args.python)
 print("PYQT: " + args.pyqt)
+print("GDAL: " + args.gdal)
 
 if not os.path.exists(args.python):
     raise QGISBundlerError(args.python + " does not exists")
@@ -54,13 +58,16 @@ if not os.path.exists(pythonHost):
 if not os.path.exists(os.path.join(args.qgis_install_tree, "QGIS.app")):
     raise QGISBundlerError(args.qgis_install_tree + " does not contain QGIS.app")
 
+if not os.path.exists(args.gdal + "/bin"):
+    raise QGISBundlerError(args.gdal + "/bin does not contain GDAL installation")
 
 class Paths:
     def __init__(self, args):
         # original destinations
-        self.pyqtHostDir = args.pyqt
-        self.pythonHost = args.python
+        self.pyqtHostDir = os.path.realpath(args.pyqt)
+        self.pythonHost = os.path.realpath(args.python)
         self.pysitepackages = os.path.join(os.path.dirname(self.pythonHost), "lib", "python3.7", "site-packages")
+        self.gdalHost = os.path.realpath(args.gdal)
 
         # new bundle destinations
         self.qgisApp = os.path.realpath(os.path.join(args.output_directory, "QGIS.app"))
@@ -91,6 +98,14 @@ print("Copying " + args.qgis_install_tree)
 cp.copytree(args.qgis_install_tree, args.output_directory, symlinks=True)
 if not os.path.exists(pa.qgisApp):
     raise QGISBundlerError(pa.qgisExe + " does not exists")
+
+print("Copying " + pa.gdalHost)
+if not os.path.exists(pa.binDir):
+    os.makedirs(pa.binDir)
+
+for item in os.listdir(pa.gdalHost + "/bin"):
+    cp.copy(pa.gdalHost + "/bin/" + item, pa.binDir)
+subprocess.call(['chmod', '-R', '+w', pa.binDir])
 
 print("Remove unneeded qgis_bench.app")
 if os.path.exists(pa.binDir + "/qgis_bench.app"):
@@ -428,6 +443,7 @@ exes = set()
 exes.add(pa.qgisExe)
 exes.add(pa.macosDir + "/lib/qgis/crssync")
 exes |= set(glob.glob(pa.frameworksDir + "/Python.framework/Versions/Current/bin/*"))
+exes |= set(glob.glob(pa.binDir + "/*"))
 
 for exe in exes:
     if not os.path.islink(exe):

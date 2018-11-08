@@ -35,8 +35,9 @@ echo "Bundle"
 python3 qgis_bundler.py \
   --qgis_install_tree $BUILD_DIR/install  \
   --output_directory $BUILD_DIR/bundle  \
-  --python /usr/local/Cellar/python/3.7.0/Frameworks/Python.framework/Versions/3.7/Python \
-  --pyqt /usr/local/Cellar/pyqt/5.10.1_1/lib/python3.7/site-packages/PyQt5
+  --python /usr/local/opt/python3/Frameworks/Python.framework/Versions/3.7/Python \
+  --pyqt /usr/local/opt/pyqt5/lib/python3.7/site-packages/PyQt5 \
+  --gdal /usr/local/opt/gdal2
 
 echo "Package"
 python3 qgis_packager.py \

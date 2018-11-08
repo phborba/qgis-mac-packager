@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o pipefail
+
 # 2018 Peter Petrik (zilolv at gmail dot com)
 # GNU General Public License 2 any later version
 
@@ -10,7 +12,7 @@ PWD=`pwd`
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 BD=$DIR/../../builds/pr-${TAG}
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-LOG=$BD/build_${TIMESTAMP}.log
+LOG=$BD/pr_${TIMESTAMP}.log
 
 echo "BUILDING PR"
 mkdir -p $BD
