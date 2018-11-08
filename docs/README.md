@@ -11,7 +11,9 @@ Package was build with XCode 10.1 (10B61) and following Homebrew's packages
 - boost 1.67.0_1
 - cairo 1.16.0
 - cgal 4.13
+- cmake 3.12.4
 - conan 1.8.4
+- create-dmg 1.0.0.4
 - curl 7.62.0
 - cython 0.29
 - eigen 3.3.5
@@ -38,6 +40,7 @@ Package was build with XCode 10.1 (10B61) and following Homebrew's packages
 - gnu-sed 4.5
 - graphite2 1.3.12
 - grass7 7.4.2
+- gsl 2.5
 - gst-plugins-base 1.14.4
 - gstreamer 1.14.4
 - harfbuzz 2.1.1
@@ -45,12 +48,15 @@ Package was build with XCode 10.1 (10B61) and following Homebrew's packages
 - hicolor-icon-theme 0.17
 - icu4c 62.1
 - isl 0.20
+- jasper 2.0.14
 - jpeg 9c
 - jpeg-turbo 2.0.0
 - json-c 0.13.1
+- laszip 3.2.2
 - lbzip2 2.5
 - libffi 3.2.1
 - libgeotiff 1.4.2_2
+- libharu 2.3.0
 - libiconv 1.15
 - libmpc 1.1.0
 - libogg 1.3.3
@@ -104,12 +110,14 @@ Package was build with XCode 10.1 (10B61) and following Homebrew's packages
 - qwt 6.1.3_4
 - qwtpolar 1.1.1_3
 - readline 7.0.5
+- saga-gis 7.0.0_1
 - scipy 1.1.0_2
 - sfcgal 1.3.5
 - sip 4.19.8_5
 - spatialindex 1.8.5
 - spawn-fcgi 1.6.4
 - sqlite 3.25.2
+- swig 3.0.12
 - szip 2.1.1_1
 - tcl-tk 8.6.8
 - theora 1.1.1
@@ -121,4 +129,4 @@ Package was build with XCode 10.1 (10B61) and following Homebrew's packages
 - zlib 1.2.11
 - zstd 1.3.7
 
-Updated: 2018-11-07 11:42:48
+Updated: 2018-11-08 12:59:42
