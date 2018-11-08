@@ -33,9 +33,15 @@ export HOMEBREW_NO_AUTO_UPDATE=1
     1. Create App with a folder to upload a files, get a token
     2. Create File ~/Projects/dropbox_token.txt and paste the token inside
 - copy `run_cronjob` one folder above
+- to Code Signing 
+    - You need application certificate from https://developer.apple.com/account
+    - Generate production/development signing identify 
+    - `security find-identity -v` to find existing identities 
+    - create `sing_identity.txt` with the ID of your identity
 - so your folders structure is
 ```
   dropbox_token.txt
+  sign_identity.txt
   run_cronjob.bash
   qgis-mac-packager/
   builds/
@@ -47,6 +53,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 crontab -e
 0 12 * * *  cd /Users/lutra/qgis && ./run_cronjob.bash > ./builds/cron.log 2>&1
 ```
+
 
 
 # Server Update

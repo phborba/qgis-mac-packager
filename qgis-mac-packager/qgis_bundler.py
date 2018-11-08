@@ -268,7 +268,14 @@ for lib in libs:
     if "/plugins/" in lib:
         pluginFolder = lib.split("/plugins/")[1]
         pluginFolder = pluginFolder.split("/")[0]
-        target_dir = pa.pluginsDir + "/" + pluginFolder
+        # Skip this is already copied
+        if "libpyqt5qmlplugin.dylib" in lib:
+            if os.path.exists(pa.pluginsDir + "/PyQt5/libpyqt5qmlplugin.dylib"):
+                target_dir = pa.pluginsDir + "/PyQt5"
+            else:
+                raise QGISBundlerError("Ups, missing libpyqt5qmlplugin.dylib")
+        else:
+            target_dir = pa.pluginsDir + "/" + pluginFolder
     else:
         target_dir = pa.libDir
 
@@ -489,7 +496,7 @@ for root, dirnames, filenames in os.walk(pa.qgisApp):
     for file in filenames:
         fpath = os.path.join(root, file)
         filename, file_extension = os.path.splitext(fpath)
-        if file_extension in [".a", ".pyc"]:
+        if file_extension in [".a", ".pyc", ".h", ".hpp"]:
             cp.remove(fpath)
 
     for dir in dirs:
@@ -497,8 +504,14 @@ for root, dirnames, filenames in os.walk(pa.qgisApp):
         if "__pycache__" in dpath:
             cp.rmtree(dpath)
 
+        if "/include/" in dpath:
+            cp.rmtree(dpath)
+
 print(100 * "*")
 print("STEP 9: Test full tree QGIS.app")
 print(100 * "*")
 step8(pa)
 
+# Wow we are done!
+cpt = sum([len(files) for r, d, files in os.walk(pa.qgisApp)])
+print ("Done with files bundled " + str(cpt))

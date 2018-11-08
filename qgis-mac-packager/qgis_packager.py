@@ -4,6 +4,7 @@
 import argparse
 import os
 import subprocess
+import sys
 
 thisDir = os.path.dirname(os.path.realpath(__file__))
 resourcesDir = os.path.join(thisDir, "resources")
@@ -13,12 +14,48 @@ class QGISPackageError(Exception):
     pass
 
 
+def sign_this(path, identity):
+    try:
+        args = ["codesign",
+                "-s", identity,
+                "-v",
+                path]
+        out = subprocess.check_output(args, stderr=subprocess.STDOUT, encoding='UTF-8')
+        print(out.strip())
+    except subprocess.CalledProcessError as err:
+        if not "is already signed" in str(err.output):
+            print(err.output)
+            raise
+        else:
+            print(path + " is already signed")
+
+
+def sign_bundle_content(qgisApp, identity):
+    # sign all binaries/libraries but QGIS
+    for root, dirs, files in os.walk(qgisApp, topdown=False):
+        for file in files:
+            filepath = os.path.join(root, file)
+            filename, file_extension = os.path.splitext(filepath)
+            if file_extension in [".dylib", ".so", ""] and os.access(filepath, os.X_OK):
+                if not filepath.endswith("/Contents/MacOS/QGIS"):
+                    sign_this(filepath, identity)
+
+    # now sign the directory
+    print("Sign the app dir")
+    sign_this(qgisApp + "/Contents/MacOS/QGIS", identity)
+    sign_this(qgisApp, identity)
+
+
 parser = argparse.ArgumentParser(description='Package QGIS Application')
 
 parser.add_argument('--bundle_directory',
                     required=True,
                     help='output directory with resulting QGIS.app bundle')
 parser.add_argument('--outname', required=True, help="resulting file")
+parser.add_argument('--sign',
+                    required=False,
+                    type=argparse.FileType('r'),
+                    help='File with Apple signing identity')
 
 pkg = False
 dmg = True
@@ -32,7 +69,19 @@ qgisApp = os.path.join(args.bundle_directory, "QGIS.app")
 if not os.path.exists(qgisApp):
     raise QGISPackageError(qgisApp + " does not exists")
 
-# TODO SIGN?
+identity = None
+if args.sign:
+    # parse token
+    identity = args.sign.read().strip()
+    if len(identity) != 40:
+        sys.exit("ERROR: Looks like your ID is not valid, should be 40 char long")
+
+if identity:
+    print("Signing the bundle")
+    sign_bundle_content(qgisApp, identity)
+else:
+    print("Signing skipped, no identity supplied")
+
 if pkg:
     print(100*"*")
     print("STEP: Create pkg installer")
@@ -76,13 +125,19 @@ if dmg:
             qgisApp + "/"
             ]
 
-    subprocess.check_output(args)
+    out = subprocess.check_output(args, encoding='UTF-8')
+    print(out)
 
-    # TODO
-    # args= ["codesign",
-    #        "-s", "$CODESIGN_IDENTITY",
-    #        "-v",
-    #        dmgFile]
+    if identity:
+        print("Sign dmg file")
+        args= ["codesign",
+                "-s", identity,
+                "-v",
+                dmgFile]
+        out = subprocess.check_output(args, encoding='UTF-8')
+        print(out)
+    else:
+        print("Signing skipped, no identity supplied")
 
     fsize = subprocess.check_output(["du", "-h", dmgFile], encoding='UTF-8')
     print("ALL DONE\n" + fsize)

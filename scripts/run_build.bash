@@ -43,7 +43,8 @@ python3 qgis_bundler.py \
 echo "Package"
 python3 qgis_packager.py \
   --bundle_directory $BUILD_DIR/bundle \
-  --outname=$BUILD_DIR/$PACKAGE
+  --outname=$BUILD_DIR/$PACKAGE \
+  --sign $DIR/../../sign_identity.txt \
 
 echo "Upload"
 python3 qgis_uploader.py \
