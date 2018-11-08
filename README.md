@@ -35,7 +35,10 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 - copy `run_cronjob` one folder above
 - to Code Signing 
     - You need application certificate from https://developer.apple.com/account
-    - Generate production/development signing identify 
+    - Generate production/development signing identify
+    - Get cer file and scp to the server
+    - Double click on cer file and install it on the server
+    - On Machine where you created request, export private key and copy and install on server too.
     - `security find-identity -v` to find existing identities 
     - create `sing_identity.txt` with the ID of your identity
 - so your folders structure is
@@ -52,9 +55,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 ``` 
 crontab -e
 0 12 * * *  cd /Users/lutra/qgis && ./run_cronjob.bash > ./builds/cron.log 2>&1
-```
-
-
+``` 
 
 # Server Update
 

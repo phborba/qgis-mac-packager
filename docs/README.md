@@ -7,6 +7,8 @@ Minimum supported MacOS version is 10.14
 
 Package was build with XCode 10.1 (10B61) and following Homebrew's packages
 
+- autoconf 2.69
+- automake 1.16.1_1
 - bison 3.2
 - boost 1.67.0_1
 - cairo 1.16.0
@@ -110,7 +112,7 @@ Package was build with XCode 10.1 (10B61) and following Homebrew's packages
 - qwt 6.1.3_4
 - qwtpolar 1.1.1_3
 - readline 7.0.5
-- saga-gis 7.0.0_1
+- saga-gis-lts 2.3.2_2
 - scipy 1.1.0_2
 - sfcgal 1.3.5
 - sip 4.19.8_5
@@ -129,4 +131,4 @@ Package was build with XCode 10.1 (10B61) and following Homebrew's packages
 - zlib 1.2.11
 - zstd 1.3.7
 
-Updated: 2018-11-08 12:59:42
+Updated: 2018-11-08 16:17:49
