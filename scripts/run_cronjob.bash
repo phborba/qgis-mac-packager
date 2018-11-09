@@ -28,6 +28,7 @@ find $LD/* -mtime +60 -exec rm {} \;
 
 echo "Check GIT repo" 2>&1 | tee -a $LOG
 cd $DIR/qgis-mac-packager
+git fetch origin | tee -a $LOG
 LOCAL=$(git rev-parse @)
 REMOTE=$(git rev-parse origin)
 
@@ -38,7 +39,6 @@ if [ $LOCAL = $REMOTE ]; then
     exit_status_pr=0
 else
     echo "update qgis-mac-packager" 2>&1 | tee -a $LOG
-    git fetch origin 2>&1 | tee -a $LOG
     git rebase origin/master 2>&1 | tee -a $LOG
 
     echo "rebuild LTR" 2>&1 | tee -a $LOG
