@@ -51,7 +51,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
   logs/
 ```
 - Run `run_*.bash` to build nightly/ltr/pr releases
-- Nightly releases should be set as cronjobs once per day
+- Nightly releases should be set as cronjobs once per day (use tabs!)
 ``` 
 crontab -e
 0   12  *   *   *  bash /Users/lutra/qgis/run_cronjob.bash > /Users/lutra/qgis/logs/cron.log 2>&1

@@ -10,16 +10,12 @@ SD=$DIR/qgis-mac-packager/scripts
 
 echo "Create dirs"
 mkdir -p $LD
-mkdir -p $BD/ltr
-mkdir -p $BD/nightly
-mkdir -p $BD/pr
+mkdir -p $BD
 touch $LOG
 
 echo "clean the build directories" 2>&1 | tee -a $LOG
 # remove all dmg files older than X days
-find $BD/nightly/*.dmg -mtime +5 -exec rm {} \;
-find $BD/pr/*.dmg -mtime +5 -exec rm {} \;
-find $BD/ltr/*.dmg -mtime +5 -exec rm {} \;
+find $BD/*/*.dmg -mtime +5 -exec rm {} \;
 
 echo "clean the log directories" 2>&1 | tee -a $LOG
 # remove all files older than 60 days
