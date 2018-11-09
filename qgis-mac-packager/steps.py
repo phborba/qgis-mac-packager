@@ -11,7 +11,7 @@ class QGISBundlerError(Exception):
 
 def clean_redundant_files(pa, cp):
     extensionsToCheck = [".a", ".pyc", ".c", ".cpp", ".h", ".hpp", ".cmake", ".prl"]
-    dirsToCheck = ["/include", "/Headers", "/__pycache__", "/test", "/tests", "/examples"]
+    dirsToCheck = ["/include", "/Headers", "/__pycache__"]
 
     # remove unneeded files/dirs
     for root, dirnames, filenames in os.walk(pa.qgisApp):
