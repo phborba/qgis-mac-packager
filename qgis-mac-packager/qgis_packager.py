@@ -33,12 +33,21 @@ def sign_this(path, identity):
 def sign_bundle_content(qgisApp, identity):
     # sign all binaries/libraries but QGIS
     for root, dirs, files in os.walk(qgisApp, topdown=False):
+        # first sign all binaries
         for file in files:
             filepath = os.path.join(root, file)
             filename, file_extension = os.path.splitext(filepath)
             if file_extension in [".dylib", ".so", ""] and os.access(filepath, os.X_OK):
                 if not filepath.endswith("/Contents/MacOS/QGIS"):
                     sign_this(filepath, identity)
+
+    # now sign resources
+    for root, dirs, files in os.walk(qgisApp, topdown=False):
+        for file in files:
+            filepath = os.path.join(root, file)
+            filename, file_extension = os.path.splitext(filepath)
+            if file_extension not in [".dylib", ".so", ""]:
+                sign_this(filepath, identity)
 
     # now sign the directory
     print("Sign the app dir")

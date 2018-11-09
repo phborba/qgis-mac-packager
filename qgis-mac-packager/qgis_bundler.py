@@ -149,6 +149,21 @@ for item in os.listdir(pa.pysitepackages):
     else:
         cp.copy(s, d)
 
+# TODO copy of python site-packages should be rather
+# selective an not copy-all and then remove
+print("remove not needed python site-packages")
+redundantPyPackages = [
+    "dropbox*",
+    "GitPython*"
+    "homebrew-*",
+]
+for pp in redundantPyPackages:
+    for path in glob.glob(pa.pythonDir + "/" + pp):
+        if os.path.isdir(path):
+            cp.rmtree(path)
+        else:
+            cp.remove(path)
+
 subprocess.call(['chmod', '-R', '+w', pa.pluginsDir])
 
 print("Copying PyQt " + pyqtHostDir)
@@ -496,7 +511,7 @@ for root, dirnames, filenames in os.walk(pa.qgisApp):
     for file in filenames:
         fpath = os.path.join(root, file)
         filename, file_extension = os.path.splitext(fpath)
-        if file_extension in [".a", ".pyc", ".h", ".hpp"]:
+        if file_extension in [".a", ".pyc", ".h", ".hpp", ".cmake"]:
             cp.remove(fpath)
 
     for dir in dirs:
