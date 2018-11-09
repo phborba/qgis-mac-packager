@@ -27,6 +27,7 @@ find $LD/* -mtime +60 -exec rm {} \;
 
 
 echo "Check GIT repo" 2>&1 | tee -a $LOG
+cd $DIR/qgis-mac-packager
 LOCAL=$(git rev-parse @)
 REMOTE=$(git rev-parse origin)
 
