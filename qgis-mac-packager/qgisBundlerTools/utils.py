@@ -53,8 +53,9 @@ def resolve_libpath(pa, lib_path):
 # deletes something outside
 # the build directory
 class CopyUtils:
-    def __init__(self, outdir):
+    def __init__(self, outdir, verbose=True):
         self.outdir = outdir
+        self.verbose = verbose
 
     def _is_in_out_dir(self, name):
         if self.outdir not in name:
@@ -101,3 +102,14 @@ class CopyUtils:
     def copytree(self, src, dest, symlinks):
         self._is_in_out_dir(dest)
         shutil.copytree(src, dest, symlinks=symlinks)
+
+    def rm(self, src):
+        if os.path.exists(src):
+            self._is_in_out_dir(src)
+            if os.path.islink(src):
+                self.unlink(src)
+            elif os.path.isfile(src):
+                self.remove(src)
+            else:
+                self.rmtree(src)
+

@@ -50,7 +50,7 @@ echo "always build NIGHTLY"
 $SD/run_nightly.bash 2>&1 | tee -a $LOG
 exit_status_nightly=$?
 
-if [ $exit_status_ltr -eq 0 ] && [ $exit_status_pr -eq 0 ] && [ $exit_status_nightly -eq 0 ]; then
+if [ $exit_status_ltr -eq 0 -a $exit_status_pr -eq 0 -a $exit_status_nightly -eq 0 ]; then
     echo "SUCCESS" 2>&1 | tee -a $LOG
 else
     echo "FAIL" 2>&1 | tee -a $LOG

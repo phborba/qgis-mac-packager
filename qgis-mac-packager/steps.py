@@ -4,8 +4,38 @@ import os
 import qgisBundlerTools.otool as otool
 import qgisBundlerTools.install_name_tool as install_name_tool
 
+
 class QGISBundlerError(Exception):
     pass
+
+
+def clean_redundant_files(pa, cp):
+    extensionsToCheck = [".a", ".pyc", ".c", ".cpp", ".h", ".hpp", ".cmake", ".prl"]
+    dirsToCheck = ["/include", "/Headers", "/__pycache__", "/test", "/tests", "/examples"]
+
+    # remove unneeded files/dirs
+    for root, dirnames, filenames in os.walk(pa.qgisApp):
+        for file in filenames:
+            fpath = os.path.join(root, file)
+            filename, file_extension = os.path.splitext(fpath)
+            if any(ext==file_extension for ext in extensionsToCheck):
+                print("Removing " + fpath)
+                cp.rm(fpath)
+
+        for dir in dirnames:
+            dpath = os.path.join(root, dir)
+            print(dpath)
+            if any(ext in dpath for ext in dirsToCheck):
+                print("Removing " + dpath)
+                cp.rm(dpath)
+
+    # remove broken links and empty dirs
+    for root, dirnames, filenames in os.walk(pa.qgisApp):
+        for file in filenames:
+            fpath = os.path.join(root, file)
+            real = os.path.realpath(fpath)
+            if not os.path.exists(real):
+                os.unlink(fpath)
 
 
 def check_deps(pa, filepath, executable_path):
@@ -27,7 +57,8 @@ def check_deps(pa, filepath, executable_path):
             if pa.qgisApp not in binpath:
                 raise QGISBundlerError("Library/Framework " + bin + " is not in bundle dir for " + filepath)
 
-def step8(pa):
+
+def test_full_tree_consistency(pa):
     print("Test qgis --help works")
     try:
         output = subprocess.check_output([pa.qgisExe, "--help"], stderr=subprocess.STDOUT, encoding='UTF-8')

@@ -55,6 +55,20 @@ def sign_bundle_content(qgisApp, identity):
     sign_this(qgisApp, identity)
 
 
+def verify_sign(path):
+    args = ["codesign",
+            "--verify",
+            "--verbose",
+            path]
+
+    try:
+        out = subprocess.check_output(args, stderr=subprocess.STDOUT, encoding='UTF-8')
+        print(out.strip())
+    except subprocess.CalledProcessError as err:
+        print(err.output)
+        raise
+
+
 parser = argparse.ArgumentParser(description='Package QGIS Application')
 
 parser.add_argument('--bundle_directory',
@@ -88,6 +102,7 @@ if args.sign:
 if identity:
     print("Signing the bundle")
     sign_bundle_content(qgisApp, identity)
+    verify_sign(qgisApp)
 else:
     print("Signing skipped, no identity supplied")
 
@@ -138,13 +153,8 @@ if dmg:
     print(out)
 
     if identity:
-        print("Sign dmg file")
-        args= ["codesign",
-                "-s", identity,
-                "-v",
-                dmgFile]
-        out = subprocess.check_output(args, encoding='UTF-8')
-        print(out)
+        sign_this(dmgFile, identity)
+        verify_sign(qgisApp)
     else:
         print("Signing skipped, no identity supplied")
 

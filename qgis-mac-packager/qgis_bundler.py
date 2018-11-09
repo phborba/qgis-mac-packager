@@ -508,26 +508,12 @@ if qcaLib in output:
 print(100*"*")
 print("STEP 8: Clean redundant files")
 print(100*"*")
-
-for root, dirnames, filenames in os.walk(pa.qgisApp):
-    for file in filenames:
-        fpath = os.path.join(root, file)
-        filename, file_extension = os.path.splitext(fpath)
-        if file_extension in [".a", ".pyc", ".h", ".hpp", ".cmake"]:
-            cp.remove(fpath)
-
-    for dir in dirs:
-        dpath = os.path.join(root, dir)
-        if "__pycache__" in dpath:
-            cp.rmtree(dpath)
-
-        if "/include/" in dpath:
-            cp.rmtree(dpath)
+clean_redundant_files(pa, cp)
 
 print(100 * "*")
 print("STEP 9: Test full tree QGIS.app")
 print(100 * "*")
-step8(pa)
+test_full_tree_consistency(pa)
 
 # Wow we are done!
 cpt = sum([len(files) for r, d, files in os.walk(pa.qgisApp)])
