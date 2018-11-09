@@ -154,15 +154,17 @@ for item in os.listdir(pa.pysitepackages):
 print("remove not needed python site-packages")
 redundantPyPackages = [
     "dropbox*",
-    "GitPython*"
+    "GitPython*",
     "homebrew-*",
 ]
 for pp in redundantPyPackages:
     for path in glob.glob(pa.pythonDir + "/" + pp):
+        print("Removing " + path)
         if os.path.isdir(path):
             cp.rmtree(path)
         else:
             cp.remove(path)
+
 
 subprocess.call(['chmod', '-R', '+w', pa.pluginsDir])
 
