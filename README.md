@@ -54,7 +54,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 - Nightly releases should be set as cronjobs once per day
 ``` 
 crontab -e
-0 12 * * *  cd /Users/lutra/qgis && ./run_cronjob.bash > ./builds/cron.log 2>&1
+0   12  *   *   *  bash /Users/lutra/qgis/run_cronjob.bash > /Users/lutra/qgis/logs/cron.log 2>&1
 ``` 
 
 # Server Update
