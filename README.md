@@ -57,6 +57,7 @@ crontab -e
 0   12  *   *   *  bash /Users/lutra/qgis/run_cronjob.bash > /Users/lutra/qgis/logs/cron.log 2>&1
 ``` 
 
+
 # Server Update
 
 - update brew
