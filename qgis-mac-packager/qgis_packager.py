@@ -42,12 +42,12 @@ def sign_bundle_content(qgisApp, identity):
                     sign_this(filepath, identity)
 
     # now sign resources
-    for root, dirs, files in os.walk(qgisApp, topdown=False):
-        for file in files:
-            filepath = os.path.join(root, file)
-            filename, file_extension = os.path.splitext(filepath)
-            if file_extension not in [".dylib", ".so", ""]:
-                sign_this(filepath, identity)
+    # for root, dirs, files in os.walk(qgisApp, topdown=False):
+    #     for file in files:
+    #         filepath = os.path.join(root, file)
+    #        filename, file_extension = os.path.splitext(filepath)
+    #        if file_extension not in [".dylib", ".so", ""]:
+    #            sign_this(filepath, identity)
 
     # now sign the directory
     print("Sign the app dir")
