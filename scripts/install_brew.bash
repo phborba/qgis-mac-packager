@@ -9,7 +9,12 @@ fi
 
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 brew tap osgeo/osgeo4mac
+
 brew install git
+brew cask install xquartz
+brew install cmake
+brew install create-dmg
+
 brew install openvpn
 brew install szip
 brew install hdf5
@@ -17,12 +22,12 @@ brew install cython
 brew link --overwrite numpy
 brew install scipy
 brew install netcdf
-pip3 install dropbox
-pip3 install GitPython
-brew cask install xquartz
 brew install grass7
 brew install gsl
-brew install cmake
-brew install create-dmg
 brew install osgeo/osgeo4mac/saga-gis-lts
+pip3 install psycopg2
+
+pip3 install dropbox
+pip3 install GitPython
+
 brew install qgis3 --only-dependencies
