@@ -4,6 +4,15 @@ Set of scripts to create MacOS standalone QGIS package (dmg)
 
 For package details, see [details page](https://lutraconsulting.github.io/qgis-mac-packager/)
 
+# How to report issues 
+
+- Add link to the installed package
+- Add crash report if QGIS crashed
+- State MacOS version (e.g. 10.14.1)
+- Run `open /Applications/QGIS.app` from Terminal and add the output
+- Run `codesign --verify --verbose /Applications/QGIS.app` and add output
+- Run `env | grep -i python` and add output
+
 # Server Setup 
 
 - Get Mojave server
@@ -56,7 +65,6 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 crontab -e
 0   12  *   *   *  bash /Users/lutra/qgis/run_cronjob.bash > /Users/lutra/qgis/logs/cron.log 2>&1
 ``` 
-
 
 # Server Update
 
