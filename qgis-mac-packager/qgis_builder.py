@@ -118,8 +118,8 @@ args = ["cmake",
         "-DQGIS_MACAPP_BUNDLE=0",
         "-DWITH_3D=TRUE",
         "-DWITH_BINDINGS=TRUE",
-        "-EXIV2_INCLUDE_DIR=/usr/local/opt/exiv2/include",
-        "-EXIV2_LIBRARY=/usr/local/opt/exiv2/lib/libexiv2.dylib",
+        "-DEXIV2_INCLUDE_DIR=/usr/local/opt/exiv2/include",
+        "-DEXIV2_LIBRARY=/usr/local/opt/exiv2/lib/libexiv2.dylib",
         qgisDir
        ]
 
