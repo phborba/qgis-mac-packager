@@ -26,6 +26,7 @@ brew install grass7
 brew install gsl
 brew install osgeo/osgeo4mac/saga-gis-lts
 pip3 install psycopg2
+brew install exiv2
 
 pip3 install dropbox
 pip3 install GitPython
