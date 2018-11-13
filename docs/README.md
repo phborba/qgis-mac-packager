@@ -7,21 +7,22 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 - <a href="https://www.dropbox.com/sh/qcr9a6ry25n4x91/AABQ78LJIlKTCTMRj8H0L3u4a?dl=0"><strong>Latest Release 3.4.1</strong></a>
 - <a href="https://www.dropbox.com/sh/cc3615b1zd7ruwz/AACfBDg0GVfdgAt-FGMZiuaba?dl=0"><strong>Nightly Builds (master)</strong></a>
 
-Notes: 
+## Notes 
 
 - The LTR package will be added in February 2019
 - Minimum supported MacOS version for PR 3.4.1 builds is 10.14. Support for earliear versions will be ed in 3.4.2
 - Minimum supported MacOS version for nightly builds is 10.11
 
-# Highlights
+## Highlights
 
 - Supports Dark Mode (Mojave 10.14+)
 - Single installer, all dependencies bundled in the package
+- Signed installer and application
 - Nightly builds
 - Relocatable package, can be moved to different locatation after installation
 - Transparent server setup, all scripts/docs can be found [here](https://github.com/lutraconsulting/qgis-mac-packager)
 
-# Package Details
+## Build Details
 
 Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 
