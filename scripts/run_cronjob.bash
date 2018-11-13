@@ -9,7 +9,7 @@ LOG=$LD/qgis_${TIMESTAMP}.log
 SD=$DIR/qgis-mac-packager/scripts
 
 echo "Manage ENV"
-export PATH=/usr/local/bin:$PATH
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:$PATH
 
 echo "Create dirs"
 mkdir -p $LD
