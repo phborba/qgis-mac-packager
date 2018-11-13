@@ -126,14 +126,19 @@ print(args)
 print("env:")
 print(env)
 
-result = subprocess.run(args,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,  # Combine out/err into stdout; stderr will be None
-            universal_newlines=True,
-            check=True,
-            env=env
-        )
-print(result.stdout)
+try:
+    result = subprocess.run(args,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,  # Combine out/err into stdout; stderr will be None
+                universal_newlines=True,
+                check=True,
+                env=env,
+                encoding='UTF-8'
+            )
+    print(result.stdout)
+except subprocess.CalledProcessError as err:
+    print(err.output)
+    raise
 
 print(100*"*")
 cores = multiprocessing.cpu_count() - 1
