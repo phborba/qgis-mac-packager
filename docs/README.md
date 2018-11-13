@@ -4,8 +4,8 @@ Package contains standalone QGIS installation, with bundled Python, Qt, GDAL and
 
 Please report any issues on [GitHub issue tracker](https://github.com/lutraconsulting/qgis-mac-packager/issues)
 
-- [Latest Release 3.4.1]("https://www.dropbox.com/sh/qcr9a6ry25n4x91/AABQ78LJIlKTCTMRj8H0L3u4a?dl=0")
-- [Nightly Builds (master)]("https://www.dropbox.com/sh/cc3615b1zd7ruwz/AACfBDg0GVfdgAt-FGMZiuaba?dl=0")
+- [Latest Release 3.4.1](https://www.dropbox.com/sh/qcr9a6ry25n4x91/AABQ78LJIlKTCTMRj8H0L3u4a?dl=0)
+- [Nightly Builds (master)](https://www.dropbox.com/sh/cc3615b1zd7ruwz/AACfBDg0GVfdgAt-FGMZiuaba?dl=0)
 
 ## Notes 
 
