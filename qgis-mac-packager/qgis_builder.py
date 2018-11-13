@@ -67,9 +67,10 @@ else:
     print("Cloning...")
     git.Repo.clone_from(QGIS_REPO, qgisDir, progress=Progress())
 
+repo = git.Repo(qgisDir)
 g = git.Git(qgisDir)
 g.checkout(args.git)
-o = g.remotes().origin
+o = repo.remotes.origin
 o.pull()
 
 print(100*"*")
