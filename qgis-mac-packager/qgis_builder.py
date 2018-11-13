@@ -69,6 +69,8 @@ else:
 
 g = git.Git(qgisDir)
 g.checkout(args.git)
+o = g.remotes.origin
+o.pull()
 
 print(100*"*")
 print("STEP 2: Clean the build/install directory ")
