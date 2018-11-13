@@ -69,7 +69,7 @@ else:
 
 g = git.Git(qgisDir)
 g.checkout(args.git)
-o = g.remotes.origin
+o = g.remotes().origin
 o.pull()
 
 print(100*"*")
