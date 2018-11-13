@@ -9,6 +9,7 @@ import qgisBundlerTools.utils as utils
 import git
 import subprocess
 import multiprocessing
+import sys
 
 class QGISBuildError(Exception):
     pass
@@ -148,6 +149,8 @@ print("STEP 4: make on " + str(cores) + " cores")
 print(100*"*")
 os.chdir(buildDir)
 
+sys.stdout.flush()
 os.system("make -j"+str(cores) + " install")
+sys.stdout.flush()
 
 print("build done")
