@@ -24,8 +24,6 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 
 Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 
-<div class="packages">
-
 - autoconf 2.69
 - automake 1.16.1_1
 - bison 3.2
@@ -149,7 +147,5 @@ Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 - xz 5.2.4
 - zlib 1.2.11
 - zstd 1.3.7
-
-</div>
 
 Updated: 2018-11-08 16:17:49
