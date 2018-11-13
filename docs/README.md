@@ -1,5 +1,3 @@
-# Downloads
-
 Package contains standalone QGIS installation, with bundled Python, Qt, GDAL and other dependencies.
 
 Please report any issues on [GitHub issue tracker](https://github.com/lutraconsulting/qgis-mac-packager/issues)
@@ -10,7 +8,7 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 ## Notes 
 
 - The LTR package will be added in February 2019
-- Minimum supported MacOS version for PR 3.4.1 builds is 10.14. Support for earliear versions will be ed in 3.4.2
+- Minimum supported MacOS version for PR 3.4.1 builds is 10.14. Support for earliear versions will be added in 3.4.2
 - Minimum supported MacOS version for nightly builds is 10.11
 
 ## Highlights
@@ -19,12 +17,14 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 - Single installer, all dependencies bundled in the package
 - Signed installer and application
 - Nightly builds
-- Relocatable package, can be moved to different locatation after installation
+- Relocatable package, can be moved to different location after installation
 - Transparent server setup, all scripts/docs can be found [here](https://github.com/lutraconsulting/qgis-mac-packager)
 
 ## Build Details
 
 Package was built with XCode 10.1 (10B61) and following Homebrew's packages
+
+<div class="packages">
 
 - autoconf 2.69
 - automake 1.16.1_1
@@ -149,5 +149,7 @@ Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 - xz 5.2.4
 - zlib 1.2.11
 - zstd 1.3.7
+
+</div>
 
 Updated: 2018-11-08 16:17:49
