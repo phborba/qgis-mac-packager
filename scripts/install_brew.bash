@@ -25,11 +25,24 @@ brew install netcdf
 brew install grass7
 brew install gsl
 brew install osgeo/osgeo4mac/saga-gis-lts
-pip3 install psycopg2
 brew install exiv2
 brew install osgeo/osgeo4mac/gdal2 --with-complete --with-libkml
 
+# python
+pip3 install future
+pip3 install numpy
+pip3 install psycopg2
+pip3 install matplotlib
+pip3 install pyparsing
+pip3 install requests
+pip3 install mock
+pip3 install pyyaml
+pip3 install nose2
+pip3 install owslib
+
+# tools
 pip3 install dropbox
 pip3 install GitPython
+
 
 brew install qgis3 --only-dependencies
