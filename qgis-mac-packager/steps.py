@@ -9,6 +9,36 @@ class QGISBundlerError(Exception):
     pass
 
 
+def append_recursively_site_packages(cp, sourceDir, destDir):
+    for item in os.listdir(sourceDir):
+        s = os.path.join(sourceDir, item)
+        d = os.path.join(destDir, item)
+        if os.path.exists(d):
+            print("Skipped " + d)
+            continue
+        else:
+            print(" Copied " + d)
+
+        if os.path.isdir(s):
+            # hard copy - no symlinks
+            cp.copytree(s, d, False)
+
+            if os.path.exists(d + "/.dylibs"):
+                print("Removing extra " + d + "/.dylibs")
+                cp.rmtree(d + "/.dylibs")
+        else:
+            # if it is link, copy also content of the dir of that link.
+            # this is because pth files can get other site-packages
+            # but we want it on one place
+            if os.path.islink(s):
+                dirname = os.path.realpath(s)
+                dirname = os.path.dirname(dirname)
+                append_recursively_site_packages(cp, dirname, destDir)
+
+            if not os.path.exists(d):
+                cp.copy(s, d)
+
+
 def clean_redundant_files(pa, cp):
     extensionsToCheck = [".a", ".pyc", ".c", ".cpp", ".h", ".hpp", ".cmake", ".prl"]
     dirsToCheck = ["/include", "/Headers", "/__pycache__"]

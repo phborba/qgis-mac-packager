@@ -73,6 +73,7 @@ crontab -e
 ```
 brew update 
 brew upgrade
+brew cleaup
 ```
 - update cronjob
 - remove build/* folders for clean build

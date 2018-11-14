@@ -130,24 +130,7 @@ if os.path.exists(pa.binDir + "/qgis_bench.app"):
     cp.rmtree(pa.binDir + "/qgis_bench.app")
 
 print("Append Python site-packages")
-for item in os.listdir(pa.pysitepackages):
-    s = os.path.join(pa.pysitepackages, item)
-    d = os.path.join(pa.pythonDir, item)
-    if os.path.exists(d):
-        print("Skipped " + d )
-        continue
-    else:
-        print(" Copied " + d )
-
-    if os.path.isdir(s):
-        # hard copy - no symlinks
-        cp.copytree(s, d, False)
-
-        if os.path.exists(d + "/.dylibs"):
-            print("Removing extra " + d + "/.dylibs")
-            cp.rmtree(d + "/.dylibs")
-    else:
-        cp.copy(s, d)
+append_recursively_site_packages(cp, pa.pysitepackages, pa.pythonDir)
 
 # TODO copy of python site-packages should be rather
 # selective an not copy-all and then remove

@@ -69,6 +69,20 @@ def verify_sign(path):
         raise
 
 
+def print_identities():
+    args = ["security",
+            "find-identity",
+            "-v", "-p",
+            "codesigning"]
+
+    try:
+        out = subprocess.check_output(args, stderr=subprocess.STDOUT, encoding='UTF-8')
+        print(out.strip())
+    except subprocess.CalledProcessError as err:
+        print(err.output)
+        raise
+
+
 parser = argparse.ArgumentParser(description='Package QGIS Application')
 
 parser.add_argument('--bundle_directory',
@@ -98,6 +112,9 @@ if args.sign:
     identity = args.sign.read().strip()
     if len(identity) != 40:
         sys.exit("ERROR: Looks like your ID is not valid, should be 40 char long")
+
+print("Print available identities")
+print_identities()
 
 if identity:
     print("Signing the bundle")
