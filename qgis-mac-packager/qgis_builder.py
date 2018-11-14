@@ -71,8 +71,13 @@ else:
 repo = git.Repo(qgisDir)
 g = git.Git(qgisDir)
 g.checkout(args.git)
-o = repo.remotes.origin
-o.pull()
+try:
+    # pull does not work when we have tag, only on branch (e.g. master)
+    o = repo.remotes.origin
+    o.pull()
+except git.exc.GitCommandError:
+    print("Failed to pull, probably you are on tag and not branch...")
+
 
 print(100*"*")
 print("STEP 2: Clean the build/install directory ")

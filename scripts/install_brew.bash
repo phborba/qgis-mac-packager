@@ -38,6 +38,9 @@ pip3 install requests
 pip3 install mock
 pip3 install pyyaml
 pip3 install nose2
+
+pip3 install cython
+pip3 install git+https://github.com/jswhit/pyproj.git
 pip3 install owslib
 
 # tools
