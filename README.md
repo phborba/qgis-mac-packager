@@ -50,6 +50,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
     - On Machine where you created request, export private key and copy and install on server too.
     - `security find-identity -v` to find existing identities 
     - create `sing_identity.txt` with the ID of your identity
+    - allow to use it in cronjob (https://stackoverflow.com/a/20324331/2838364)
 - so your folders structure is
 ```
   dropbox_token.txt
