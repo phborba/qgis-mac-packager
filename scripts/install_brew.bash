@@ -9,6 +9,9 @@ fi
 
 brew tap osgeo/osgeo4mac
 
+brew update
+brew upgrade
+
 brew install git
 brew cask install xquartz
 brew install cmake
@@ -110,7 +113,3 @@ pip3 install traitlets
 pip3 install urllib3
 pip3 install xlrd
 pip3 install xlwt
-
-brew update
-brew upgrade
-brew cleanup

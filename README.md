@@ -78,7 +78,9 @@ NOTE: grep for "lutra", since this username is hardcoded in few places around
 ```
 brew update 
 brew upgrade
-brew cleanup
+
+# this may remove some python packages!
+# brew cleanup
 ```
 - remove build/* folders for clean build
 - update docs/README.md with new set of used libs
