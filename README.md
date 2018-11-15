@@ -78,9 +78,7 @@ NOTE: grep for "lutra", since this username is hardcoded in few places around
 ```
 brew update 
 brew upgrade
-brew cleaup
+brew cleanup
 ```
-- update cronjob
 - remove build/* folders for clean build
 - update docs/README.md with new set of used libs
-

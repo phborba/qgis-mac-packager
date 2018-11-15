@@ -15,26 +15,27 @@ brew cask install xquartz
 brew install cmake
 brew install create-dmg
 
+# pyproj has bug for python3, unable to install from pip3
+pip3 install cython
+pip3 install git+https://github.com/jswhit/pyproj.git
+
 brew install openvpn
 brew install szip
 brew install hdf5
-brew install cython
 brew link --overwrite numpy
 brew install scipy
 brew install netcdf
-brew install grass7
 brew install gsl
-brew install osgeo/osgeo4mac/saga-gis-lts
 brew install exiv2
+
 brew install osgeo/osgeo4mac/gdal2 --with-complete --with-libkml
+brew install osgeo/osgeo4mac/saga-gis-lts
+brew install grass7
 
 # tools
 pip3 install dropbox
 pip3 install GitPython
 
-# pyproj has bug for python3, unable to install from pip3
-pip3 install cython
-pip3 install git+https://github.com/jswhit/pyproj.git
 pip3 install owslib
 
 # qgis deps
@@ -110,3 +111,6 @@ pip3 install urllib3
 pip3 install xlrd
 pip3 install xlwt
 
+brew update
+brew upgrade
+brew cleanup
