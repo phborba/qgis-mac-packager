@@ -17,13 +17,36 @@ class QGISUploadError(Exception):
 
 
 # Uploads contents of LOCALFILE to Dropbox
+# from dropbox's examples
+# files < 150 MB, see https://stackoverflow.com/q/33810138/2838364
+# files larger > 150 MB https://stackoverflow.com/a/40114617/2838364
 def backup(local, remote):
+    file_size = os.path.getsize(local)
+    CHUNK_SIZE = 4 * 1024 * 1024
+
     with open(local, 'rb') as f:
         # We use WriteMode=overwrite to make sure that the settings in the file
         # are changed on upload
         print("Uploading " + local + " to Dropbox as " + remote + "...")
         try:
-            dbx.files_upload(f.read(), remote, mode=WriteMode('overwrite'))
+            if file_size <= CHUNK_SIZE:
+                dbx.files_upload(f.read(), remote, mode=WriteMode('overwrite'))
+            else:
+                upload_session_start_result = dbx.files_upload_session_start(f.read(CHUNK_SIZE))
+                cursor = dropbox.files.UploadSessionCursor(session_id=upload_session_start_result.session_id,
+                                                           offset=f.tell())
+                commit = dropbox.files.CommitInfo(path=remote)
+
+                while f.tell() < file_size:
+                    if (file_size - f.tell()) <= CHUNK_SIZE:
+                        dbx.files_upload_session_finish(f.read(CHUNK_SIZE),
+                                                        cursor,
+                                                        commit)
+                    else:
+                        dbx.files_upload_session_append_v2(f.read(CHUNK_SIZE),
+                                                           cursor)
+                        cursor.offset = f.tell()
+
         except ApiError as err:
             # This checks for the specific error where a user doesn't have
             # enough Dropbox space quota to upload this file

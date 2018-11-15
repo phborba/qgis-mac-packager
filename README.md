@@ -65,7 +65,8 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 - Run `run_*.bash` to build nightly/ltr/pr releases
 - Nightly releases should be set as launchd once per day (use tabs!)
 ``` 
-cp scripts/org.qgis.build.plist ~/Library/LaunchAgents/ 
+cp scripts/org.qgis.build.plist ~/Library/LaunchAgents/
+plutil ~/Library/LaunchAgents/org.qgis.build.plist 
 launchctl load ~/Library/LaunchAgents/org.qgis.build.plist
 ``` 
 

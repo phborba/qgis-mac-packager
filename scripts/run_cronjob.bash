@@ -39,19 +39,19 @@ if [ $LOCAL = $REMOTE ]; then
     exit_status_pr=0
 else
     echo "update qgis-mac-packager" >> $LOG 2>&1
-    git rebase origin/master 2>&1 | tee -a $LOG
+    git rebase origin/master >> $LOG 2>&1
 
     echo "rebuild LTR" >> $LOG 2>&1
-    $SD/run_ltr.bash 2>&1 | tee -a $LOG
+    $SD/run_ltr.bash >> $LOG 2>&1
     exit_status_ltr=$?
 
     echo "rebuild PR" >> $LOG 2>&1
-    $SD/run_pr.bash 2>&1 | tee -a $LOG
+    $SD/run_pr.bash >> $LOG 2>&1
     exit_status_pr=$?
 fi
 
 echo "always build NIGHTLY" >> $LOG 2>&1
-$SD/run_nightly.bash 2>&1 | tee -a $LOG
+$SD/run_nightly.bash >> $LOG 2>&1
 exit_status_nightly=$?
 
 if [ $exit_status_ltr -eq 0 -a $exit_status_pr -eq 0 -a $exit_status_nightly -eq 0 ]; then
