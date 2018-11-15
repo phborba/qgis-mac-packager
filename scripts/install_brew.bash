@@ -9,9 +9,6 @@ fi
 
 brew tap osgeo/osgeo4mac
 
-brew update
-brew upgrade
-
 brew install git
 brew cask install xquartz
 brew install cmake
