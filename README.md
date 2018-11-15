@@ -65,7 +65,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 - Run `run_*.bash` to build nightly/ltr/pr releases
 - Nightly releases should be set as launchd once per day (use tabs!)
 ``` 
-cp scripts/qgis.plist ~/Library/LaunchAgents/ 
+cp scripts/org.qgis.build.plist ~/Library/LaunchAgents/ 
 ``` 
 
 NOTE: grep for "lutra", since this username is hardcoded in few places around
