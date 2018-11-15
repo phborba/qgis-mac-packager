@@ -15,6 +15,7 @@ brew install cmake
 brew install create-dmg
 
 # pyproj has bug for python3, unable to install from pip3
+pip3 install python-dateutil
 pip3 install cython
 pip3 install git+https://github.com/jswhit/pyproj.git
 
@@ -94,7 +95,6 @@ pip3 install pyodbc
 pip3 install pyparsing
 pip3 install pypubsub
 pip3 install pysal
-pip3 install python-dateutil
 pip3 install pytz
 pip3 install pyyaml
 pip3 install requests

@@ -33,6 +33,7 @@ def append_recursively_site_packages(cp, sourceDir, destDir):
             if os.path.islink(s):
                 dirname = os.path.realpath(s)
                 dirname = os.path.dirname(dirname)
+                print("packaging also site-package " + dirname)
                 append_recursively_site_packages(cp, dirname, destDir)
 
             if not os.path.exists(d):
