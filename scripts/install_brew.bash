@@ -30,6 +30,7 @@ brew install exiv2
 brew install osgeo/osgeo4mac/gdal2 --with-complete --with-libkml
 brew install osgeo/osgeo4mac/saga-gis-lts
 brew install grass7
+brew install gdal2-python
 
 # tools
 pip3 install dropbox
