@@ -7,7 +7,7 @@
 
         <key>ProgramArguments</key>
         <array>
-                <string>/Users/lutra/qgis/run_cronjob.bash > /Users/lutra/qgis/logs/cron.log 2>&1</string>
+                <string>/Users/lutra/qgis/run_cronjob.bash</string>
         </array>
 
         <key>OnDemand</key>
