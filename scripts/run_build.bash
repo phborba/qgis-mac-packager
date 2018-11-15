@@ -45,6 +45,7 @@ python3 qgis_packager.py \
   --bundle_directory $BUILD_DIR/bundle \
   --outname=$BUILD_DIR/$PACKAGE \
   --sign $DIR/../../sign_identity.txt \
+  --keychain $DIR/../../qgis.keychain-db
 
 echo "Upload"
 python3 qgis_uploader.py \

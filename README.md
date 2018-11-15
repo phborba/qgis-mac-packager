@@ -51,10 +51,12 @@ export HOMEBREW_NO_AUTO_UPDATE=1
     - `security find-identity -v` to find existing identities 
     - create `sing_identity.txt` with the ID of your identity
     - allow to use it in cronjob (https://stackoverflow.com/a/20324331/2838364)
+    - create symbolic link to keychain with the imported identity
 - so your folders structure is
 ```
   dropbox_token.txt
   sign_identity.txt
+  qgis.keychain.db --> ~/Library/Keychains/login.keychain-db
   run_cronjob.bash
   qgis-mac-packager/
   builds/

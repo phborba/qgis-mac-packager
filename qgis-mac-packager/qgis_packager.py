@@ -14,12 +14,18 @@ class QGISPackageError(Exception):
     pass
 
 
-def sign_this(path, identity):
+def sign_this(path, identity, keychain):
     try:
         args = ["codesign",
                 "-s", identity,
-                "-v",
-                path]
+                "-v"]
+
+        if keychain:
+            args += ["--keychain", keychainFile]
+
+        args += [path]
+
+
         out = subprocess.check_output(args, stderr=subprocess.STDOUT, encoding='UTF-8')
         print(out.strip())
     except subprocess.CalledProcessError as err:
@@ -30,7 +36,7 @@ def sign_this(path, identity):
             print(path + " is already signed")
 
 
-def sign_bundle_content(qgisApp, identity):
+def sign_bundle_content(qgisApp, identity, keychain):
     # sign all binaries/libraries but QGIS
     for root, dirs, files in os.walk(qgisApp, topdown=False):
         # first sign all binaries
@@ -39,7 +45,7 @@ def sign_bundle_content(qgisApp, identity):
             filename, file_extension = os.path.splitext(filepath)
             if file_extension in [".dylib", ".so", ""] and os.access(filepath, os.X_OK):
                 if not filepath.endswith("/Contents/MacOS/QGIS"):
-                    sign_this(filepath, identity)
+                    sign_this(filepath, identity, keychain)
 
     # now sign resources
     # for root, dirs, files in os.walk(qgisApp, topdown=False):
@@ -51,8 +57,8 @@ def sign_bundle_content(qgisApp, identity):
 
     # now sign the directory
     print("Sign the app dir")
-    sign_this(qgisApp + "/Contents/MacOS/QGIS", identity)
-    sign_this(qgisApp, identity)
+    sign_this(qgisApp + "/Contents/MacOS/QGIS", identity, keychain)
+    sign_this(qgisApp, identity, keychain)
 
 
 def verify_sign(path):
@@ -69,11 +75,14 @@ def verify_sign(path):
         raise
 
 
-def print_identities():
+def print_identities(keychain):
     args = ["security",
             "find-identity",
             "-v", "-p",
             "codesigning"]
+
+    if keychain:
+        args += [keychain]
 
     try:
         out = subprocess.check_output(args, stderr=subprocess.STDOUT, encoding='UTF-8')
@@ -93,6 +102,10 @@ parser.add_argument('--sign',
                     required=False,
                     type=argparse.FileType('r'),
                     help='File with Apple signing identity')
+parser.add_argument('--keychain',
+                    required=False,
+                    help="keychain file",
+                    default=None)
 
 pkg = False
 dmg = True
@@ -111,14 +124,23 @@ if args.sign:
     # parse token
     identity = args.sign.read().strip()
     if len(identity) != 40:
-        sys.exit("ERROR: Looks like your ID is not valid, should be 40 char long")
+        raise QGISPackageError("ERROR: Looks like your ID is not valid, should be 40 char long")
+
+keychainFile = args.keychain
+if keychainFile:
+    keychainFile = os.path.realpath(keychainFile)
+    print("Using keychain " + keychainFile)
+    if not os.path.exists(keychainFile):
+        raise QGISPackageError("missing file " + keychainFile)
+else:
+    print("No keychain file specified")
 
 print("Print available identities")
-print_identities()
+print_identities(keychainFile)
 
 if identity:
     print("Signing the bundle")
-    sign_bundle_content(qgisApp, identity)
+    sign_bundle_content(qgisApp, identity, keychainFile)
     verify_sign(qgisApp)
 else:
     print("Signing skipped, no identity supplied")
@@ -170,7 +192,7 @@ if dmg:
     print(out)
 
     if identity:
-        sign_this(dmgFile, identity)
+        sign_this(dmgFile, identity, keychainFile)
         verify_sign(qgisApp)
     else:
         print("Signing skipped, no identity supplied")
