@@ -36,6 +36,14 @@ def append_recursively_site_packages(cp, sourceDir, destDir):
                 print("packaging also site-package " + dirname)
                 append_recursively_site_packages(cp, dirname, destDir)
 
+            # this can contain also site-packages with absolute path
+            if s.endswith(".pth"):
+                with open(s, 'r') as myfile:
+                    dirname = myfile.read().strip()
+                if os.path.isdir(dirname):
+                    print("packaging also site-package " + dirname)
+                    append_recursively_site_packages(cp, dirname, destDir)
+
             if not os.path.exists(d):
                 cp.copy(s, d)
 
