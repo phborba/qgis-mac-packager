@@ -24,7 +24,7 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 
 Package was built with XCode 10.1 (10B61)
 
-
+Used Homebrew's packages
 
 - autoconf 2.69
 - automake 1.16.1_1
@@ -51,6 +51,7 @@ Package was built with XCode 10.1 (10B61)
 - fribidi 1.0.5
 - gcc 8.2.0
 - gdal2 2.3.2_1
+- gdal2-python 2.3.2
 - gdbm 1.18.1
 - geos 3.7.0
 - gettext 0.19.8.1
@@ -157,4 +158,84 @@ Package was built with XCode 10.1 (10B61)
 - zlib 1.2.11
 - zstd 1.3.7
 
-Updated: 2018-11-15 15:03:06
+Used Python3 modules
+
+- Cython 0.29
+- ExifRead 2.1.2
+- GDAL 2.3.1
+- GitPython 2.1.11
+- Jinja2 2.10
+- MarkupSafe 1.1.0
+- OWSLib 0.17.0
+- PyQt5 
+- PySAL 1.14.4.post2
+- PyYAML 3.13
+- Pygments 2.2.0
+- Pypubsub 4.0.0
+- Shapely 1.6.4.post2
+- _plotly_utils 
+- certifi 2018.10.15
+- chardet 3.0.4
+- coverage 4.5.2
+- decorator 4.3.0
+- exifread 2.1.2
+- future 0.17.1
+- git 2.1.11
+- gitdb 2.0.5
+- gitdb2 2.0.5
+- h5py 2.8.0
+- httplib2 0.12.0
+- idna 2.7
+- ipython_genutils 0.2.0
+- jinja2 2.10
+- jsonschema 2.6.0
+- jupyter_core 4.4.0
+- libfuturize 
+- libpasteurize 
+- lxml 4.2.5
+- markupsafe 1.1.0
+- matplotlib 2.2.3
+- mock 2.0.0
+- mpl_toolkits 
+- nbformat 4.4.0
+- networkx 2.2
+- nose2 0.8.0
+- numpy 1.15.4
+- osgeo 2.3.1
+- owslib 0.17.0
+- pandas 0.23.4
+- past 0.17.1
+- pbr 5.1.1
+- pip 18.1
+- pkg_resources 
+- plotly 3.4.1
+- plotlywidget 
+- ply 3.11
+- psycopg2 2.7.6.1
+- pubsub 4.0.0
+- pygments 2.2.0
+- pyodbc 4.0.24
+- pyproj 1.9.5.1
+- pysal 1.14.4
+- pytils 0.3
+- pyximport 
+- requests 2.20.0
+- retrying 1.3.3
+- scipy 1.1.0
+- script 
+- setuptools 40.5.0
+- shapely 1.6.4.post2
+- simplejson 3.16.0
+- six 1.11.0
+- smmap 2.0.5
+- smmap2 2.0.5
+- test 2.3.4.5
+- tools 0.1.9
+- traitlets 4.3.2
+- urllib3 1.24.1
+- wheel 0.32.0
+- xlrd 1.1.0
+- xlwt 1.3.0
+- yaml 3.13
+
+Updated: 2018-11-15 15:33:01
