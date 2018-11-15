@@ -46,18 +46,15 @@ def resolve_libpath(pa, lib_path):
             # from brew packages
             for item in os.listdir(pa.pysitepackages):
                 s = os.path.join(pa.pysitepackages, item)
+                print(s)
                 if os.path.isdir(s):
-                    if os.path.exists(s + lib_path.replace("@loader_path", "")):
-                        lib_path = s + lib_path.replace("@loader_path", "")
+                    if os.path.exists(s + "/" + lib_path.replace("@loader_path", "")):
+                        lib_path = s + "/" + lib_path.replace("@loader_path", "")
                         break
-                    if os.path.exists(s + ".dylibs/" + lib_path.replace("@loader_path", "")):
-                        lib_path = s + ".dylibs/" + lib_path.replace("@loader_path", "")
+                    if os.path.exists(s + "/.dylibs/" + lib_path.replace("@loader_path", "")):
+                        lib_path = s + "/.dylibs/" + lib_path.replace("@loader_path", "")
                         break
-
-    # hmmm, some broken library in python package
-    if "/DLC/h5py/" in lib_path:
-        lib_path = lib_path.replace("/DLC/h5py/", "/usr/local/lib/python3.7/site-packages/h5py/.dylibs/")
-
+                        break
 
     return lib_path
 

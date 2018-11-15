@@ -56,6 +56,11 @@ def get_binary_dependencies(pa, binary):
 
         filename, file_extension = os.path.splitext(lib_path)
 
+        # hmmm, some broken library in python package
+        if "/DLC/h5py/" in lib_path:
+            lib_path = lib_path.replace("/DLC/h5py/", "/usr/local/lib/python3.7/site-packages/h5py/.dylibs/")
+
+
         if lib_path.startswith("/usr/lib/") or lib_path.startswith("/System/Library/"):
             sys_libs.append(lib_path)
             # current/lib and bin is for some reason Python has some bundled libs/exes in framewoek
