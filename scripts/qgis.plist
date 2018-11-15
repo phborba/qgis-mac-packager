@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+        <key>label</key>
+        <string>org.qgis.build</string>
+
+        <key>ProgramArguments</key>
+        <array>
+                <string>/Users/lutra/qgis/run_cronjob.bash</string>
+        </array>
+
+        <key>OnDemand</key>
+        <false/>
+
+        <key>Nice</key>
+        <integer>1</integer>
+
+	<key>StartCalendarInterval</key>
+	<dict>
+  		<key>Hour</key>
+  		<integer>12</integer>
+  		<key>Minute</key>
+  		<integer>00</integer>
+	</dict>
+
+        <key>StandardErrorPath</key>
+        <string>/Users/lutra/qgis/logs/qgis_launchd.err</string>
+
+        <key>StandardOutPath</key>
+        <string>/Users/lutra/qgis/logs/qgis_launchd.out</string>
+</dict>
+</plist>

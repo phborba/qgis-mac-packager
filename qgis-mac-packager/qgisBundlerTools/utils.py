@@ -34,16 +34,25 @@ def resolve_libpath(pa, lib_path):
             lib_path = lib_path.replace("@loader_path/../..", pa.contentsDir)
         elif os.path.exists("/usr/local/lib" + lib_path.replace("@loader_path/.dylibs", "")):
             lib_path = "/usr/local/lib" + lib_path.replace("@loader_path/.dylibs", "")
+        elif os.path.exists("/usr/local/lib" + lib_path.replace("@loader_path/../.dylibs", "")):
+            lib_path = "/usr/local/lib" + lib_path.replace("@loader_path/../.dylibs", "")
         elif os.path.exists("/usr/local" + lib_path.replace("@loader_path", "")):
             lib_path = "/usr/local" + lib_path.replace("@loader_path", "")
+        elif os.path.exists("/usr/local/lib" + lib_path.replace("@loader_path", "")):
+            lib_path = "/usr/local/lib" + lib_path.replace("@loader_path", "")
         else:
-            for binary in []:
-                if os.path.exists(os.path.dirname(binary) + "/" + lib_path.replace("@loader_path", "")):
-                    lib_path = os.path.dirname(binary) + "/" + lib_path.replace("@loader_path", "")
-                    break
-                elif os.path.exists(pa.pysitepackages + "/" + os.path.basename(os.path.dirname(binary)) + lib_path.replace("@loader_path","")):
-                    lib_path = pa.pysitepackages + "/" + os.path.basename(os.path.dirname(binary)) + lib_path.replace("@loader_path", "")
-                    break
+            # workarounds. Some python packages have bundled their libraries
+            # but the libraries are in different version than the libraries
+            # from brew packages
+            for item in os.listdir(pa.pysitepackages):
+                s = os.path.join(pa.pysitepackages, item)
+                if os.path.isdir(s):
+                    if os.path.exists(s + lib_path.replace("@loader_path", "")):
+                        lib_path = s + lib_path.replace("@loader_path", "")
+                        break
+                    if os.path.exists(s + ".dylibs/" + lib_path.replace("@loader_path", "")):
+                        lib_path = s + ".dylibs/" + lib_path.replace("@loader_path", "")
+                        break
 
     return lib_path
 

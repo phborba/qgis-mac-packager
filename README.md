@@ -63,11 +63,12 @@ export HOMEBREW_NO_AUTO_UPDATE=1
   logs/
 ```
 - Run `run_*.bash` to build nightly/ltr/pr releases
-- Nightly releases should be set as cronjobs once per day (use tabs!)
+- Nightly releases should be set as launchd once per day (use tabs!)
 ``` 
-crontab -e
-0   12  *   *   *  bash /Users/lutra/qgis/run_cronjob.bash > /Users/lutra/qgis/logs/cron.log 2>&1
+cp scripts/qgis.plist ~/Library/LaunchAgents/ 
 ``` 
+
+NOTE: grep for "lutra", since this username is hardcoded in few places around
 
 # Server Update
 
