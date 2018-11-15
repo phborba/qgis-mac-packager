@@ -54,6 +54,11 @@ def resolve_libpath(pa, lib_path):
                         lib_path = s + ".dylibs/" + lib_path.replace("@loader_path", "")
                         break
 
+    # hmmm, some broken library in python package
+    if "/DLC/h5py/" in lib_path:
+        lib_path = lib_path.replace("/DLC/h5py/", "/usr/local/lib/python3.7/site-packages/h5py/.dylibs/")
+
+
     return lib_path
 
 

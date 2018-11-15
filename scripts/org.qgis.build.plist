@@ -7,7 +7,7 @@
 
         <key>ProgramArguments</key>
         <array>
-                <string>/Users/lutra/qgis/run_cronjob.bash</string>
+                <string>/Users/lutra/qgis/run_cronjob.bash > /Users/lutra/qgis/logs/cron.log 2>&1</string>
         </array>
 
         <key>OnDemand</key>
@@ -16,13 +16,13 @@
         <key>Nice</key>
         <integer>1</integer>
 
-	<key>StartCalendarInterval</key>
-	<dict>
-  		<key>Hour</key>
-  		<integer>12</integer>
-  		<key>Minute</key>
-  		<integer>00</integer>
-	</dict>
+        <key>StartCalendarInterval</key>
+	    <dict>
+  		    <key>Hour</key>
+  		    <integer>12</integer>
+  		    <key>Minute</key>
+  		    <integer>00</integer>
+	    </dict>
 
         <key>StandardErrorPath</key>
         <string>/Users/lutra/qgis/logs/qgis_launchd.err</string>
