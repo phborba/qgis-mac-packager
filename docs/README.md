@@ -22,7 +22,8 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 
 ## Build Details
 
-Package was built with XCode 10.1 (10B61) and following Homebrew's packages
+Package was built with XCode 10.1 (10B61)
+
 
 
 - autoconf 2.69
