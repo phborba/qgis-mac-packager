@@ -24,11 +24,13 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 
 Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 
+
 - autoconf 2.69
 - automake 1.16.1_1
-- bison 3.2
-- boost 1.67.0_1
+- bison 3.2.1
+- boost 1.68.0
 - cairo 1.16.0
+- cfitsio 3.450
 - cgal 4.13
 - cmake 3.12.4
 - conan 1.8.4
@@ -36,6 +38,8 @@ Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 - curl 7.62.0
 - cython 0.29
 - eigen 3.3.5
+- epsilon 0.9.2
+- exiv2 0.26
 - expat 2.2.6
 - fcgi 2.4.0
 - fftw 3.3.8
@@ -46,7 +50,6 @@ Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 - fribidi 1.0.5
 - gcc 8.2.0
 - gdal2 2.3.2_1
-- gdal2-python 2.3.2
 - gdbm 1.18.1
 - geos 3.7.0
 - gettext 0.19.8.1
@@ -63,6 +66,7 @@ Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 - gst-plugins-base 1.14.4
 - gstreamer 1.14.4
 - harfbuzz 2.1.1
+- hdf4 4.2.13
 - hdf5 1.10.4
 - hicolor-icon-theme 0.17
 - icu4c 62.1
@@ -73,20 +77,22 @@ Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 - json-c 0.13.1
 - laszip 3.2.2
 - lbzip2 2.5
+- libdap 3.19.1
 - libffi 3.2.1
 - libgeotiff 1.4.2_2
 - libharu 2.3.0
 - libiconv 1.15
+- libkml-dev 1.3-dev
 - libmpc 1.1.0
 - libogg 1.3.3
 - libpng 1.6.35
-- libpq 11.0
+- libpq 11.1
 - libspatialite 4.3.0a_6
 - libtasn1 4.13
-- libtiff 4.0.9_4
+- libtiff 4.0.9_5
 - libtool 2.4.6_1
 - libvorbis 1.3.6
-- libxml2 2.9.7
+- libxml2 2.9.8
 - libxslt 1.1.32
 - libzip 1.5.1
 - lighttpd 1.4.50
@@ -111,14 +117,15 @@ Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 - pcre2 10.32
 - pixman 0.34.0_1
 - pkg-config 0.29.2
-- poppler 0.71.0
+- poppler 0.71.0_1
+- popt 1.16
 - postgis 2.5.0
 - postgresql 10.5
 - proj 5.2.0
 - pyqt 5.10.1_1
 - pyqt5-webkit 5.10.1
 - pyspatialite 3.0.1_3
-- python 3.7.0
+- python 3.7.1
 - qca 2.1.3_2
 - qhull 2015.2
 - qjson 0.9.0_1
@@ -131,11 +138,11 @@ Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 - readline 7.0.5
 - saga-gis-lts 2.3.2_2
 - scipy 1.1.0_2
-- sfcgal 1.3.5
-- sip 4.19.8_5
+- sfcgal 1.3.5_1
+- sip 4.19.8_6
 - spatialindex 1.8.5
 - spawn-fcgi 1.6.4
-- sqlite 3.25.2
+- sqlite 3.25.3
 - swig 3.0.12
 - szip 2.1.1_1
 - tcl-tk 8.6.8
@@ -144,8 +151,9 @@ Package was built with XCode 10.1 (10B61) and following Homebrew's packages
 - webp 1.0.0
 - wxmac 3.0.4_1
 - wxpython 3.0.2.0_1
+- xerces-c 3.2.2
 - xz 5.2.4
 - zlib 1.2.11
 - zstd 1.3.7
 
-Updated: 2018-11-08 16:17:49
+Updated: 2018-11-15 15:03:06
