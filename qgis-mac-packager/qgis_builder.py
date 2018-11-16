@@ -36,7 +36,7 @@ parser.add_argument('--min_os',
                     default=None,
                     help='min os version to support')
 
-verbose = True
+verbose = False
 
 QGIS_REPO = "https://github.com/qgis/QGIS.git/"
 
