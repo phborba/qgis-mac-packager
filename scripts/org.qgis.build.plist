@@ -10,11 +10,11 @@
                 <string>/Users/lutra/qgis/run_cronjob.bash</string>
         </array>
 
-        <key>OnDemand</key>
+        <key>KeepAlive</key>
         <false/>
 
-        <key>Nice</key>
-        <integer>1</integer>
+        <key>RunAtLoad</key>
+        <false/>
 
         <key>StartCalendarInterval</key>
         <dict>
