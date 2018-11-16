@@ -100,7 +100,6 @@ brew install pyspatialite
 brew install r
 brew install saga-gis-lts
 
-pip3 install pyqgis-startup
 pip3 installcertifi
 pip3 installchardet
 pip3 installidna

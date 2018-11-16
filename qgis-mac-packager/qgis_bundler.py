@@ -76,6 +76,10 @@ if not os.path.exists(args.saga + "/bin"):
 
 class Paths:
     def __init__(self, args):
+        # bundler path
+        self.bundlerDir = os.path.dirname(os.path.realpath(__file__))
+        self.bundlerResourcesDir = os.path.join(self.bundlerDir, "resources")
+
         # original destinations
         self.pyqtHostDir = os.path.realpath(args.pyqt)
         self.pythonHost = os.path.realpath(args.python)
@@ -94,6 +98,7 @@ class Paths:
         self.qgisPluginsDir = os.path.join(self.pluginsDir, "qgis")
         self.pythonDir = os.path.join(self.contentsDir, "Resources", "python")
         self.binDir = os.path.join(self.macosDir, "bin")
+
 
 cp = utils.CopyUtils(os.path.realpath(args.output_directory))
 pa = Paths(args)
@@ -155,6 +160,12 @@ for pp in redundantPyPackages:
 
 
 subprocess.call(['chmod', '-R', '+w', pa.pluginsDir])
+
+print("add pyqgis_startup.py to remove MacOS default paths")
+startup_script = os.path.join(pa.bundlerResourcesDir, "pyqgis-startup.py")
+if not os.path.exists(startup_script):
+    raise QGISBundlerError("Missing resource " + startup_script)
+cp.copy(startup_script, os.path.join(pa.pythonDir, "pyqgis-startup.py"))
 
 print("Copying PyQt " + pyqtHostDir)
 if not os.path.exists(pa.pythonDir + "/PyQt5/Qt.so"):

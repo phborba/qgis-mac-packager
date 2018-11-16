@@ -10,6 +10,9 @@ class QGISBundlerError(Exception):
 
 
 def patch_files(pa, min_os):
+    add_python_home = True
+    add_python_start = True
+
     # Info.plist
     # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-113253
     infoplist = os.path.join(pa.contentsDir, "Info.plist")
@@ -34,30 +37,60 @@ def patch_files(pa, min_os):
         with open(infoplist, "w") as f:
             f.write(c)
 
-    # PythonHome
-    with open(infoplist, "r") as f:
-        c = f.read()
+        # check
+        with open(infoplist, "r") as f:
+            c = f.read()
+            if "LSMinimumSystemVersion" not in c:
+                raise QGISBundlerError("UUUPS LSMinimumSystemVersion " + infoplist)
 
-        # add minimum version
-        if "PYTHONHOME" in c:
-            raise QGISBundlerError("Ups PYTHONHOME already present in info " + infoplist)
 
-        c = c.replace("\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
-                      "\t\t<key>PYTHONHOME</key>\n" +
-                      "\t\t<string>/Applications/QGIS.app/Contents/Frameworks/Python.framework/Versions/Current</string>\n" +
-                      "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
-                      )
+    # Python Start
+    if add_python_start:
+        with open(infoplist, "r") as f:
+            c = f.read()
 
-    with open(infoplist, "w") as f:
-        f.write(c)
+            # add minimum version
+            if "PYQGIS_STARTUP" in c:
+                raise QGISBundlerError("Ups PYQGIS_STARTUP already present in info " + infoplist)
 
-    # check
-    with open(infoplist, "r") as f:
-        c = f.read()
-        if "LSMinimumSystemVersion" not in c:
-            raise QGISBundlerError("UUUPS LSMinimumSystemVersion " + infoplist)
-        if "PYTHONHOME" not in c:
-            raise QGISBundlerError("UUUPS PYTHONHOME " + infoplist)
+            c = c.replace("\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
+                          "\t\t<key>PYQGIS_STARTUP</key>\n" +
+                          "\t\t<string>/Applications/QGIS.app/Contents/Resources/python/pyqgis-startup.py</string>\n" +
+                          "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
+                          )
+
+        with open(infoplist, "w") as f:
+            f.write(c)
+
+        # check
+        with open(infoplist, "r") as f:
+            c = f.read()
+            if "PYQGIS_STARTUP" not in c:
+                raise QGISBundlerError("UUUPS PYQGIS_STARTUP " + infoplist)
+
+    # Python Home
+    if add_python_home:
+        with open(infoplist, "r") as f:
+            c = f.read()
+
+            # add minimum version
+            if "PYTHONHOME" in c:
+                raise QGISBundlerError("Ups PYTHONHOME already present in info " + infoplist)
+
+            c = c.replace("\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
+                          "\t\t<key>PYTHONHOME</key>\n" +
+                          "\t\t<string>/Applications/QGIS.app/Contents/Frameworks/Python.framework/Versions/Current</string>\n" +
+                          "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
+                          )
+
+        with open(infoplist, "w") as f:
+            f.write(c)
+
+        # check
+        with open(infoplist, "r") as f:
+            c = f.read()
+            if "PYTHONHOME" not in c:
+                raise QGISBundlerError("UUUPS PYTHONHOME " + infoplist)
 
 
 def append_recursively_site_packages(cp, sourceDir, destDir):
