@@ -92,7 +92,7 @@ brew install brewsci/bio/matplotlib
 # core providers
 brew install gdal2-python
 
-brew install oracle-client-sdk
+# brew install oracle-client-sdk
 brew install grass7
 brew install gettext
 brew install gpsbabel
