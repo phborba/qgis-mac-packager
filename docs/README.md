@@ -62,6 +62,7 @@ Used Homebrew's packages
 - glslang 7.9.2888
 - gmp 6.1.2_2
 - gnu-sed 4.5
+- gpp 2.25
 - graphite2 1.3.12
 - grass7 7.4.2
 - gsl 2.5
@@ -161,8 +162,8 @@ Used Homebrew's packages
 Used Python3 modules
 
 - Cython 0.29
+- DateTime 4.3
 - ExifRead 2.1.2
-- GDAL 2.3.1
 - GitPython 2.1.11
 - Jinja2 2.10
 - MarkupSafe 1.1.0
@@ -201,7 +202,7 @@ Used Python3 modules
 - networkx 2.2
 - nose2 0.8.0
 - numpy 1.15.4
-- osgeo 2.3.1
+- osgeo 
 - owslib 0.17.0
 - pandas 0.23.4
 - past 0.17.1
@@ -233,9 +234,11 @@ Used Python3 modules
 - tools 0.1.9
 - traitlets 4.3.2
 - urllib3 1.24.1
-- wheel 0.32.0
+- wheel 0.32.2
 - xlrd 1.1.0
 - xlwt 1.3.0
 - yaml 3.13
+- zope 
+- zope.interface 4.6.0
 
-Updated: 2018-11-15 15:33:01
+Updated: 2018-11-16 10:14:44

@@ -9,7 +9,7 @@ class QGISBundlerError(Exception):
     pass
 
 
-def patch_files(pa):
+def patch_files(pa, min_os):
     # Info.plist
     # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-113253
     infoplist = os.path.join(pa.contentsDir, "Info.plist")
@@ -26,7 +26,7 @@ def patch_files(pa):
 
         c = c.replace("\t<key>CFBundleDevelopmentRegion</key>",
                       "\t<key>LSMinimumSystemVersion</key>\n" +
-                      "\t<string>10.11.0</string>\n" +
+                      "\t<string>{}</string>\n".format(min_os) +
                       "\t<key>CFBundleDevelopmentRegion</key>"
                       )
 

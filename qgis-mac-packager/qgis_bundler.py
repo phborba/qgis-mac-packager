@@ -36,6 +36,9 @@ parser.add_argument('--rpath_hint',
 parser.add_argument('--start_step',
                     required=False,
                     default=0)
+parser.add_argument('--min_os',
+                    required=True,
+                    help='min os version to support')
 
 verbose = False
 
@@ -47,6 +50,7 @@ print("PYTHON: " + args.python)
 print("PYQT: " + args.pyqt)
 print("GDAL: " + args.gdal)
 print("SAGA: " + args.saga)
+print("APPLE MINOS: "  + args.min_os)
 
 if not os.path.exists(args.python):
     raise QGISBundlerError(args.python + " does not exists")
@@ -496,7 +500,7 @@ clean_redundant_files(pa, cp)
 print(100 * "*")
 print("STEP 8: Patch files")
 print(100 * "*")
-patch_files(pa)
+patch_files(pa, args.min_os)
 
 
 print(100 * "*")
