@@ -17,7 +17,7 @@ brew install create-dmg
 # pyproj has bug for python3, unable to install from pip3
 pip3 install python-dateutil
 pip3 install cython
-pip3 install git+https://github.com/jswhit/pyproj.git
+CFLAGS='-std=c99' pip3 install git+https://github.com/jswhit/pyproj.git
 
 brew install openvpn
 brew install szip
