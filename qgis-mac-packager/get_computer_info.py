@@ -30,7 +30,10 @@ def xcode():
     return "Unknown"
 
 def homebrew_libs():
-    exclude = ["python@2", "bash-completion", "gdal"]
+    # only gdaL2 from osgeo homebrew should be present
+    force_error =["gdal"]
+
+    exclude = ["python@2", "bash-completion"]
     libs = []
 
     homebrew_dir = brew_prefix()
@@ -43,6 +46,10 @@ def homebrew_libs():
         versions = next(os.walk(bottle_dir))[1]
         if len(versions) != 1:
             raise Exception("Multiple versions installed for " + bottle_dir)
+
+        for e in force_error:
+            if bottle.endswith(e):
+                raise Exception(bottle + " present but it must not be installed on system")
 
         excluded = False
         for e in exclude:
@@ -60,7 +67,7 @@ def homebrew_libs():
 def check_py_version(name):
     cmd = "import {}; print({}.__version__)".format(name, name)
     try:
-        output = subprocess.check_output(["python3", "-c", cmd], encoding='UTF-8')
+        output = subprocess.check_output(["python3", "-c", cmd], stderr=subprocess.PIPE, encoding='UTF-8')
         return output.strip()
     except:
         print("Unable to detect version for " + name)
@@ -75,8 +82,15 @@ def python_libs():
     # List all folders immediately under this folder:
     sitepackages = os.path.join(homebrew_dir, "lib/python3.7/site-packages/")
     pkgs = next(os.walk(sitepackages))[1]
-    for pkg in pkgs:
-        pkg_dir = os.path.join(sitepackages, pkg)
+    done_pkgs = []
+
+    while pkgs:
+        pkg = pkgs.pop()
+        pkg_dir =  os.path.realpath(os.path.join(sitepackages, pkg))
+        if pkg_dir in done_pkgs:
+            continue
+        done_pkgs += [pkg_dir]
+
         excluded = False
         for e in exclude:
             if e in pkg_dir:
@@ -93,6 +107,13 @@ def python_libs():
             # e.g numpy-1.15.4-py3.7.egg-info/
             parts = pkg.replace("-py3.7.egg-info", "").split("-")
             libs[parts[0]] = parts[1]
+        # this can contain also site-packages with absolute path
+        elif pkg.endswith(".pth"):
+            with open(pkg, 'r') as myfile:
+                dirname = myfile.read().strip()
+            if os.path.isdir(dirname):
+                pkgs += [os.path.realpath(dirname)]
+
         else:
             if os.path.isdir(pkg_dir):
                 if pkg not in libs:

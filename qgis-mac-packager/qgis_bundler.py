@@ -494,7 +494,13 @@ print(100*"*")
 clean_redundant_files(pa, cp)
 
 print(100 * "*")
-print("STEP 9: Test full tree QGIS.app")
+print("STEP 8: Patch files")
+print(100 * "*")
+patch_files(pa)
+
+
+print(100 * "*")
+print("STEP 10: Test full tree QGIS.app")
 print(100 * "*")
 test_full_tree_consistency(pa)
 

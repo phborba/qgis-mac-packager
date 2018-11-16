@@ -9,6 +9,56 @@ class QGISBundlerError(Exception):
     pass
 
 
+def patch_files(pa):
+    # Info.plist
+    # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-113253
+    infoplist = os.path.join(pa.contentsDir, "Info.plist")
+    if not os.path.exists(infoplist):
+        raise  QGISBundlerError("MISSING " + infoplist)
+
+    # Minimum version
+    with open(infoplist, "r") as f:
+        c = f.read()
+
+        # add minimum version
+        if "LSMinimumSystemVersion" in c:
+            raise QGISBundlerError("Ups minimum version already present in info " + infoplist)
+
+        c = c.replace("\t<key>CFBundleDevelopmentRegion</key>",
+                      "\t<key>LSMinimumSystemVersion</key>\n" +
+                      "\t<string>10.11.0</string>\n" +
+                      "\t<key>CFBundleDevelopmentRegion</key>"
+                      )
+
+    with open(infoplist, "w") as f:
+        f.write(c)
+
+    # PythonHome
+    with open(infoplist, "r") as f:
+        c = f.read()
+
+        # add minimum version
+        if "PYTHONHOME" in c:
+            raise QGISBundlerError("Ups PYTHONHOME already present in info " + infoplist)
+
+        c = c.replace("\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
+                      "\t\t<key>PYTHONHOME</key>\n" +
+                      "\t\t<string>/Applications/QGIS.app/Contents/Frameworks/Python.framework/Versions/Current</string>\n" +
+                      "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
+                      )
+
+    with open(infoplist, "w") as f:
+        f.write(c)
+
+    # check
+    with open(infoplist, "r") as f:
+        c = f.read()
+        if "LSMinimumSystemVersion" not in c:
+            raise QGISBundlerError("UUUPS LSMinimumSystemVersion " + infoplist)
+        if "PYTHONHOME" not in c:
+            raise QGISBundlerError("UUUPS PYTHONHOME " + infoplist)
+
+
 def append_recursively_site_packages(cp, sourceDir, destDir):
     for item in os.listdir(sourceDir):
         s = os.path.join(sourceDir, item)

@@ -28,10 +28,18 @@ brew install netcdf
 brew install gsl
 brew install exiv2
 
+# make sure you do not install homebrew-core/gdal since it
+# does not support netcdf
 brew install osgeo/osgeo4mac/gdal2 --with-complete --with-libkml
 brew install osgeo/osgeo4mac/saga-gis-lts
 brew install grass7
 brew install gdal2-python
+
+# use this link until postgis is build on osgeo
+brew uninstall gdal # safety
+brew link gdal2 --force
+brew install https://raw.githubusercontent.com/OSGeo/homebrew-osgeo4mac/530a838c9d93721d0c2d5eee2ddeb702b848184f/Formula/postgis.rb --build-from-source
+
 
 # tools
 pip3 install dropbox
