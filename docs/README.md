@@ -164,6 +164,7 @@ Used Python3 modules
 - Cython 0.29
 - DateTime 4.3
 - ExifRead 2.1.2
+- GDAL 2.3.2
 - GitPython 2.1.11
 - Jinja2 2.10
 - MarkupSafe 1.1.0
@@ -202,7 +203,7 @@ Used Python3 modules
 - networkx 2.2
 - nose2 0.8.0
 - numpy 1.15.4
-- osgeo 
+- osgeo 2.3.2
 - owslib 0.17.0
 - pandas 0.23.4
 - past 0.17.1
@@ -241,4 +242,4 @@ Used Python3 modules
 - zope 
 - zope.interface 4.6.0
 
-Updated: 2018-11-16 10:14:44
+Updated: 2018-11-16 12:16:49
