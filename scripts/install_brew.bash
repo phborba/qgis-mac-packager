@@ -60,8 +60,8 @@ brew install python
 brew install qt
 brew install pyqt
 brew install pyqt5-webkit
-brew install x11
-# brew install qca
+# brew install x11
+brew install qca
 brew install qtkeychain
 brew install qscintilla2
 brew install qwt
