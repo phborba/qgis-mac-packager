@@ -30,8 +30,7 @@ cd $DIR/../qgis-mac-packager
 echo "Run build"
 python3 qgis_builder.py \
    --output_directory $BUILD_DIR \
-   --git $GIT \
-   --min_os ${MINOS}
+   --git $GIT --min_os ${MINOS}
 
 echo "Bundle"
 python3 qgis_bundler.py \
@@ -40,8 +39,7 @@ python3 qgis_bundler.py \
   --python /usr/local/opt/python3/Frameworks/Python.framework/Versions/3.7/Python \
   --pyqt /usr/local/opt/pyqt5/lib/python3.7/site-packages/PyQt5 \
   --gdal /usr/local/opt/gdal2 \
-  --saga /usr/local/opt/saga-gis-lts \
-  --min_os ${MINOS}
+  --saga /usr/local/opt/saga-gis-lts --min_os ${MINOS}
 
 echo "Package"
 python3 qgis_packager.py \

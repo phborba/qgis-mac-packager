@@ -11,6 +11,7 @@ import subprocess
 import multiprocessing
 import sys
 
+
 class QGISBuildError(Exception):
     pass
 
@@ -31,10 +32,11 @@ parser.add_argument('--git',
                     required=True,
                     help='git branch/tag/changeset')
 parser.add_argument('--min_os',
-                    required=True,
+                    required=False,
+                    default=None,
                     help='min os version to support')
 
-verbose = False
+verbose = True
 
 QGIS_REPO = "https://github.com/qgis/QGIS.git/"
 
@@ -43,7 +45,7 @@ args = parser.parse_args()
 print("OUTPUT DIRECTORY: " + args.output_directory)
 print("GIT: " + args.git)
 print("CLEAN: " + str(args.clean))
-print("APPLE MINOS: "  + args.min_os)
+print("APPLE MINOS: "  + str(args.min_os))
 
 outDir = os.path.realpath(args.output_directory)
 if not os.path.exists(outDir):
@@ -120,7 +122,7 @@ env = {
     "PATH": "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
 }
 
-args = ["cmake",
+cmake_args = ["cmake",
         "-DCMAKE_BUILD_TYPE=Release",
         "-DCMAKE_INSTALL_PREFIX="+os.path.realpath(installDir),
         "-DCMAKE_PREFIX_PATH="+prefix_path,
@@ -129,9 +131,12 @@ args = ["cmake",
         "-DWITH_BINDINGS=TRUE",
         "-DEXIV2_INCLUDE_DIR=/usr/local/opt/exiv2/include",
         "-DEXIV2_LIBRARY=/usr/local/opt/exiv2/lib/libexiv2.dylib",
-        "-DCMAKE_OSX_DEPLOYMENT_TARGET={}".format(args.min_os),
-        qgisDir
        ]
+
+if not (args.min_os is None):
+    cmake_args += ["-DCMAKE_OSX_DEPLOYMENT_TARGET={}".format(args.min_os)]
+
+cmake_args += [qgisDir]
 
 print("run cmake command:")
 print(args)
@@ -139,7 +144,7 @@ print("env:")
 print(env)
 
 try:
-    result = subprocess.run(args,
+    result = subprocess.run(cmake_args,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,  # Combine out/err into stdout; stderr will be None
                 universal_newlines=True,
@@ -159,7 +164,10 @@ print(100*"*")
 os.chdir(buildDir)
 
 sys.stdout.flush()
-os.system("make -j"+str(cores) + " install")
+cmd = "make -j"+str(cores) + " install"
+if verbose:
+    cmd += " VERBOSE=1"
+os.system(cmd)
 sys.stdout.flush()
 
 print("build done")

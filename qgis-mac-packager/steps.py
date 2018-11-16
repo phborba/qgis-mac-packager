@@ -17,21 +17,22 @@ def patch_files(pa, min_os):
         raise  QGISBundlerError("MISSING " + infoplist)
 
     # Minimum version
-    with open(infoplist, "r") as f:
-        c = f.read()
+    if not (min_os is None):
+        with open(infoplist, "r") as f:
+            c = f.read()
 
-        # add minimum version
-        if "LSMinimumSystemVersion" in c:
-            raise QGISBundlerError("Ups minimum version already present in info " + infoplist)
+            # add minimum version
+            if "LSMinimumSystemVersion" in c:
+                raise QGISBundlerError("Ups minimum version already present in info " + infoplist)
 
-        c = c.replace("\t<key>CFBundleDevelopmentRegion</key>",
-                      "\t<key>LSMinimumSystemVersion</key>\n" +
-                      "\t<string>{}</string>\n".format(min_os) +
-                      "\t<key>CFBundleDevelopmentRegion</key>"
-                      )
+            c = c.replace("\t<key>CFBundleDevelopmentRegion</key>",
+                          "\t<key>LSMinimumSystemVersion</key>\n" +
+                          "\t<string>{}</string>\n".format(min_os) +
+                          "\t<key>CFBundleDevelopmentRegion</key>"
+                          )
 
-    with open(infoplist, "w") as f:
-        f.write(c)
+        with open(infoplist, "w") as f:
+            f.write(c)
 
     # PythonHome
     with open(infoplist, "r") as f:

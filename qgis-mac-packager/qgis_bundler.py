@@ -37,7 +37,8 @@ parser.add_argument('--start_step',
                     required=False,
                     default=0)
 parser.add_argument('--min_os',
-                    required=True,
+                    required=False,
+                    default=None,
                     help='min os version to support')
 
 verbose = False
@@ -50,7 +51,7 @@ print("PYTHON: " + args.python)
 print("PYQT: " + args.pyqt)
 print("GDAL: " + args.gdal)
 print("SAGA: " + args.saga)
-print("APPLE MINOS: "  + args.min_os)
+print("APPLE MINOS: "  + str(args.min_os))
 
 if not os.path.exists(args.python):
     raise QGISBundlerError(args.python + " does not exists")
