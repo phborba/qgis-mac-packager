@@ -21,6 +21,12 @@ pip3 install python-dateutil
 pip3 install cython
 CFLAGS='-std=c99' pip3 install git+https://github.com/jswhit/pyproj.git
 
+# make sure you do not install homebrew-core/gdal since it
+# does not support netcdf
+# also do not use bottle since it does not have netcdf too!
+brew install osgeo/osgeo4mac/gdal2 --with-complete --with-libkml
+brew link gdal2 --force
+
 brew install openvpn
 brew install szip
 brew install hdf5
@@ -29,15 +35,10 @@ brew install scipy
 brew install netcdf
 brew install gsl
 brew install exiv2
-
-# make sure you do not install homebrew-core/gdal since it
-# does not support netcdf
-brew install osgeo/osgeo4mac/gdal2 --with-complete --with-libkml
 brew install osgeo/osgeo4mac/saga-gis-lts
 brew install gdal2-python
 
 # use this link until postgis is build on osgeo
-brew link gdal2 --force
 brew install https://raw.githubusercontent.com/OSGeo/homebrew-osgeo4mac/530a838c9d93721d0c2d5eee2ddeb702b848184f/Formula/postgis.rb --build-from-source
 
 
