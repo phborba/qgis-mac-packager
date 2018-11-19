@@ -372,6 +372,13 @@ for lib in libs:
                     raise QGISBundlerError("All PyQt5 modules should be already bundled!" + file)
 
 
+# fix duplicit libwx_osx_cocoau_core-3.0.dylib
+# https://github.com/lutraconsulting/qgis-mac-packager/issues/26
+lib = pa.libDir + "/libwx_osx_cocoau_core-3.0.dylib"
+existing_link_realpath = pa.libDir + "/libwx_osx_cocoau_core-3.0.dylib"
+cp.remove(lib)
+relpath = os.path.relpath(existing_link_realpath, os.path.dirname(lib))
+cp.symlink(relpath, lib)
 
 print(100*"*")
 print("STEP 3: Copy frameworks to bundle")

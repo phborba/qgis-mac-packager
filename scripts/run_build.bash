@@ -28,9 +28,9 @@ echo "Please run brew update manually to get new deps"
 
 cd $DIR/../qgis-mac-packager
 echo "Run build"
-# python3 qgis_builder.py \
-#   --output_directory $BUILD_DIR \
-#   --git $GIT --min_os ${MINOS}
+python3 qgis_builder.py \
+   --output_directory $BUILD_DIR \
+   --git $GIT --min_os ${MINOS}
 
 echo "Bundle"
 python3 qgis_bundler.py \
