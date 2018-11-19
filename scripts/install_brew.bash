@@ -103,18 +103,18 @@ brew install pyspatialite
 brew install r
 brew install saga-gis-lts
 
-pip3 installcertifi
-pip3 installchardet
-pip3 installidna
-pip3 installOWSLib
-pip3 installcython
-pip3 installpyproj
-pip3 installpython-dateutil
-pip3 installpytz
-pip3 installrequests
-pip3 installsix
-pip3 installurllib3
-pip3 installcoverage
+pip3 install certifi
+pip3 install chardet
+pip3 install idna
+pip3 install OWSLib
+pip3 install cython
+pip3 install pyproj
+pip3 install python-dateutil
+pip3 install pytz
+pip3 install requests
+pip3 install six
+pip3 install urllib3
+pip3 install coverage
 pip3 install funcsigs
 pip3 install future
 pip3 install mock
