@@ -37,6 +37,7 @@ def _patch_file(pa, filepath, keyword, replace_from, replace_to):
 def patch_files(pa, min_os):
     add_python_home = True
     add_python_start = True
+    add_python_path = True
     add_grass7_folder = True
     add_qgis_prefix = True
     add_gdal_paths = True
@@ -77,6 +78,17 @@ def patch_files(pa, min_os):
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
                                )
 
+    # Python path
+    if add_python_home:
+        _patch_file(pa, infoplist,
+                               "PYTHONPATH",
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
+                               "\t\t<key>PYTHONPATH</key>\n" +
+                               "\t\t<string>/Applications/QGIS.app/Contents/Resources/python</string>\n" +
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
+                               )
+
+    # qgis prefix
     if add_qgis_prefix:
         _patch_file(pa, infoplist,
                                "QGIS_PREFIX_PATH",

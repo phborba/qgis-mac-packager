@@ -579,6 +579,7 @@ for exe in exes:
                 raise QGISBundlerError("invalid lib link!")
         else:
             print("Skipping link " + exe)
+            subprocess.call(['chmod', '+x', exe])
 
 print(100*"*")
 print("STEP 7: Fix QCA_PLUGIN_PATH Qt Plugin path")
