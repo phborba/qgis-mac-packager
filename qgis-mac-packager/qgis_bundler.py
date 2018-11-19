@@ -30,6 +30,9 @@ parser.add_argument('--gdal',
 parser.add_argument('--saga',
                     required=True,
                     help='saga installation directory')
+parser.add_argument('--grass7',
+                    required=True,
+                    help='grass7 installation directory')
 parser.add_argument('--rpath_hint',
                     required=False,
                     default="")
@@ -51,6 +54,7 @@ print("PYTHON: " + args.python)
 print("PYQT: " + args.pyqt)
 print("GDAL: " + args.gdal)
 print("SAGA: " + args.saga)
+print("GRASS7: " + args.grass7)
 print("APPLE MINOS: "  + str(args.min_os))
 
 if not os.path.exists(args.python):
@@ -73,6 +77,9 @@ if not os.path.exists(args.gdal + "/bin"):
 if not os.path.exists(args.saga + "/bin"):
     raise QGISBundlerError(args.saga + "/bin does not contain SAGA installation")
 
+if not os.path.exists(args.grass7 + "/bin"):
+    raise QGISBundlerError(args.grass7 + "/bin does not contain GRASS7 installation")
+
 
 class Paths:
     def __init__(self, args):
@@ -86,6 +93,7 @@ class Paths:
         self.pysitepackages = os.path.join(os.path.dirname(self.pythonHost), "lib", "python3.7", "site-packages")
         self.gdalHost = os.path.realpath(args.gdal)
         self.sagaHost = os.path.realpath(args.saga)
+        self.grass7Host = os.path.realpath(args.grass7)
 
         # new bundle destinations
         self.qgisApp = os.path.realpath(os.path.join(args.output_directory, "QGIS.app"))
@@ -96,9 +104,11 @@ class Paths:
         self.qgisExe = os.path.join(self.macosDir, "QGIS")
         self.pluginsDir = os.path.join(self.contentsDir, "PlugIns")
         self.qgisPluginsDir = os.path.join(self.pluginsDir, "qgis")
-        self.pythonDir = os.path.join(self.contentsDir, "Resources", "python")
+        self.resourcesDir = os.path.join(self.contentsDir, "Resources")
+        self.pythonDir = os.path.join(self.resourcesDir, "python")
         self.binDir = os.path.join(self.macosDir, "bin")
-
+        self.grass7Dir = os.path.join(self.resourcesDir, "grass7")
+        self.gdalDataDir = os.path.join(self.resourcesDir, "gdal")
 
 cp = utils.CopyUtils(os.path.realpath(args.output_directory))
 pa = Paths(args)
@@ -125,15 +135,20 @@ print("Remove crssync")
 if os.path.exists(pa.libDir + "/qgis/crssync"):
     cp.rmtree(pa.libDir + "/qgis")
 
-print("Copying " + pa.gdalHost)
+print("Copying GDAL" + pa.gdalHost)
 for item in os.listdir(pa.gdalHost + "/bin"):
     cp.copy(pa.gdalHost + "/bin/" + item, pa.binDir)
-
+cp.copytree(pa.gdalHost + "/share/gdal", pa.gdalDataDir, symlinks=False)
+subprocess.call(['chmod', '-R', '+w', pa.gdalDataDir])
 
 print("Copying SAGA " + pa.sagaHost)
 cp.copy(pa.sagaHost + "/bin/saga_cmd", pa.binDir)
-
 subprocess.call(['chmod', '-R', '+w', pa.binDir])
+
+print("Copying GRASS7 " + pa.grass7Host)
+cp.copytree(pa.grass7Host, pa.grass7Dir, symlinks=True)
+subprocess.call(['chmod', '-R', '+w', pa.grass7Dir])
+
 
 print("Remove unneeded qgis_bench.app")
 if os.path.exists(pa.binDir + "/qgis_bench.app"):
@@ -225,8 +240,14 @@ deps_queue |= set(glob.glob(qtDir + "/plugins/*/*.dylib"))
 deps_queue |= set(glob.glob(qcaDir + "/lib/qt5/plugins/*/*.dylib"))
 # 5. python interpreter
 deps_queue.add(pythonHost)
-# 5. saga for processing toolbox
-deps_queue.add(pa.binDir + "/saga_cmd")
+# 6. saga for processing toolbox and other bins
+deps_queue |= set(glob.glob(pa.binDir + "/*"))
+# 7. grass7
+deps_queue |= set(glob.glob(pa.grass7Dir + "/bin/*"))
+deps_queue |= set(glob.glob(pa.grass7Dir + "/lib/*.dylib"))
+deps_queue |= set(glob.glob(pa.grass7Dir + "/driver/db/*"))
+deps_queue |= set(glob.glob(pa.grass7Dir + "/etc/*"))
+deps_queue |= set(glob.glob(pa.grass7Dir + "/etc/*/*"))
 
 while deps_queue:
     lib = deps_queue.pop()
@@ -242,6 +263,9 @@ while deps_queue:
         continue
 
     if not lib_fixed:
+        continue
+
+    if os.path.isdir(lib_fixed):
         continue
 
     extraInfo = "" if lib == lib_fixed else "(" + lib_fixed + ")"
@@ -307,7 +331,7 @@ for lib in libs:
         subprocess.call(['chmod', '+w', new_file])
 
     # link to libs folder if the library is somewhere around the bundle dir
-    if (pa.qgisApp in lib) and (pa.libDir not in lib) :
+    if (pa.qgisApp in lib) and (pa.libDir not in lib):
         link = pa.libDir + "/" + os.path.basename(lib)
         if not os.path.exists(link):
             cp.symlink(os.path.relpath(lib, pa.libDir),
@@ -461,29 +485,34 @@ exes = set()
 exes.add(pa.qgisExe)
 exes |= set(glob.glob(pa.frameworksDir + "/Python.framework/Versions/Current/bin/*"))
 exes |= set(glob.glob(pa.binDir + "/*"))
+exes |= set(glob.glob(pa.grass7Dir + "/bin/*"))
+exes |= set(glob.glob(pa.grass7Dir + "/driver/db/*"))
+exes |= set(glob.glob(pa.grass7Dir + "/etc/*"))
+exes |= set(glob.glob(pa.grass7Dir + "/etc/*/*"))
 
 for exe in exes:
-    if not os.path.islink(exe):
-        print("Patching " + exe)
-        binaryDependencies = otool.get_binary_dependencies(pa.qgisApp, exe)
-        try:
-            install_name_tool.fix_lib(exe, binaryDependencies, pa.contentsDir, libPatchedPath, relLibPathToFramework)
-        except subprocess.CalledProcessError:
-            # Python.framework/Versions/Current/bin/idle3 is not a Mach-O file ??
-            pass
-        subprocess.call(['chmod', '+x', exe])
+    if not os.path.isdir(exe):
+        if not os.path.islink(exe):
+            print("Patching " + exe)
+            binaryDependencies = otool.get_binary_dependencies(pa.qgisApp, exe)
+            try:
+                install_name_tool.fix_lib(exe, binaryDependencies, pa.contentsDir, libPatchedPath, relLibPathToFramework)
+            except subprocess.CalledProcessError:
+                # Python.framework/Versions/Current/bin/idle3 is not a Mach-O file ??
+                pass
+            subprocess.call(['chmod', '+x', exe])
 
-        # as we use @executable_path everywhere,
-        # there is a problem
-        # because QGIS and bin/* is different directory
-        exeDir = os.path.dirname(exe)
-        if not os.path.exists(exeDir + "/lib"):
-            cp.symlink(os.path.relpath(pa.libDir, exeDir), exeDir + "/lib")
-        testLink = os.path.realpath(exeDir + "/lib")
-        if testLink != os.path.realpath(pa.libDir):
-            raise QGISBundlerError("invalid lib link!")
-    else:
-        print("Skipping link " + exe)
+            # as we use @executable_path everywhere,
+            # there is a problem
+            # because QGIS and bin/* is different directory
+            exeDir = os.path.dirname(exe)
+            if not os.path.exists(exeDir + "/lib"):
+                cp.symlink(os.path.relpath(pa.libDir, exeDir), exeDir + "/lib")
+            testLink = os.path.realpath(exeDir + "/lib")
+            if testLink != os.path.realpath(pa.libDir):
+                raise QGISBundlerError("invalid lib link!")
+        else:
+            print("Skipping link " + exe)
 
 print(100*"*")
 print("STEP 7: Fix QCA_PLUGIN_PATH Qt Plugin path")

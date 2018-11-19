@@ -37,6 +37,7 @@ parser.add_argument('--min_os',
                     help='min os version to support')
 
 verbose = False
+enable_tests = False
 
 QGIS_REPO = "https://github.com/qgis/QGIS.git/"
 
@@ -118,10 +119,19 @@ for path in prefix_path.split(";"):
     if not os.path.exists(path):
         raise QGISBuildError("Missing " + path)
 
+grass7_prefix = "/usr/local/Cellar/grass7/7.4.2/grass-base"
+if not os.path.exists(grass7_prefix):
+    raise QGISBuildError("Missing " + grass7_prefix)
+
 env = {
     "PATH": "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin",
-    "GRASS_PREFIX7": "/usr/local/Cellar/grass7/7.4.2/grass-base"
+    "GRASS_PREFIX7": grass7_prefix,
 }
+
+# copied from homebrew receipt... is it needed at all?
+# keep superenv from stripping (use Cellar prefix)
+env["CXXFLAGS"] = "-isystem {}/include".format(grass7_prefix)
+
 
 cmake_args = ["cmake",
         "-DCMAKE_BUILD_TYPE=Release",
@@ -134,6 +144,10 @@ cmake_args = ["cmake",
         "-DEXIV2_LIBRARY=/usr/local/opt/exiv2/lib/libexiv2.dylib",
         "-DCMAKE_FIND_FRAMEWORK=LAST" # FindGEOS.cmake is confused because it finds geos library but not framework Info.plist
        ]
+
+if not enable_tests:
+    # disable unit tests
+    cmake_args += ["-DENABLE_TESTS=FALSE"]
 
 if not (args.min_os is None):
     cmake_args += ["-DCMAKE_OSX_DEPLOYMENT_TARGET={}".format(args.min_os)]

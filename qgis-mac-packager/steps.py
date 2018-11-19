@@ -9,9 +9,37 @@ class QGISBundlerError(Exception):
     pass
 
 
+def _patch_file(pa, filepath, keyword, replace_from, replace_to):
+    realpath = os.path.realpath(filepath)
+    if not os.path.exists(realpath) or pa.qgisApp not in realpath:
+        raise QGISBundlerError("Invalid file to patch " + filepath)
+
+    with open(filepath, "r") as f:
+        c = f.read()
+
+        # add minimum version
+        if keyword in c:
+            raise QGISBundlerError("Ups {} already present in info {}".format(keyword, filepath))
+
+        c = c.replace(replace_from,
+                      replace_to)
+
+    with open(filepath, "w") as f:
+        f.write(c)
+
+    # check
+    with open(filepath, "r") as f:
+        c = f.read()
+        if keyword not in c:
+            raise QGISBundlerError("Ups failed to add {} in info {}".format(keyword, filepath))
+
+
 def patch_files(pa, min_os):
     add_python_home = True
     add_python_start = True
+    add_grass7_folder = True
+    add_qgis_prefix = True
+    add_gdal_paths = True
 
     # Info.plist
     # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-113253
@@ -21,76 +49,77 @@ def patch_files(pa, min_os):
 
     # Minimum version
     if not (min_os is None):
-        with open(infoplist, "r") as f:
-            c = f.read()
-
-            # add minimum version
-            if "LSMinimumSystemVersion" in c:
-                raise QGISBundlerError("Ups minimum version already present in info " + infoplist)
-
-            c = c.replace("\t<key>CFBundleDevelopmentRegion</key>",
-                          "\t<key>LSMinimumSystemVersion</key>\n" +
-                          "\t<string>{}</string>\n".format(min_os) +
-                          "\t<key>CFBundleDevelopmentRegion</key>"
-                          )
-
-        with open(infoplist, "w") as f:
-            f.write(c)
-
-        # check
-        with open(infoplist, "r") as f:
-            c = f.read()
-            if "LSMinimumSystemVersion" not in c:
-                raise QGISBundlerError("UUUPS LSMinimumSystemVersion " + infoplist)
-
+        _patch_file(pa, infoplist,
+                               "LSMinimumSystemVersion",
+                               "\t<key>CFBundleDevelopmentRegion</key>",
+                               "\t<key>LSMinimumSystemVersion</key>\n" +
+                               "\t<string>{}</string>\n".format(min_os) +
+                               "\t<key>CFBundleDevelopmentRegion</key>"
+                               )
 
     # Python Start
     if add_python_start:
-        with open(infoplist, "r") as f:
-            c = f.read()
-
-            # add minimum version
-            if "PYQGIS_STARTUP" in c:
-                raise QGISBundlerError("Ups PYQGIS_STARTUP already present in info " + infoplist)
-
-            c = c.replace("\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
-                          "\t\t<key>PYQGIS_STARTUP</key>\n" +
-                          "\t\t<string>/Applications/QGIS.app/Contents/Resources/python/pyqgis-startup.py</string>\n" +
-                          "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
-                          )
-
-        with open(infoplist, "w") as f:
-            f.write(c)
-
-        # check
-        with open(infoplist, "r") as f:
-            c = f.read()
-            if "PYQGIS_STARTUP" not in c:
-                raise QGISBundlerError("UUUPS PYQGIS_STARTUP " + infoplist)
+        _patch_file(pa, infoplist,
+                               "PYQGIS_STARTUP",
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
+                               "\t\t<key>PYQGIS_STARTUP</key>\n" +
+                               "\t\t<string>/Applications/QGIS.app/Contents/Resources/python/pyqgis-startup.py</string>\n" +
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
+                               )
 
     # Python Home
     if add_python_home:
-        with open(infoplist, "r") as f:
-            c = f.read()
+        _patch_file(pa, infoplist,
+                               "PYTHONHOME",
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
+                               "\t\t<key>PYTHONHOME</key>\n" +
+                               "\t\t<string>/Applications/QGIS.app/Contents/Frameworks/Python.framework/Versions/Current</string>\n" +
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
+                               )
 
-            # add minimum version
-            if "PYTHONHOME" in c:
-                raise QGISBundlerError("Ups PYTHONHOME already present in info " + infoplist)
+    if add_qgis_prefix:
+        _patch_file(pa, infoplist,
+                               "QGIS_PREFIX_PATH",
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
+                               "\t\t<key>QGIS_PREFIX_PATH</key>\n" +
+                               "\t\t<string>{}</string>\n".format(pa.macosDir) +
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
+                               )
 
-            c = c.replace("\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
-                          "\t\t<key>PYTHONHOME</key>\n" +
-                          "\t\t<string>/Applications/QGIS.app/Contents/Frameworks/Python.framework/Versions/Current</string>\n" +
-                          "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
-                          )
+    # Grass7 folder
+    if add_grass7_folder:
+        grass7pyfile = os.path.join(pa.pythonDir, "plugins/processing/algs/grass7/Grass7Utils.py")
+        _patch_file(pa,
+                    grass7pyfile,
+                    pa.grass7Dir,
+                  "'/Applications/GRASS-7.{}.app/Contents/MacOS'.format(version)",
+                  "'{}'".format(pa.grass7Dir))
 
-        with open(infoplist, "w") as f:
-            f.write(c)
 
-        # check
-        with open(infoplist, "r") as f:
-            c = f.read()
-            if "PYTHONHOME" not in c:
-                raise QGISBundlerError("UUUPS PYTHONHOME " + infoplist)
+    # fix GDAL paths
+    if add_gdal_paths:
+        _patch_file(pa, infoplist,
+                               "GDAL_DRIVER_PATH",
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
+                               "\t\t<key>GDAL_DRIVER_PATH</key>\n" +
+                               "\t\t<string>{}</string>\n".format(pa.libDir) +
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
+                               )
+
+        _patch_file(pa, infoplist,
+                               "GDAL_DATA",
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
+                               "\t\t<key>GDAL_DATA</key>\n" +
+                               "\t\t<string>{}</string>\n".format(pa.gdalDataDir) +
+                               "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
+                               )
+
+    # fix for Retina displays
+    with open(infoplist, "r") as f:
+        c = f.read()
+        keyword = "NSHighResolutionCapable"
+        if keyword not in c:
+            raise QGISBundlerError("Missing {} in info {}".format(keyword, infoplist))
 
 
 def append_recursively_site_packages(cp, sourceDir, destDir):
@@ -220,3 +249,17 @@ def test_full_tree_consistency(pa):
 
             if pa.qgisApp not in filepath:
                 raise QGISBundlerError(" File " + root + "/" + file + " is not in bundle dir")
+
+    print("Test GDAL installation")
+    gdalinfo = pa.binDir + "/gdalinfo"
+    expected_formats = ["netCDF", "GRIB", "GPKG", "GTiff"]
+    try:
+        output = subprocess.check_output([gdalinfo, "--formats"], stderr=subprocess.STDOUT, encoding='UTF-8')
+    except subprocess.CalledProcessError as err:
+        print(err.output)
+        raise
+
+    for f in expected_formats:
+        if f not in output:
+            raise QGISBundlerError("format {} missing in gdalinfo --formats".format(f))
+
