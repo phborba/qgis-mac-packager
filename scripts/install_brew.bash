@@ -13,6 +13,7 @@ fi
 
 brew tap osgeo/osgeo4mac
 
+brew install fcgi
 brew install git
 brew cask install xquartz
 brew install cmake
