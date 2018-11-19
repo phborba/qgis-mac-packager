@@ -24,19 +24,7 @@ For package details, see [details page](https://lutraconsulting.github.io/qgis-m
 - Sign out from the apple developer page and app store
 - Open XCode and accept license
 - install homebrew and QGIS deps by running `install_brew.bash`
-- Update `~/.bash_profile`
-```
-export CLICOLOR=1
-export PS1="\[\e[32m\]\u\[\e[m\]\[\e[32m\]@\[\e[m\]\[\e[32m\]\h\[\e[m\]:\[\e[34m\]\w\[\e[m\]\\$ "
-
-# allow bash completion 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
-fi
-
-export PATH="/usr/local/sbin:$PATH"
-export HOMEBREW_NO_AUTO_UPDATE=1
-```
+- Update `~/.bash_profile` from `scrips/bash_profile`
 - now clone this repository
 - to upload to Dropbox
     1. Create App with a folder to upload a files, get a token
