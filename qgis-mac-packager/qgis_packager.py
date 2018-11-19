@@ -180,12 +180,12 @@ if dmg:
             "--window-pos", "200", "120",
             "--window-size", "800", "600",
             "--icon-size", "120",
-            "--icon", resourcesDir + "/qgis-icon-120x120.png" ,"200", "190",
+            "--icon", resourcesDir + "/qgis-icon-120x120.png" ,"300", "190",
             "--hide-extension", "QGIS.app",
             "--app-drop-link", "600", "185",
             "--eula", resourcesDir + "/EULA.txt",
             dmgFile,
-            qgisApp + "/"
+            qgisApp
             ]
 
     out = subprocess.check_output(args, encoding='UTF-8')
