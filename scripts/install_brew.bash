@@ -17,6 +17,15 @@ brew install git
 brew cask install xquartz
 brew install cmake
 brew install create-dmg
+brew install ninja
+brew install gsl
+brew install sip
+brew install bison
+brew install flex
+brew install pkg-config
+brew install python
+brew install qt
+brew install pyqt
 
 # pyproj has bug for python3, unable to install from pip3
 pip3 install python-dateutil
@@ -52,16 +61,7 @@ pip3 install owslib
 # qgis deps
 # brew install osgeo/osgeo4mac/qgis3 --only-dependencies
 # qgis install it brings homebrew-core/gdal dependency back
-brew install cmake
-brew install ninja
-brew install gsl
-brew install sip
-brew install bison
-brew install flex
-brew install pkg-config
-brew install python
-brew install qt
-brew install pyqt
+
 brew install pyqt5-webkit
 # brew install x11
 brew install qca
