@@ -249,6 +249,11 @@ deps_queue |= set(glob.glob(pa.grass7Dir + "/driver/db/*"))
 deps_queue |= set(glob.glob(pa.grass7Dir + "/etc/*"))
 deps_queue |= set(glob.glob(pa.grass7Dir + "/etc/*/*"))
 
+# DEBUGGING
+debug_lib = None
+# debug_lib = "libjpeg"
+# debug_lib = "libhdf"
+
 while deps_queue:
     lib = deps_queue.pop()
     # patch @rpath, @loader_path and @executable_path
@@ -277,6 +282,12 @@ while deps_queue:
     done_queue.add(lib_fixed)
 
     binaryDependencies = otool.get_binary_dependencies(pa, lib_fixed)
+
+    if debug_lib:
+        for l in binaryDependencies.libs:
+            if debug_lib in l:
+               print(100*"*")
+               print("JPEG: {} -- {}".format(debug_lib, lib))
 
     sys_libs |= set(binaryDependencies.sys_libs)
     libs |= set(binaryDependencies.libs)
@@ -326,6 +337,7 @@ for lib in libs:
         print("Bundling " + lib + " to " + target_dir)
         if not os.path.exists(target_dir):
             os.makedirs(target_dir)
+
         cp.copy(lib, target_dir)
 
         new_file = os.path.join(target_dir, os.path.basename(lib))
@@ -372,13 +384,36 @@ for lib in libs:
                     raise QGISBundlerError("All PyQt5 modules should be already bundled!" + file)
 
 
-# fix duplicit libwx_osx_cocoau_core-3.0.dylib
-# https://github.com/lutraconsulting/qgis-mac-packager/issues/26
-lib = pa.libDir + "/libwx_osx_cocoau_core-3.0.dylib"
-existing_link_realpath = pa.libDir + "/libwx_osx_cocoau_core-3.0.dylib"
-cp.remove(lib)
-relpath = os.path.relpath(existing_link_realpath, os.path.dirname(lib))
-cp.symlink(relpath, lib)
+# fix duplicit libraries
+# this is really just a workaround,
+# because when libraries are copied, we should copy all the link tree
+# xy.dylib -> dx.1.0.dylib -> dx.1.0.0.dylib ..but now we copy it 3 times
+# and not as links
+workarounds = {}
+
+for l in ["libwx_osx_cocoau_core",
+          "libwx_osx_cocoau_html",
+          "libwx_baseu_xml",
+          "libwx_osx_cocoau_adv",
+          "libwx_baseu"
+          ]:
+    lib = pa.libDir + "/{}-3.0.dylib".format(l)
+    existing_link_realpath = pa.libDir + "/{}-3.0.0.4.0.dylib".format(l)
+    workarounds[lib] = existing_link_realpath
+
+lib = pa.libDir + "/libpq.5.dylib"
+existing_link_realpath = pa.libDir + "/libpq.5.10.dylib"
+workarounds[lib] = existing_link_realpath
+
+for lib, existing_link_realpath in workarounds.items():
+    if not (os.path.exists(lib) and os.path.exists(existing_link_realpath)):
+        print("WARNING: Workaround " + lib + "->" + existing_link_realpath + " is no longer valid, maybe you upaded packages?")
+        continue
+
+    cp.remove(lib)
+    relpath = os.path.relpath(existing_link_realpath, os.path.dirname(lib))
+    cp.symlink(relpath, lib)
+
 
 print(100*"*")
 print("STEP 3: Copy frameworks to bundle")

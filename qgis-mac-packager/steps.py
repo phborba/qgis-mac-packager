@@ -225,6 +225,24 @@ def test_full_tree_consistency(pa):
     print("Test that we have just one-of-kind of library type")
     errors = []
 
+    # jpeg.9 is /usr/local/Cellar/jpeg/9c/lib/libjpeg.9.dylib
+    # required by others
+    # jpeg.8 is /usr/local/Cellar/jpeg-turbo/2.0.0/lib/libjpeg.8.dylib
+    # required by /osgeo4mac/qt5-webkit
+
+    # hdf5
+    # /usr/local/Cellar//hdf5/1.10.4/lib/libhdf5.103.dylib
+    # required by others
+    # /usr/local/lib/python3.7//site-packages/h5py/.dylibs/libhdf5.101.dylib
+    # required by h5py
+
+    # 2.0 and 2.1 already in /usr/local/Cellar/pyqt/5.10.1_1/lib/python3.7/site-packages/PyQt5/
+    exceptions = [
+        "_QOpenGLFunctions_2_0.so", "_QOpenGLFunctions_2_1.so",
+        "libhdf",
+        "libjpeg"
+    ]
+
     unique_libs = {}
     for root, dirs, files in os.walk(pa.qgisApp):
         for file in files:
@@ -236,8 +254,16 @@ def test_full_tree_consistency(pa):
                     continue
 
                 basename = os.path.basename(filename)
+
+                skip = False
+                for e in exceptions:
+                    if basename.endswith(e):
+                        skip = True
+                if skip:
+                    continue
+
                 basename = basename.replace(".cpython-37m-darwin", "")
-                basename = re.sub(r'(\d+\.)?(\d+\.)?(\d+\.)?(\*|\d+)$', '', basename) # e.g. 3.0.0.4 or 3.0
+                basename = re.sub(r'(\-\d+)?(\.\d+)?(\.\d+)?(\.\d+)?(\.\d+)$', '', basename) # e.g. 3.0.0.4 or 3.0
                 print('Checking duplicity of library ' + basename)
                 if basename in unique_libs:
                     errors += ["Library " + filepath + " is bundled multiple times, first time in " + unique_libs[basename]]
