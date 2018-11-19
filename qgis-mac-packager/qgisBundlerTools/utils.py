@@ -3,6 +3,15 @@
 
 import os
 import shutil
+import subprocess
+
+
+def files_differ(file1, file2):
+    try:
+        subprocess.check_output(["diff", file1, file2], stderr=subprocess.STDOUT, encoding='UTF-8')
+    except subprocess.CalledProcessError as err:
+        return True
+    return False
 
 
 def framework_name(framework):

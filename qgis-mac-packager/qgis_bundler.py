@@ -309,6 +309,9 @@ print(100*"*")
 print("STEP 2: Copy libraries/plugins to bundle")
 print(100*"*")
 
+unlinked_libs = set()
+unlink_links = set()
+
 for lib in libs:
     # We assume that all libraries with @ are already bundled in QGIS.app
     # TODO in conda they use rpath, so this is not true
@@ -356,15 +359,27 @@ for lib in libs:
             # we already have this lib in the bundle (because there is a link! in lib/), so make sure we do not have it twice!
             existing_link_realpath = os.path.realpath(link)
             if existing_link_realpath != os.path.realpath(lib):
-                # ok, in this case remove the new library and just symlink to the lib
-                cp.remove(lib)
-                relpath = os.path.relpath(existing_link_realpath, os.path.dirname(lib))
-                cp.symlink(relpath,
-                           lib)
+                if utils.files_differ(existing_link_realpath, lib):
+                    # libraries with the same name BUT with different contents
+                    # so do not have it in libs folder because we do not know which
+                    # we HOPE that this happens only for cpython extensions for python modules
+                    if not "cpython-37m-darwin" in link:
+                        raise QGISBundlerError("multiple libraries with same name but different content " + link + "; " + lib)
+                    unlink_links.add(link)
+                    unlinked_libs.add(existing_link_realpath)
+                    unlinked_libs.add(os.path.realpath(lib))
 
-                link = os.path.realpath(lib)
-                if not os.path.exists(link):
-                    raise QGISBundlerError("Ups, wrongly relinked! " + link)
+                else:
+                    # same library (binary) --> we need just one
+                    # ok, in this case remove the new library and just symlink to the lib
+                    cp.remove(lib)
+                    relpath = os.path.relpath(existing_link_realpath, os.path.dirname(lib))
+                    cp.symlink(relpath,
+                               lib)
+
+                    link = os.path.realpath(lib)
+                    if not os.path.exists(link):
+                        raise QGISBundlerError("Ups, wrongly relinked! " + link)
 
 
     # find out if there are no python3.7 plugins in the dir
@@ -383,6 +398,10 @@ for lib in libs:
                 else:
                     raise QGISBundlerError("All PyQt5 modules should be already bundled!" + file)
 
+
+# these are cpython libs, unlink them it is enough to have them in python site-packages
+for lib in unlink_links:
+    cp.unlink(lib)
 
 # fix duplicit libraries
 # this is really just a workaround,
@@ -541,6 +560,9 @@ for lib in libs:
         binaryDependencies = otool.get_binary_dependencies(pa, lib)
         install_name_tool.fix_lib(lib, binaryDependencies, pa.contentsDir, libPatchedPath, relLibPathToFramework)
         subprocess.call(['chmod', '+x', lib])
+
+        # TODO what to do with unlinked_libs????
+        # now we hope noone references them
     else:
         print("Skipping link " + lib)
 

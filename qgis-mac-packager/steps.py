@@ -2,6 +2,7 @@ import subprocess
 import os
 
 import qgisBundlerTools.otool as otool
+import qgisBundlerTools.utils as utils
 import qgisBundlerTools.install_name_tool as install_name_tool
 import re
 
@@ -278,7 +279,12 @@ def test_full_tree_consistency(pa):
                 basename = re.sub(r'(\-\d+)?(\.\d+)?(\.\d+)?(\.\d+)?(\.\d+)$', '', basename) # e.g. 3.0.0.4 or 3.0
                 print('Checking duplicity of library ' + basename)
                 if basename in unique_libs:
-                    errors += ["Library " + filepath + " is bundled multiple times, first time in " + unique_libs[basename]]
+                    if utils.files_differ(filepath, unique_libs[basename]):
+                        # make sure there is no link in libs
+                        if os.path.exists(pa.libDir + "/" + os.path.basename(filepath)):
+                            errors += ["Link exists for library " + filepath + " is bundled multiple times, first time in " + unique_libs[basename]]
+                    else:
+                        errors += ["Library " + filepath + " is bundled multiple times, first time in " + unique_libs[basename]]
 
                 unique_libs[basename] = filepath
 
