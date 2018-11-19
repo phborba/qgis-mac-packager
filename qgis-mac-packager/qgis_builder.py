@@ -119,7 +119,8 @@ for path in prefix_path.split(";"):
         raise QGISBuildError("Missing " + path)
 
 env = {
-    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin"
+    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin",
+    "GRASS_PREFIX7": "/usr/local/Cellar/grass7/7.4.2/grass-base"
 }
 
 cmake_args = ["cmake",
@@ -131,6 +132,7 @@ cmake_args = ["cmake",
         "-DWITH_BINDINGS=TRUE",
         "-DEXIV2_INCLUDE_DIR=/usr/local/opt/exiv2/include",
         "-DEXIV2_LIBRARY=/usr/local/opt/exiv2/lib/libexiv2.dylib",
+        "-DCMAKE_FIND_FRAMEWORK=LAST" # FindGEOS.cmake is confused because it finds geos library but not framework Info.plist
        ]
 
 if not (args.min_os is None):
@@ -152,7 +154,16 @@ try:
                 env=env,
                 encoding='UTF-8'
             )
-    print(result.stdout)
+    output = result.stdout
+    print(output)
+
+    if "Could not determine GEOS version from framework." in output:
+        raise QGISBuildError("Unable to determine GEOS version!!")
+
+    if "Could not find GRASS 7" in output:
+        raise QGISBuildError("Unable to determine GRASS7 installation!!")
+
+
 except subprocess.CalledProcessError as err:
     print(err.output)
     raise
