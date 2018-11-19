@@ -257,7 +257,7 @@ def test_full_tree_consistency(pa):
 
                 skip = False
                 for e in exceptions:
-                    if basename.endswith(e):
+                    if filepath.endswith(e):
                         skip = True
                 if skip:
                     continue
