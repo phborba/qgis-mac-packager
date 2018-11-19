@@ -297,6 +297,7 @@ print(msg)
 print(100*"*")
 print("STEP 2: Copy libraries/plugins to bundle")
 print(100*"*")
+
 for lib in libs:
     # We assume that all libraries with @ are already bundled in QGIS.app
     # TODO in conda they use rpath, so this is not true
@@ -338,16 +339,39 @@ for lib in libs:
                        link)
             link = os.path.realpath(link)
             if not os.path.exists(link):
-                raise QGISBundlerError("Ups, wrongly relinked! " + lib)
+                raise QGISBundlerError("Ups, wrongly linked! " + lib)
+        else:
+            # we already have this lib in the bundle (because there is a link! in lib/), so make sure we do not have it twice!
+            existing_link_realpath = os.path.realpath(link)
+            if existing_link_realpath != os.path.realpath(lib):
+                # ok, in this case remove the new library and just symlink to the lib
+                cp.remove(lib)
+                relpath = os.path.relpath(existing_link_realpath, os.path.dirname(lib))
+                cp.symlink(relpath,
+                           lib)
+
+                link = os.path.realpath(lib)
+                if not os.path.exists(link):
+                    raise QGISBundlerError("Ups, wrongly relinked! " + link)
+
 
     # find out if there are no python3.7 plugins in the dir
     plugLibDir = os.path.join(os.path.dirname(lib), "python3.7", "site-packages", "PyQt5")
     if os.path.exists(plugLibDir):
         for file in glob.glob(plugLibDir + "/*.so"):
-            destFile = pa.pluginsDir + "/PyQt5/" + os.path.basename(file)
-            cp.copy(file, destFile )
-            subprocess.call(['chmod', '+w', destFile])
-            print("Adding extra python plugin " + file)
+            basename =  os.path.basename(file)
+            destFile = pa.pluginsDir + "/PyQt5/" + basename
+            link = pa.pythonDir + "/PyQt5/" + basename
+            if not os.path.exists(destFile):
+                if os.path.exists(link):
+                    print("Linking extra python plugin " + file)
+                    relpath = os.path.relpath(link, os.path.dirname(destFile))
+                    cp.symlink(relpath,
+                               destFile)
+                else:
+                    raise QGISBundlerError("All PyQt5 modules should be already bundled!" + file)
+
+
 
 print(100*"*")
 print("STEP 3: Copy frameworks to bundle")

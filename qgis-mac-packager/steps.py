@@ -3,7 +3,7 @@ import os
 
 import qgisBundlerTools.otool as otool
 import qgisBundlerTools.install_name_tool as install_name_tool
-
+import re
 
 class QGISBundlerError(Exception):
     pass
@@ -221,6 +221,32 @@ def test_full_tree_consistency(pa):
         print(output.split("\n")[0])
     if "QGIS" not in output:
         raise QGISBundlerError("wrong QGIS.app installation")
+
+    print("Test that we have just one-of-kind of library type")
+    errors = []
+
+    unique_libs = {}
+    for root, dirs, files in os.walk(pa.qgisApp):
+        for file in files:
+            filepath = os.path.join(root, file)
+            if not os.path.islink(filepath):
+                filename, file_extension = os.path.splitext(filepath)
+
+                if not (file_extension in [".dylib", ".so"] and otool.is_omach_file(filepath)):
+                    continue
+
+                basename = os.path.basename(filename)
+                basename = basename.replace(".cpython-37m-darwin", "")
+                basename = re.sub(r'(\d+\.)?(\d+\.)?(\d+\.)?(\*|\d+)$', '', basename) # e.g. 3.0.0.4 or 3.0
+                print('Checking duplicity of library ' + basename)
+                if basename in unique_libs:
+                    errors += ["Library " + filepath + " is bundled multiple times, first time in " + unique_libs[basename]]
+
+                unique_libs[basename] = filepath
+
+    if errors:
+        print("\n".join(errors))
+        raise QGISBundlerError("Duplicate libraries found!")
 
 
     print("Test that all libraries have correct link and and bundled")
