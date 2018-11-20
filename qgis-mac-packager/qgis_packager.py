@@ -63,7 +63,7 @@ def sign_bundle_content(qgisApp, identity, keychain):
 
 def verify_sign(path):
     args = ["codesign",
-            "--verify",
+            "--deep-verify",
             "--verbose",
             path]
 

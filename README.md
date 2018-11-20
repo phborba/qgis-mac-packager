@@ -10,8 +10,12 @@ For package details, see [details page](https://lutraconsulting.github.io/qgis-m
 - Add crash report if QGIS crashed
 - State MacOS version (e.g. 10.14.1)
 - Run `open /Applications/QGIS.app` from Terminal and add the output
-- Run `codesign --verify --verbose /Applications/QGIS.app` and add output
-- Run `env | grep -i python` and add output
+
+# Debugging Tips
+- [gatekeeper](https://stackoverflow.com/a/29221163/2838364): `codesign --verbose --deep-verify /Applications/QGIS.app/` 
+- loaded dylibs: `ps -A | grep -i qgis; vmmap <pid>`
+- signature: `codesign -d -vvvv <file>` 
+
 
 # Server Setup 
 

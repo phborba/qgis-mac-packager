@@ -65,6 +65,8 @@ def get_binary_dependencies(pa, binary):
             sys_libs.append(lib_path)
             # current/lib and bin is for some reason Python has some bundled libs/exes in framewoek
             # plugins is for dynamically loaded plugins in frameworks (e.g. Qt modules)
+        elif lib_path.startswith("/opt/X11"):
+            raise Exception("xquartz should be uninstalled, since X libraries should be taken from system /usr/lib")
         elif (".framework" in lib_path) and ("/plugins/" not in lib_path) and ("/Current/lib/" not in lib_path) and ("/Current/bin/" not in lib_path):
             frameworks.append(lib_path)
         # elif [".dylib", ".so"] in lib_path:

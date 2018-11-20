@@ -308,7 +308,6 @@ def test_full_tree_consistency(pa):
         print("\n".join(errors))
         raise QGISBundlerError("Duplicate libraries found!")
 
-
     print("Test that all libraries have correct link and and bundled")
     for root, dirs, files in os.walk(pa.qgisApp):
         for file in files:
@@ -340,7 +339,8 @@ def test_full_tree_consistency(pa):
     gdalinfo = pa.binDir + "/gdalinfo"
     expected_formats = ["GRIB", "GPKG", "GTiff"]
     # https://github.com/lutraconsulting/qgis-mac-packager/issues/25
-    # "netCDF"
+    expected_formats += ["netCDF"]
+
     try:
         output = subprocess.check_output([gdalinfo, "--formats"], stderr=subprocess.STDOUT, encoding='UTF-8')
     except subprocess.CalledProcessError as err:
