@@ -45,6 +45,7 @@ def patch_files(pa, min_os):
     add_grass7_folder = True
     add_qgis_prefix = True
     add_gdal_paths = True
+    add_quarantine = True
     destContents = "/Applications/QGIS.app/Contents"
 
     # Info.plist
@@ -60,6 +61,16 @@ def patch_files(pa, min_os):
                                "\t<key>CFBundleDevelopmentRegion</key>",
                                "\t<key>LSMinimumSystemVersion</key>\n" +
                                "\t<string>{}</string>\n".format(min_os) +
+                               "\t<key>CFBundleDevelopmentRegion</key>"
+                               )
+
+    # LSFileQuarantineEnabled
+    if add_quarantine:
+        _patch_file(pa, infoplist,
+                               "LSFileQuarantineEnabled",
+                               "\t<key>CFBundleDevelopmentRegion</key>",
+                               "\t<key>LSFileQuarantineEnabled</key>\n" +
+                               "\t<false/>\n".format(min_os) +
                                "\t<key>CFBundleDevelopmentRegion</key>"
                                )
 
