@@ -33,11 +33,18 @@ pip3 install python-dateutil
 pip3 install cython
 CFLAGS='-std=c99' pip3 install git+https://github.com/jswhit/pyproj.git
 
+
+# https://github.com/lutraconsulting/qgis-mac-packager/issues/25
+# if gdal2 is compiled with netcdf support and not from bottle
+# it crashes on ininitalization of the static variable in wms/minidriver.cpp
+brew install osgeo/osgeo4mac/gdal2
+brew link gdal2 --force
+
 # make sure you do not install homebrew-core/gdal since it
 # does not support netcdf
 # also do not use bottle since it does not have netcdf too!
-brew install osgeo/osgeo4mac/gdal2 --with-complete --with-libkml
-brew link gdal2 --force
+# brew install osgeo/osgeo4mac/gdal2 --with-complete --with-libkml
+# brew link gdal2 --force
 
 brew install openvpn
 brew install szip
