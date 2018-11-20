@@ -11,6 +11,18 @@ then
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
+# WARNING!!!
+# If we build something we MUST use --build-bottle flag!!!
+# https://github.com/lutraconsulting/qgis-mac-packager/issues/25
+#
+# https://docs.brew.sh/Bottles
+# By default, bottles will be built for the oldest CPU supported by the OS/architecture you’re building for
+# (Core 2 for 64-bit OSs). This ensures that bottles are compatible with all computers you might distribute
+# them to. If you really want your bottles to be optimized for something else, you can pass the --bottle-arch=
+# option to build for another architecture; for example, brew install foo --build-bottle --bottle-arch=penryn.
+# Just remember that if you build for a newer architecture some of your users might get binaries they can’t
+# run and that would be sad!
+
 brew tap osgeo/osgeo4mac
 
 brew install fcgi
@@ -33,18 +45,11 @@ pip3 install python-dateutil
 pip3 install cython
 CFLAGS='-std=c99' pip3 install git+https://github.com/jswhit/pyproj.git
 
-
-# https://github.com/lutraconsulting/qgis-mac-packager/issues/25
-# if gdal2 is compiled with netcdf support and not from bottle
-# it crashes on ininitalization of the static variable in wms/minidriver.cpp
-brew install osgeo/osgeo4mac/gdal2
-brew link gdal2 --force
-
 # make sure you do not install homebrew-core/gdal since it
 # does not support netcdf
 # also do not use bottle since it does not have netcdf too!
-# brew install osgeo/osgeo4mac/gdal2 --with-complete --with-libkml
-# brew link gdal2 --force
+brew install osgeo/osgeo4mac/gdal2 --build-bottle --with-complete --with-libkml
+brew link gdal2 --force
 
 brew install openvpn
 brew install szip
@@ -54,12 +59,15 @@ brew install scipy
 brew install netcdf
 brew install gsl
 brew install exiv2
-brew install osgeo/osgeo4mac/saga-gis-lts
+
+# https://github.com/OSGeo/homebrew-osgeo4mac/issues/529
+brew install saga-gis-lts --build-bottle
+
 brew install gdal2-python
 
 # use this link until postgis is build on osgeo
-brew install https://raw.githubusercontent.com/OSGeo/homebrew-osgeo4mac/530a838c9d93721d0c2d5eee2ddeb702b848184f/Formula/postgis.rb --build-from-source
-
+POSTGIS_FORMULA=https://raw.githubusercontent.com/OSGeo/homebrew-osgeo4mac/530a838c9d93721d0c2d5eee2ddeb702b848184f/Formula/postgis.rb
+brew install $POSTGIS_FORMULA --build-bottle --build-from-source
 
 # tools
 pip3 install dropbox
@@ -109,7 +117,6 @@ brew install gettext
 brew install gpsbabel
 brew install pyspatialite
 brew install r
-brew install saga-gis-lts
 
 pip3 install certifi
 pip3 install chardet
