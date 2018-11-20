@@ -147,8 +147,9 @@ subprocess.call(['chmod', '-R', '+w', pa.binDir])
 
 print("Copying GRASS7 " + pa.grass7Host)
 cp.copytree(pa.grass7Host, pa.grass7Dir, symlinks=True)
+cp.copy(pa.grass7Host + "../bin/grass74", pa.grass7Dir + "/bin")
 subprocess.call(['chmod', '-R', '+w', pa.grass7Dir])
-
+subprocess.call(['chmod', '-R', '+x', pa.grass7Dir + "/bin"])
 
 print("Remove unneeded qgis_bench.app")
 if os.path.exists(pa.binDir + "/qgis_bench.app"):
