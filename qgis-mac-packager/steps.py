@@ -15,6 +15,9 @@ def _patch_file(pa, filepath, keyword, replace_from, replace_to):
     if not os.path.exists(realpath) or pa.qgisApp not in realpath:
         raise QGISBundlerError("Invalid file to patch " + filepath)
 
+    if pa.qgisApp in replace_to:
+        raise QGISBundlerError("Wrong destination! " + replace_to)
+
     with open(filepath, "r") as f:
         c = f.read()
 
@@ -42,6 +45,7 @@ def patch_files(pa, min_os):
     add_grass7_folder = True
     add_qgis_prefix = True
     add_gdal_paths = True
+    destContents = "/Applications/QGIS.app/Contents"
 
     # Info.plist
     # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-113253
@@ -65,7 +69,7 @@ def patch_files(pa, min_os):
                                "PYQGIS_STARTUP",
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
                                "\t\t<key>PYQGIS_STARTUP</key>\n" +
-                               "\t\t<string>/Applications/QGIS.app/Contents/Resources/python/pyqgis-startup.py</string>\n" +
+                               "\t\t<string>{}/Resources/python/pyqgis-startup.py</string>\n".format(destContents) +
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
                                )
 
@@ -75,17 +79,17 @@ def patch_files(pa, min_os):
                                "PYTHONHOME",
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
                                "\t\t<key>PYTHONHOME</key>\n" +
-                               "\t\t<string>/Applications/QGIS.app/Contents/Frameworks/Python.framework/Versions/Current</string>\n" +
+                               "\t\t<string>{}/Frameworks/Python.framework/Versions/Current</string>\n".format(destContents) +
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
                                )
 
     # Python path
-    if add_python_home:
+    if add_python_path:
         _patch_file(pa, infoplist,
                                "PYTHONPATH",
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
                                "\t\t<key>PYTHONPATH</key>\n" +
-                               "\t\t<string>/Applications/QGIS.app/Contents/Resources/python</string>\n" +
+                               "\t\t<string>{}/Resources/python</string>\n".format(destContents) +
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
                                )
 
@@ -95,7 +99,7 @@ def patch_files(pa, min_os):
                                "QGIS_PREFIX_PATH",
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
                                "\t\t<key>QGIS_PREFIX_PATH</key>\n" +
-                               "\t\t<string>{}</string>\n".format(pa.macosDir) +
+                               "\t\t<string>{}/MacOS</string>\n".format(destContents) +
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
                                )
 
@@ -115,7 +119,7 @@ def patch_files(pa, min_os):
                                "GDAL_DRIVER_PATH",
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
                                "\t\t<key>GDAL_DRIVER_PATH</key>\n" +
-                               "\t\t<string>{}</string>\n".format(pa.libDir) +
+                               "\t\t<string>{}/MacOS/lib</string>\n".format(destContents) +
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
                                )
 
@@ -123,7 +127,7 @@ def patch_files(pa, min_os):
                                "GDAL_DATA",
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
                                "\t\t<key>GDAL_DATA</key>\n" +
-                               "\t\t<string>{}</string>\n".format(pa.gdalDataDir) +
+                               "\t\t<string>{}/Resources/gdal</string>\n".format(destContents) +
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
                                )
 
