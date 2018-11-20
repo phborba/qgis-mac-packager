@@ -338,7 +338,9 @@ def test_full_tree_consistency(pa):
 
     print("Test GDAL installation")
     gdalinfo = pa.binDir + "/gdalinfo"
-    expected_formats = ["netCDF", "GRIB", "GPKG", "GTiff"]
+    expected_formats = ["GRIB", "GPKG", "GTiff"]
+    # https://github.com/lutraconsulting/qgis-mac-packager/issues/25
+    # "netCDF"
     try:
         output = subprocess.check_output([gdalinfo, "--formats"], stderr=subprocess.STDOUT, encoding='UTF-8')
     except subprocess.CalledProcessError as err:
