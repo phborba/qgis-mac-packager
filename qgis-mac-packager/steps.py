@@ -105,12 +105,13 @@ def patch_files(pa, min_os):
 
     # Grass7 folder
     if add_grass7_folder:
-        grass7pyfile = os.path.join(destContents, "Resources", "python", "plugins", "processing", "algs", "grass7", "Grass7Utils.py")
+        grass7pyfile = os.path.join(pa.pythonDir, "plugins/processing/algs/grass7/Grass7Utils.py")
+        destGrass7Dir = "{}/Resources/grass7".format(destContents)
         _patch_file(pa,
                     grass7pyfile,
-                    pa.grass7Dir,
-                  "'/Applications/GRASS-7.{}.app/Contents/MacOS'.format(version)",
-                  "'{}'".format(pa.grass7Dir))
+                    destGrass7Dir,
+                    "'/Applications/GRASS-7.{}.app/Contents/MacOS'.format(version)",
+                    "'{}'".format(destGrass7Dir))
 
 
     # fix GDAL paths
@@ -127,7 +128,7 @@ def patch_files(pa, min_os):
                                "GDAL_DATA",
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
                                "\t\t<key>GDAL_DATA</key>\n" +
-                               "\t\t<string>{}/Resources/gdal</string>\n".format(destContents) +
+                               "\t\t<string>{}</string>\n".format(destContents) +
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
                                )
 
