@@ -105,7 +105,7 @@ def patch_files(pa, min_os):
 
     # Grass7 folder
     if add_grass7_folder:
-        grass7pyfile = os.path.join(pa.pythonDir, "plugins/processing/algs/grass7/Grass7Utils.py")
+        grass7pyfile = os.path.join(destContents, "Resources", "python", "plugins", "processing", "algs", "grass7", "Grass7Utils.py")
         _patch_file(pa,
                     grass7pyfile,
                     pa.grass7Dir,

@@ -9,7 +9,8 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 
 - The LTR package will be added in February 2019
 - Minimum supported MacOS version for PR 3.4.1 builds is 10.14. Support for earliear versions will be added in 3.4.2
-- Minimum supported MacOS version for nightly builds is 10.11
+- Minimum supported MacOS version for nightly builds is 10.11. 
+- Python support is not available on 10.11 and 10.12 due to the upstream bug.
 
 ## Highlights
 
@@ -34,10 +35,9 @@ Used Homebrew's packages
 - cfitsio 3.450
 - cgal 4.13
 - cmake 3.12.4
-- conan 1.8.4
+- conan 1.9.1
 - create-dmg 1.0.0.4
 - curl 7.62.0
-- cython 0.29
 - eigen 3.3.5
 - epsilon 0.9.2
 - exiv2 0.26
@@ -59,10 +59,11 @@ Used Homebrew's packages
 - giflib 5.1.4_1
 - git 2.19.1
 - glib 2.58.1
-- glslang 7.9.2888
+- glslang 7.10.2984
 - gmp 6.1.2_2
 - gnu-sed 4.5
 - gpp 2.25
+- gpsbabel 1.5.4_1
 - graphite2 1.3.12
 - grass7 7.4.2
 - gsl 2.5
@@ -98,19 +99,18 @@ Used Homebrew's packages
 - libxml2 2.9.8
 - libxslt 1.1.32
 - libzip 1.5.1
-- lighttpd 1.4.50
 - little-cms2 2.9
 - lz4 1.8.3
 - lzo 2.10
 - matplotlib 2.2.3
 - mpfr 4.0.1
 - netcdf 4.6.1_4
+- ninja 1.8.2
 - nspr 4.20
 - nss 3.40
 - numpy 1.15.4
 - openblas 0.3.3
 - openjpeg 2.3.0
-- openldap 2.4.46
 - openssl 1.0.2p
 - openvpn 2.4.6
 - opus 1.3
@@ -138,13 +138,13 @@ Used Homebrew's packages
 - qtkeychain 0.9.1
 - qwt 6.1.3_4
 - qwtpolar 1.1.1_3
+- r 3.5.1
 - readline 7.0.5
 - saga-gis-lts 2.3.2_2
 - scipy 1.1.0_2
-- sfcgal 1.3.5_1
+- sfcgal 1.3.6
 - sip 4.19.8_6
 - spatialindex 1.8.5
-- spawn-fcgi 1.6.4
 - sqlite 3.25.3
 - swig 3.0.12
 - szip 2.1.1_1
@@ -162,13 +162,13 @@ Used Homebrew's packages
 Used Python3 modules
 
 - Cython 0.29
-- DateTime 4.3
 - ExifRead 2.1.2
 - GDAL 2.3.2
 - GitPython 2.1.11
 - Jinja2 2.10
 - MarkupSafe 1.1.0
 - OWSLib 0.17.0
+- OpenSSL 18.0.0
 - PyQt5 
 - PySAL 1.14.4.post2
 - PyYAML 3.13
@@ -176,11 +176,16 @@ Used Python3 modules
 - Pypubsub 4.0.0
 - Shapely 1.6.4.post2
 - _plotly_utils 
+- asn1crypto 0.24.0
 - certifi 2018.10.15
+- cffi 1.11.5
 - chardet 3.0.4
 - coverage 4.5.2
+- cryptography 2.4.1
+- dateutil 2.7.5
 - decorator 4.3.0
 - exifread 2.1.2
+- funcsigs 1.0.2
 - future 0.17.1
 - git 2.1.11
 - gitdb 2.0.5
@@ -203,6 +208,7 @@ Used Python3 modules
 - networkx 2.2
 - nose2 0.8.0
 - numpy 1.15.4
+- oauthlib 2.1.0
 - osgeo 2.3.2
 - owslib 0.17.0
 - pandas 0.23.4
@@ -215,13 +221,17 @@ Used Python3 modules
 - ply 3.11
 - psycopg2 2.7.6.1
 - pubsub 4.0.0
+- pyOpenSSL 18.0.0
+- pycparser 2.19
 - pygments 2.2.0
 - pyodbc 4.0.24
 - pyproj 1.9.5.1
 - pysal 1.14.4
+- python_dateutil 2.7.5
 - pytils 0.3
+- pytz 2018.7
 - pyximport 
-- requests 2.20.0
+- requests 2.20.1
 - retrying 1.3.3
 - scipy 1.1.0
 - script 
@@ -231,6 +241,7 @@ Used Python3 modules
 - six 1.11.0
 - smmap 2.0.5
 - smmap2 2.0.5
+- termcolor 1.1.0
 - test 2.3.4.5
 - tools 0.1.9
 - traitlets 4.3.2
@@ -239,7 +250,5 @@ Used Python3 modules
 - xlrd 1.1.0
 - xlwt 1.3.0
 - yaml 3.13
-- zope 
-- zope.interface 4.6.0
 
-Updated: 2018-11-16 12:16:49
+Updated: 2018-11-20 07:21:36
