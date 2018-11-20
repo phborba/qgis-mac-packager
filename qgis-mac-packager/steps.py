@@ -128,7 +128,7 @@ def patch_files(pa, min_os):
                                "GDAL_DATA",
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>",
                                "\t\t<key>GDAL_DATA</key>\n" +
-                               "\t\t<string>{}</string>\n".format(destContents) +
+                               "\t\t<string>{}/gdal</string>\n".format(destContents) +
                                "\t\t<key>QT_AUTO_SCREEN_SCALE_FACTOR</key>"
                                )
 
