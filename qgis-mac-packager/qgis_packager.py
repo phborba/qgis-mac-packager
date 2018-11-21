@@ -26,7 +26,7 @@ def sign_this(path, identity, keychain):
         # signed and you cannot ship bundle with 2 different signatures
         # https://github.com/lutraconsulting/qgis-mac-packager/issues/30
         # we may end up in resigning the binaries, but who cares
-        
+
         if keychain:
             args += ["--keychain", keychainFile]
 

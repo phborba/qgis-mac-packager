@@ -130,7 +130,7 @@ def get_computer_info():
     mac_ver = platform.mac_ver()[0]
 
     msg = ""
-    msg += "Minimum supported MacOS version is " + mac_ver + "\n\n"
+    msg += "MacOS version is " + mac_ver + "\n\n"
     msg += "Package was built with XCode " + xcode() + "\n\n"
     msg += "Used Homebrew's packages\n\n"
     msg += homebrew_libs() + "\n\n"

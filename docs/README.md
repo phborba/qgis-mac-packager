@@ -8,10 +8,9 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 ## Notes 
 
 - The LTR package will be added in February 2019
-- Minimum supported MacOS version for PR 3.4.1 builds is 10.14. Support for earliear versions will be added in 3.4.2
+- Minimum supported MacOS version for PR 3.4.1 builds is 10.14. Support for earlier versions will be added in 3.4.2
 - Minimum supported MacOS version for nightly builds is 10.11. 
 - Python support is not available on 10.11 and 10.12 due to the [upstream bug](https://github.com/lutraconsulting/qgis-mac-packager/issues/22)
-- If you cannot open installed application, try to allow opening applications [downloaded from internet](https://github.com/lutraconsulting/qgis-mac-packager/issues/30)
 
 ## Highlights
 

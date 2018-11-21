@@ -3,6 +3,8 @@
 Set of scripts to create MacOS standalone QGIS package (dmg)
 
 For package details, see [details page](https://lutraconsulting.github.io/qgis-mac-packager/)
+To know when we release, see [QGIS release schedule](https://www.qgis.org/en/site/getinvolved/development/roadmap.html#release-schedule)
+or use google calendar with [roadmap](https://calendar.google.com/calendar?cid=bHV0cmFjb25zdWx0aW5nLmNvLnVrX3JoZXIwM2YxNWg1N2xwaXI4NmF2NHJqb2JvQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20)
 
 # How to report issues 
 
@@ -10,6 +12,7 @@ For package details, see [details page](https://lutraconsulting.github.io/qgis-m
 - Add crash report if QGIS crashed
 - State MacOS version (e.g. 10.14.1)
 - Run `open /Applications/QGIS.app` from Terminal and add the output
+- Append any messages from QGIS message log or python warnings log if present
 
 # Debugging Tips
 - [gatekeeper](https://stackoverflow.com/a/29221163/2838364): `codesign --verbose --deep-verify /Applications/QGIS.app/` 
@@ -66,13 +69,14 @@ NOTE: grep for "lutra", since this username is hardcoded in few places around
 
 # Server Update
 
-- update homebrew
-```
-brew update 
-brew upgrade
-
-# this may remove some python packages!
-# brew cleanup
-```
-- remove build/* folders for clean build
+- remove all build folders 
+- remove homebrew (`/usr/local/*`)
+- reinstall homebrew packages
 - update docs/README.md with new set of used libs
+
+# How to release new versions
+
+- remove all build folders 
+- update TAG in `scripts/run_ltr.bash`, `scripts/run_pr.bash`
+- wait till next nightly build to build the package
+- check `docs/README.md` if there are some references to old/new version to update

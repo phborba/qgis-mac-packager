@@ -63,7 +63,6 @@ def resolve_libpath(pa, lib_path):
                     if os.path.exists(s + "/.dylibs/" + lib_path.replace("@loader_path", "")):
                         lib_path = s + "/.dylibs/" + lib_path.replace("@loader_path", "")
                         break
-                        break
 
     return lib_path
 

@@ -60,13 +60,17 @@ brew install gsl
 brew install exiv2
 
 # https://github.com/OSGeo/homebrew-osgeo4mac/issues/529
-brew install saga-gis-lts --build-bottle
+# brew install saga-gis-lts --build-bottle
+# should be fixed with https://github.com/OSGeo/homebrew-osgeo4mac/commit/6e1ee285d8619e4d10bbe3ab34b4934f158baf28
+brew install osgeo/osgeo4mac/saga-gis-lts
 
 brew install gdal2-python
 
 # use this link until postgis is build on osgeo
-POSTGIS_FORMULA=https://raw.githubusercontent.com/OSGeo/homebrew-osgeo4mac/530a838c9d93721d0c2d5eee2ddeb702b848184f/Formula/postgis.rb
-brew install $POSTGIS_FORMULA --build-bottle --build-from-source
+# POSTGIS_FORMULA=https://raw.githubusercontent.com/OSGeo/homebrew-osgeo4mac/530a838c9d93721d0c2d5eee2ddeb702b848184f/Formula/postgis.rb
+# brew install $POSTGIS_FORMULA --build-bottle --build-from-source
+# should be fixed with https://github.com/OSGeo/homebrew-osgeo4mac/commit/afbffb335d7f4f39bc7d0ac224655871f18c91de
+brew install osgeo/osgeo4mac/postgis
 
 # tools
 pip3 install dropbox
