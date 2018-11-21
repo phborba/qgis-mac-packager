@@ -15,11 +15,18 @@ class QGISPackageError(Exception):
 
 
 def sign_this(path, identity, keychain):
+    # TODO maybe codesing --deep option will be satisfactory
+    # instead of signing one by one binary!
     try:
         args = ["codesign",
                 "-s", identity,
-                "-v"]
-
+                "-v",
+                "--force"]
+        # --force is required, since XQuarz packages in brew is already
+        # signed and you cannot ship bundle with 2 different signatures
+        # https://github.com/lutraconsulting/qgis-mac-packager/issues/30
+        # we may end up in resigning the binaries, but who cares
+        
         if keychain:
             args += ["--keychain", keychainFile]
 

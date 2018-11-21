@@ -60,13 +60,11 @@ def get_binary_dependencies(pa, binary):
         if "/DLC/h5py/" in lib_path:
             lib_path = lib_path.replace("/DLC/h5py/", "/usr/local/lib/python3.7/site-packages/h5py/.dylibs/")
 
-
+        # note "/opt/X11" comes from XQuarz and it has ALREADY signed X libraries
         if lib_path.startswith("/usr/lib/") or lib_path.startswith("/System/Library/"):
             sys_libs.append(lib_path)
             # current/lib and bin is for some reason Python has some bundled libs/exes in framewoek
             # plugins is for dynamically loaded plugins in frameworks (e.g. Qt modules)
-        elif lib_path.startswith("/opt/X11"):
-            raise Exception("xquartz should be uninstalled, since X libraries should be taken from system /usr/lib")
         elif (".framework" in lib_path) and ("/plugins/" not in lib_path) and ("/Current/lib/" not in lib_path) and ("/Current/bin/" not in lib_path):
             frameworks.append(lib_path)
         # elif [".dylib", ".so"] in lib_path:

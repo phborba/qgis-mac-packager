@@ -111,6 +111,7 @@ brew install brewsci/bio/matplotlib
 brew install gdal2-python
 
 # brew install oracle-client-sdk
+brew cask install XQuartz # requirement of grass7
 brew install grass7
 brew install gettext
 brew install gpsbabel
