@@ -2,15 +2,15 @@ Package contains standalone QGIS installation, with bundled Python, Qt, GDAL and
 
 Please report any issues on [GitHub issue tracker](https://github.com/lutraconsulting/qgis-mac-packager/issues)
 
-- [Latest Release 3.4.1](https://www.dropbox.com/sh/qcr9a6ry25n4x91/AABQ78LJIlKTCTMRj8H0L3u4a?dl=0)
+- [Latest Release 3.4.2](https://www.dropbox.com/sh/qcr9a6ry25n4x91/AABQ78LJIlKTCTMRj8H0L3u4a?dl=0)
 - [Nightly Builds (master)](https://www.dropbox.com/sh/cc3615b1zd7ruwz/AACfBDg0GVfdgAt-FGMZiuaba?dl=0)
 
 ## Notes 
 
 - The LTR package will be added in February 2019
-- Minimum supported MacOS version for PR 3.4.1 builds is 10.14. Support for earlier versions will be added in 3.4.2
-- Minimum supported MacOS version for nightly builds is 10.11. 
-- Python support is not available on 10.11 and 10.12 due to the [upstream bug](https://github.com/lutraconsulting/qgis-mac-packager/issues/22)
+- Minimum supported MacOS version for PR 3.4.2 builds is 10.11*
+- Minimum supported MacOS version for nightly builds is 10.11*
+- *Python support is not available on 10.11 and 10.12 due to the [upstream bug](https://github.com/lutraconsulting/qgis-mac-packager/issues/22)
 - QGIS [must be installed](https://github.com/lutraconsulting/qgis-mac-packager/issues/11) in /Applications/QGIS 
 
 ## Highlights
