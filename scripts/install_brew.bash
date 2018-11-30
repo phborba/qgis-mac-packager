@@ -70,7 +70,7 @@ brew install gdal2-python
 # POSTGIS_FORMULA=https://raw.githubusercontent.com/OSGeo/homebrew-osgeo4mac/530a838c9d93721d0c2d5eee2ddeb702b848184f/Formula/postgis.rb
 # brew install $POSTGIS_FORMULA --build-bottle --build-from-source
 # should be fixed with https://github.com/OSGeo/homebrew-osgeo4mac/commit/afbffb335d7f4f39bc7d0ac224655871f18c91de
-brew install osgeo/osgeo4mac/postgis
+brew install osgeo/osgeo4mac/postgis2
 
 # tools
 pip3 install dropbox
@@ -102,7 +102,6 @@ brew install hicolor-icon-theme
 brew install libiconv
 brew install geos
 brew install libspatialite
-brew install postgis
 brew install openssl
 brew install poppler
 brew install gnu-sed
