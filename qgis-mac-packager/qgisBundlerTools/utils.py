@@ -90,6 +90,11 @@ class CopyUtils:
         else:
             os.makedirs(name)
 
+    def rename(self, src, dest):
+        self._is_in_out_dir(src)
+        self._is_in_out_dir(dest)
+        os.rename(src, dest)
+
     def remove(self, name):
         self._is_in_out_dir(name)
         os.remove(name)

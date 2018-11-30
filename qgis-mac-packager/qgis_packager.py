@@ -101,9 +101,9 @@ def print_identities(keychain):
 
 parser = argparse.ArgumentParser(description='Package QGIS Application')
 
-parser.add_argument('--bundle_directory',
+parser.add_argument('--qgisApp',
                     required=True,
-                    help='output directory with resulting QGIS.app bundle')
+                    help='full path to resulting QGIS{suffix}.app bundle (in bundle directory)')
 parser.add_argument('--outname', required=True, help="resulting file")
 parser.add_argument('--sign',
                     required=False,
@@ -118,10 +118,12 @@ pkg = False
 dmg = True
 
 args = parser.parse_args()
-print("BUNDLE DIRECTORY: " + args.bundle_directory)
+print("QGIS: " + args.qgisApp)
 print("OUTNAME: " + args.outname)
 
-qgisApp = os.path.join(args.bundle_directory, "QGIS.app")
+qgisApp = os.path.realpath(args.qgisApp)
+qgisAppName = os.path.basename(qgisApp)
+print("QGIS_APP:" + qgisAppName)
 
 if not os.path.exists(qgisApp):
     raise QGISPackageError(qgisApp + " does not exists")
@@ -188,7 +190,7 @@ if dmg:
             "--window-size", "800", "600",
             "--icon-size", "120",
             "--icon", resourcesDir + "/qgis-icon-120x120.png" ,"300", "190",
-            "--hide-extension", "QGIS.app",
+            "--hide-extension", qgisAppName,
             "--app-drop-link", "600", "185",
             "--eula", resourcesDir + "/EULA.txt",
             dmgFile,

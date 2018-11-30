@@ -9,13 +9,14 @@ PWD=`pwd`
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-if (( $# != 3 )); then
-    echo "run_all build_dir git_tag release_name"
+if (( $# != 4 )); then
+    echo "run_build build_dir git_tag release_name qgisapp_name"
 fi
 
 BUILD_DIR=$1
 GIT=$2
 RELEASE=$3
+QGISAPP=$4
 PACKAGE=qgis_${RELEASE}_${GIT}_${TIMESTAMP}.dmg
 MINOS=10.11.0
 
@@ -40,12 +41,13 @@ python3 qgis_bundler.py \
   --pyqt /usr/local/opt/pyqt5/lib/python3.7/site-packages/PyQt5 \
   --gdal /usr/local/opt/gdal2 \
   --saga /usr/local/opt/saga-gis-lts \
-  --grass7 /usr/local/Cellar/grass7/7.4.2/grass-base\
-  --min_os ${MINOS}
+  --grass7 /usr/local/Cellar/grass7/7.4.2/grass-base \
+  --min_os ${MINOS} \
+  --qgisapp_name ${QGISAPP}
 
 echo "Package"
 python3 qgis_packager.py \
-  --bundle_directory $BUILD_DIR/bundle \
+  --qgisApp $BUILD_DIR/bundle/${QGISAPP} \
   --outname=$BUILD_DIR/$PACKAGE \
   --sign $DIR/../../sign_identity.txt \
   --keychain $DIR/../../qgis.keychain-db

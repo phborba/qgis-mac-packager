@@ -6,7 +6,7 @@ set -o pipefail
 # GNU General Public License 2 any later version
 
 TAG=final-3_4_2
-
+QGISAPP="QGIS3.4.2.app"
 
 PWD=`pwd`
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
@@ -20,6 +20,7 @@ $DIR/run_build.bash \
   $BD \
   $TAG \
   pr \
+  ${QGISAPP} \
 2>&1 | tee $LOG
 
 exit_status=$?

@@ -5,6 +5,9 @@ set -o pipefail
 # 2018 Peter Petrik (zilolv at gmail dot com)
 # GNU General Public License 2 any later version
 
+TAG=master
+QGISAPP="QGIS-STAGING.app"
+
 PWD=`pwd`
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 BD=$DIR/../../builds/staging
@@ -16,8 +19,9 @@ mkdir -p $BD
 
 $DIR/run_build.bash \
   $BD \
-  master \
+  $TAG \
   staging \
+  $QGISAPP \
 2>&1 | tee $LOG
 
 exit_status=$?

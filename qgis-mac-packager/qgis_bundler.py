@@ -3,6 +3,7 @@
 
 import argparse
 import glob
+import os
 
 import qgisBundlerTools.otool as otool
 import qgisBundlerTools.install_name_tool as install_name_tool
@@ -43,6 +44,9 @@ parser.add_argument('--min_os',
                     required=False,
                     default=None,
                     help='min os version to support')
+parser.add_argument('--qgisapp_name',
+                    required=True,
+                    help='name of resulting qgis application (QGIS.app, QGIS3.4.app, QGIS3.5.app)')
 
 verbose = False
 
@@ -56,6 +60,7 @@ print("GDAL: " + args.gdal)
 print("SAGA: " + args.saga)
 print("GRASS7: " + args.grass7)
 print("APPLE MINOS: "  + str(args.min_os))
+print("QGIS.app name: " + str(args.qgisapp_name))
 
 if not os.path.exists(args.python):
     raise QGISBundlerError(args.python + " does not exists")
@@ -80,6 +85,9 @@ if not os.path.exists(args.saga + "/bin"):
 if not os.path.exists(args.grass7 + "/bin"):
     raise QGISBundlerError(args.grass7 + "/bin does not contain GRASS7 installation")
 
+if "/" in args.qgisapp_name:
+    raise QGISBundlerError(args.qgisapp_name + " must not contain path separator")
+
 
 class Paths:
     def __init__(self, args):
@@ -96,7 +104,7 @@ class Paths:
         self.grass7Host = os.path.realpath(args.grass7)
 
         # new bundle destinations
-        self.qgisApp = os.path.realpath(os.path.join(args.output_directory, "QGIS.app"))
+        self.qgisApp = os.path.realpath(os.path.join(args.output_directory, args.qgisapp_name))
         self.contentsDir = os.path.join(self.qgisApp, "Contents")
         self.macosDir = os.path.join(self.contentsDir, "MacOS")
         self.frameworksDir = os.path.join(self.contentsDir, "Frameworks")
@@ -109,6 +117,11 @@ class Paths:
         self.binDir = os.path.join(self.macosDir, "bin")
         self.grass7Dir = os.path.join(self.resourcesDir, "grass7")
         self.gdalDataDir = os.path.join(self.resourcesDir, "gdal")
+
+        # install location
+        self.installQgisAppName = args.qgisapp_name
+        self.installQgisApp = "/Applications/" + self.installQgisAppName
+
 
 cp = utils.CopyUtils(os.path.realpath(args.output_directory))
 pa = Paths(args)
@@ -125,6 +138,9 @@ if os.path.exists(args.output_directory):
 
 print("Copying " + args.qgis_install_tree)
 cp.copytree(args.qgis_install_tree, args.output_directory, symlinks=True)
+if args.qgisapp_name != "QGIS.app":
+    cp.rename(os.path.join(args.output_directory, "QGIS.app"), pa.qgisApp)
+
 if not os.path.exists(pa.qgisApp):
     raise QGISBundlerError(pa.qgisExe + " does not exists")
 

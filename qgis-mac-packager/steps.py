@@ -46,13 +46,42 @@ def patch_files(pa, min_os):
     add_qgis_prefix = True
     add_gdal_paths = True
     add_quarantine = True
-    destContents = "/Applications/QGIS.app/Contents"
+    patchCFBundleIdentifier = True
+    patchBundleName = False
+    patchBundleSignature = True
+
+    destContents = pa.installQgisApp + "/Contents"
 
     # Info.plist
     # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-113253
     infoplist = os.path.join(pa.contentsDir, "Info.plist")
     if not os.path.exists(infoplist):
         raise  QGISBundlerError("MISSING " + infoplist)
+
+    # CFBundleIdentifier
+    if patchCFBundleIdentifier:
+        identifier = pa.installQgisAppName.replace(".app", "").lower().replace(".", "")
+        _patch_file(pa, infoplist,
+                    identifier,
+                    "org.qgis.qgis3",
+                    "org.qgis.{}".format(identifier)
+        )
+
+    # Bundle name
+    if patchBundleName:
+        _patch_file(pa, infoplist,
+                    pa.installQgisAppName.replace(".app", ""),
+                    "\t<key>CFBundleName</key>\n\t<string>QGIS</string>",
+                    "\t<key>CFBundleName</key>\n\t<string>{}</string>".format(pa.installQgisAppName.replace(".app", ""))
+        )
+
+    # Bundle signature
+    if patchBundleSignature:
+        _patch_file(pa, infoplist,
+                    pa.installQgisAppName.replace(".app", ""),
+                    "\t<key>CFBundleSignature</key>\n\t<string>QGIS</string>",
+                    "\t<key>CFBundleSignature</key>\n\t<string>{}</string>".format(pa.installQgisAppName.replace(".app", ""))
+        )
 
     # Minimum version
     if not (min_os is None):

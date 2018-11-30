@@ -12,4 +12,4 @@ A clear and concise description of what the bug is.
 - Add link to the installed package
 - Add crash report if QGIS crashed
 - State MacOS version (e.g. 10.14.1)
-- The installation location of QGIS (must be /Applications/QGIS.app)
+- The installation location of QGIS (must be /Applications/QGIS<suffix>.app)

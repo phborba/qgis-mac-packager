@@ -11,7 +11,7 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 - Minimum supported MacOS version for PR 3.4.2 builds is 10.11*
 - Minimum supported MacOS version for nightly builds is 10.11*
 - *Python support is not available on 10.11 and 10.12 due to the [upstream bug](https://github.com/lutraconsulting/qgis-mac-packager/issues/22)
-- QGIS [must be installed](https://github.com/lutraconsulting/qgis-mac-packager/issues/11) in /Applications/QGIS 
+- QGIS [must be installed](https://github.com/lutraconsulting/qgis-mac-packager/issues/11) in /Applications/QGIS\<version\>.app
 
 ## Highlights
 
