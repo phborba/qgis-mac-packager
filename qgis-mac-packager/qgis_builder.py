@@ -96,13 +96,9 @@ else:
     if not os.path.exists(buildDir):
         os.makedirs(buildDir)
 
-if args.clean:
-    print ("Cleaning: " + installDir)
-    cp.recreate_dir(installDir)
-else:
-    print("Skipped, clean build not requested")
-    if not os.path.exists(installDir):
-        os.makedirs(installDir)
+# always clean the install directory
+print("Cleaning: " + installDir)
+cp.recreate_dir(installDir)
 
 print(100*"*")
 print("STEP 3: Generate CMAKE build system")
@@ -188,11 +184,24 @@ print("STEP 4: make on " + str(cores) + " cores")
 print(100*"*")
 os.chdir(buildDir)
 
-sys.stdout.flush()
-cmd = "make -j"+str(cores) + " install"
-if verbose:
-    cmd += " VERBOSE=1"
-os.system(cmd)
-sys.stdout.flush()
+make_args = ["make", "-j"+str(cores), "install"]
+try:
+    result = subprocess.run(make_args,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,  # Combine out/err into stdout; stderr will be None
+                universal_newlines=True,
+                check=True,
+                env=env,
+                encoding='UTF-8'
+            )
+    output = result.stdout
+    print(output)
+
+    if "make: *** [all] Error" in output:
+        raise QGISBuildError("Found build error")
+
+except subprocess.CalledProcessError as err:
+    print(err.output)
+    raise
 
 print("build done")
