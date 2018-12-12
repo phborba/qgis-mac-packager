@@ -61,6 +61,11 @@ def get_binary_dependencies(pa, binary):
             lib_path = lib_path.replace("/DLC/h5py/", "/usr/local/lib/python3.7/site-packages/h5py/.dylibs/")
         if "/DLC/psycopg2/" in lib_path:
             lib_path = lib_path.replace("/DLC/psycopg2/", "/usr/local/lib/python3.7/site-packages/psycopg2/.dylibs/")
+        if "@rpath" in lib_path:
+            patched_path = lib_path.replace("@rpath", "/usr/local/Cellar/lapack/3.8.0_1/lib")
+            if os.path.exists(patched_path):
+                lib_path = patched_path
+
 
         # note "/opt/X11" comes from XQuarz and it has ALREADY signed X libraries
         if lib_path.startswith("/usr/lib/") or lib_path.startswith("/System/Library/"):
