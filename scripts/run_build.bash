@@ -41,7 +41,7 @@ python3 qgis_bundler.py \
   --pyqt /usr/local/opt/pyqt5/lib/python3.7/site-packages/PyQt5 \
   --gdal /usr/local/opt/gdal2 \
   --saga /usr/local/opt/saga-gis-lts \
-  --grass7 /usr/local/Cellar/grass7/7.4.2/grass-base \
+  --grass7 /usr/local/opt/grass7/grass-base \
   --min_os ${MINOS} \
   --qgisapp_name ${QGISAPP}
 
