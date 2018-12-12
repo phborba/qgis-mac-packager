@@ -59,6 +59,8 @@ def get_binary_dependencies(pa, binary):
         # hmmm, some broken library in python package
         if "/DLC/h5py/" in lib_path:
             lib_path = lib_path.replace("/DLC/h5py/", "/usr/local/lib/python3.7/site-packages/h5py/.dylibs/")
+        if "/DLC/psycopg2/" in lib_path:
+            lib_path = lib_path.replace("/DLC/psycopg2/", "/usr/local/lib/python3.7/site-packages/psycopg2/.dylibs/")
 
         # note "/opt/X11" comes from XQuarz and it has ALREADY signed X libraries
         if lib_path.startswith("/usr/lib/") or lib_path.startswith("/System/Library/"):
