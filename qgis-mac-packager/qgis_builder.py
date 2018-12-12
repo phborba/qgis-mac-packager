@@ -192,7 +192,8 @@ try:
                 universal_newlines=True,
                 check=True,
                 env=env,
-                encoding='UTF-8'
+                encoding='UTF-8',
+                errors='replace'
             )
     output = result.stdout
     print(output)
