@@ -115,7 +115,7 @@ for path in prefix_path.split(";"):
     if not os.path.exists(path):
         raise QGISBuildError("Missing " + path)
 
-grass7_prefix = "/usr/local/Cellar/grass7/7.4.2/grass-base"
+grass7_prefix = "/usr/local/opt/grass7/grass-base"
 if not os.path.exists(grass7_prefix):
     raise QGISBuildError("Missing " + grass7_prefix)
 
