@@ -283,7 +283,7 @@ while deps_queue:
         if os.path.exists(patched_path):
             lib_fixed = patched_path
         # now try the hint?
-        lib_fixed = lib.replace("@rpath", args.rpath_hint)
+        lib_fixed = lib_fixed.replace("@rpath", args.rpath_hint)
 
     lib_fixed = lib_fixed.replace("@executable_path", pa.macosDir)
     lib_fixed = utils.resolve_libpath(pa, lib_fixed)
