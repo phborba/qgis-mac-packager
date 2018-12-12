@@ -271,12 +271,20 @@ deps_queue |= set(glob.glob(pa.grass7Dir + "/etc/*/*"))
 # DEBUGGING
 debug_lib = None
 # debug_lib = "libjpeg"
-# debug_lib = "libhdf"
 
 while deps_queue:
     lib = deps_queue.pop()
+
+    lib_fixed = lib
     # patch @rpath, @loader_path and @executable_path
-    lib_fixed = lib.replace("@rpath", args.rpath_hint)
+    if "@rpath" in lib_fixed:
+        # replace rpath we know from homebrew
+        patched_path = lib_fixed.replace("@rpath", "/usr/local/Cellar/lapack/3.8.0_1/lib")
+        if os.path.exists(patched_path):
+            lib_fixed = patched_path
+        # now try the hint?
+        lib_fixed = lib.replace("@rpath", args.rpath_hint)
+
     lib_fixed = lib_fixed.replace("@executable_path", pa.macosDir)
     lib_fixed = utils.resolve_libpath(pa, lib_fixed)
 
