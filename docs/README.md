@@ -30,13 +30,13 @@ Used Homebrew's packages
 
 - autoconf 2.69
 - automake 1.16.1_1
-- bison 3.2.1
+- bison 3.2.2
 - boost 1.68.0
 - cairo 1.16.0
 - cfitsio 3.450
 - cgal 4.13
-- cmake 3.12.4
-- conan 1.9.1
+- cmake 3.13.1
+- conan 1.10.0
 - create-dmg 1.0.0.4
 - curl 7.62.0
 - eigen 3.3.5
@@ -51,36 +51,36 @@ Used Homebrew's packages
 - freexl 1.0.5_1
 - fribidi 1.0.5
 - gcc 8.2.0
-- gdal2 2.3.2_1
+- gdal2 2.3.2_2
 - gdal2-python 2.3.2
 - gdbm 1.18.1
 - geos 3.7.0
 - gettext 0.19.8.1
-- ghostscript 9.25
+- ghostscript 9.26
 - giflib 5.1.4_1
-- git 2.19.1
+- git 2.20.0
 - glib 2.58.1
 - glslang 7.10.2984
 - gmp 6.1.2_2
 - gnu-sed 4.5
-- gpp 2.25
 - gpsbabel 1.5.4_1
 - graphite2 1.3.12
-- grass7 7.4.2
+- grass7 7.4.3_2
 - gsl 2.5
 - gst-plugins-base 1.14.4
 - gstreamer 1.14.4
-- harfbuzz 2.1.1
+- harfbuzz 2.2.0
 - hdf4 4.2.13
 - hdf5 1.10.4
 - hicolor-icon-theme 0.17
-- icu4c 62.1
+- icu4c 63.1
 - isl 0.20
 - jasper 2.0.14
 - jpeg 9c
 - jpeg-turbo 2.0.0
 - json-c 0.13.1
-- laszip 3.2.2
+- lapack 3.8.0_1
+- laszip 3.2.8
 - lbzip2 2.5
 - libdap 3.19.1
 - libffi 3.2.1
@@ -94,7 +94,7 @@ Used Homebrew's packages
 - libpq 11.1
 - libspatialite 4.3.0a_6
 - libtasn1 4.13
-- libtiff 4.0.9_5
+- libtiff 4.0.10
 - libtool 2.4.6_1
 - libvorbis 1.3.6
 - libxml2 2.9.8
@@ -108,11 +108,11 @@ Used Homebrew's packages
 - netcdf 4.6.1_4
 - ninja 1.8.2
 - nspr 4.20
-- nss 3.40
-- numpy 1.15.4
-- openblas 0.3.3
+- nss 3.41
+- numpy 1.15.4_1
+- openblas 0.3.4
 - openjpeg 2.3.0
-- openssl 1.0.2p
+- openssl 1.0.2q
 - openvpn 2.4.6
 - opus 1.3
 - orc 0.4.28
@@ -121,10 +121,10 @@ Used Homebrew's packages
 - pcre2 10.32
 - pixman 0.34.0_1
 - pkg-config 0.29.2
-- poppler 0.71.0_1
+- poppler 0.72.0
 - popt 1.16
-- postgis 2.5.0
-- postgresql 10.5
+- postgis2 2.5.1_1
+- postgresql 11.1
 - proj 5.2.0
 - pyqt 5.10.1_1
 - pyqt5-webkit 5.10.1
@@ -134,25 +134,25 @@ Used Homebrew's packages
 - qhull 2015.2
 - qjson 0.9.0_1
 - qscintilla2 2.10.4_1
-- qt 5.11.2
-- qt5-webkit 5.11.2
+- qt 5.12.0
+- qt5-webkit 5.12.0
 - qtkeychain 0.9.1
 - qwt 6.1.3_4
 - qwtpolar 1.1.1_3
 - r 3.5.1
 - readline 7.0.5
 - saga-gis-lts 2.3.2_2
-- scipy 1.1.0_2
+- scipy 1.1.0_3
 - sfcgal 1.3.6
 - sip 4.19.8_6
 - spatialindex 1.8.5
-- sqlite 3.25.3
+- sqlite 3.26.0
 - swig 3.0.12
 - szip 2.1.1_1
 - tcl-tk 8.6.8
 - theora 1.1.1
 - unixodbc 2.3.7
-- webp 1.0.0
+- webp 1.0.1
 - wxmac 3.0.4_1
 - wxpython 3.0.2.0_1
 - xerces-c 3.2.2
@@ -162,7 +162,7 @@ Used Homebrew's packages
 
 Used Python3 modules
 
-- Cython 0.29
+- Cython 0.29.1
 - ExifRead 2.1.2
 - GDAL 2.3.2
 - GitPython 2.1.11
@@ -173,16 +173,16 @@ Used Python3 modules
 - PyQt5 
 - PySAL 1.14.4.post2
 - PyYAML 3.13
-- Pygments 2.2.0
+- Pygments 2.3.0
 - Pypubsub 4.0.0
 - Shapely 1.6.4.post2
 - _plotly_utils 
 - asn1crypto 0.24.0
-- certifi 2018.10.15
+- certifi 2018.11.29
 - cffi 1.11.5
 - chardet 3.0.4
 - coverage 4.5.2
-- cryptography 2.4.1
+- cryptography 2.4.2
 - dateutil 2.7.5
 - decorator 4.3.0
 - exifread 2.1.2
@@ -193,7 +193,7 @@ Used Python3 modules
 - gitdb2 2.0.5
 - h5py 2.8.0
 - httplib2 0.12.0
-- idna 2.7
+- idna 2.8
 - ipython_genutils 0.2.0
 - jinja2 2.10
 - jsonschema 2.6.0
@@ -217,14 +217,14 @@ Used Python3 modules
 - pbr 5.1.1
 - pip 18.1
 - pkg_resources 
-- plotly 3.4.1
+- plotly 3.4.2
 - plotlywidget 
 - ply 3.11
 - psycopg2 2.7.6.1
 - pubsub 4.0.0
 - pyOpenSSL 18.0.0
 - pycparser 2.19
-- pygments 2.2.0
+- pygments 2.3.0
 - pyodbc 4.0.24
 - pyproj 1.9.5.1
 - pysal 1.14.4
@@ -232,14 +232,14 @@ Used Python3 modules
 - pytils 0.3
 - pytz 2018.7
 - pyximport 
-- requests 2.20.1
+- requests 2.21.0
 - retrying 1.3.3
 - scipy 1.1.0
 - script 
 - setuptools 40.5.0
 - shapely 1.6.4.post2
 - simplejson 3.16.0
-- six 1.11.0
+- six 1.12.0
 - smmap 2.0.5
 - smmap2 2.0.5
 - termcolor 1.1.0
@@ -252,4 +252,4 @@ Used Python3 modules
 - xlwt 1.3.0
 - yaml 3.13
 
-Updated: 2018-11-20 07:21:36
+Updated: 2018-12-13 07:06:04
