@@ -5,6 +5,8 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 - [Latest Release 3.4.2](https://www.dropbox.com/sh/qcr9a6ry25n4x91/AABQ78LJIlKTCTMRj8H0L3u4a?dl=0)
 - [Nightly Builds (master)](https://www.dropbox.com/sh/cc3615b1zd7ruwz/AACfBDg0GVfdgAt-FGMZiuaba?dl=0)
 
+## Please consider donation to our [crowdfunding](https://www.lutraconsulting.co.uk/crowdfunding/macos-qgis/) initiative
+
 ## Notes 
 
 - The LTR package will be added in February 2019
@@ -19,7 +21,7 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 - Single installer, all dependencies bundled in the package
 - Signed installer and application
 - Nightly builds
-- Relocatable package, can be moved to different location after installation
+- Allows installation of different versions side-by-side
 - Transparent server setup, all scripts/docs can be found [here](https://github.com/lutraconsulting/qgis-mac-packager)
 
 ## Build Details
