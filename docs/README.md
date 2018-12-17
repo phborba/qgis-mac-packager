@@ -23,6 +23,7 @@ Please report any issues on [GitHub issue tracker](https://github.com/lutraconsu
 - Nightly builds
 - Allows installation of different versions side-by-side
 - Transparent server setup, all scripts/docs can be found [here](https://github.com/lutraconsulting/qgis-mac-packager)
+- Embed his own version of python in the package
 
 ## Build Details
 
