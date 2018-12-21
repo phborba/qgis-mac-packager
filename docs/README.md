@@ -33,16 +33,16 @@ Used Homebrew's packages
 
 - autoconf 2.69
 - automake 1.16.1_1
-- bison 3.2.2
+- bison 3.2.3
 - boost 1.68.0
 - cairo 1.16.0
-- cfitsio 3.450
+- cfitsio 3.450_1
 - cgal 4.13
-- cmake 3.13.1
-- conan 1.10.0
-- create-dmg 1.0.0.4
-- curl 7.62.0
-- eigen 3.3.5
+- cmake 3.13.2
+- conan 1.11.0
+- create-dmg 1.0.0.5
+- curl 7.63.0
+- eigen 3.3.7
 - epsilon 0.9.2
 - exiv2 0.26
 - expat 2.2.6
@@ -57,18 +57,18 @@ Used Homebrew's packages
 - gdal2 2.3.2_2
 - gdal2-python 2.3.2
 - gdbm 1.18.1
-- geos 3.7.0
+- geos 3.7.1
 - gettext 0.19.8.1
 - ghostscript 9.26
 - giflib 5.1.4_1
-- git 2.20.0
-- glib 2.58.1
+- git 2.20.1
+- glib 2.58.2
 - glslang 7.10.2984
 - gmp 6.1.2_2
-- gnu-sed 4.5
-- gpsbabel 1.5.4_1
-- graphite2 1.3.12
-- grass7 7.4.3_2
+- gnu-sed 4.6
+- gpsbabel 1.5.4_2
+- graphite2 1.3.13
+- grass7 7.4.3_3
 - gsl 2.5
 - gst-plugins-base 1.14.4
 - gstreamer 1.14.4
@@ -93,12 +93,13 @@ Used Homebrew's packages
 - libkml-dev 1.3-dev
 - libmpc 1.1.0
 - libogg 1.3.3
-- libpng 1.6.35
+- libpng 1.6.36
 - libpq 11.1
 - libspatialite 4.3.0a_6
 - libtasn1 4.13
 - libtiff 4.0.10
 - libtool 2.4.6_1
+- libusb 1.0.22
 - libvorbis 1.3.6
 - libxml2 2.9.8
 - libxslt 1.1.32
@@ -122,7 +123,7 @@ Used Homebrew's packages
 - pango 1.42.4
 - pcre 8.42
 - pcre2 10.32
-- pixman 0.34.0_1
+- pixman 0.36.0
 - pkg-config 0.29.2
 - poppler 0.72.0
 - popt 1.16
@@ -145,7 +146,7 @@ Used Homebrew's packages
 - r 3.5.1
 - readline 7.0.5
 - saga-gis-lts 2.3.2_2
-- scipy 1.1.0_3
+- scipy 1.2.0
 - sfcgal 1.3.6
 - sip 4.19.8_6
 - spatialindex 1.8.5
@@ -237,7 +238,7 @@ Used Python3 modules
 - pyximport 
 - requests 2.21.0
 - retrying 1.3.3
-- scipy 1.1.0
+- scipy 1.2.0
 - script 
 - setuptools 40.5.0
 - shapely 1.6.4.post2
@@ -255,4 +256,4 @@ Used Python3 modules
 - xlwt 1.3.0
 - yaml 3.13
 
-Updated: 2018-12-13 07:06:04
+Updated: 2018-12-21 10:00:52
