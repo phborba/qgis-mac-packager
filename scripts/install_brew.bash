@@ -36,7 +36,7 @@ brew install bison
 brew install flex
 brew install pkg-config
 brew install python
-brew install qt
+brew install qt --with-postgresql
 brew install pyqt
 
 # pyproj has bug for python3, unable to install from pip3
